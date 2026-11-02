@@ -61,8 +61,8 @@ The product owner selected students preparing coursework or thesis projects, an 
 ### Asynchronous job contract
 
 1. `POST /jobs` validates basic input, document profile and `language` (`ru` or `en`), stores the upload or pinned repository reference, inserts a `queued` job in PostgreSQL, and responds quickly with `202 Accepted` and a job ID. It does not wait for LLM generation or PDF compilation.
-2. A Go worker process claims a queued job in a short transaction using `FOR UPDATE SKIP LOCKED`, sets a lease and attempt count, then commits before doing expensive work. The job moves through `validating`, `extracting`, `generating`, `rendering`, and `completed` or `failed`.
-3. The browser polls `GET /jobs/{id}` for progress; it can later use server-sent events if polling proves inadequate. `GET /jobs/{id}/artifacts` returns authorized links to the Typst bundle and PDF only after completion.
+2. A Go worker process claims a queued job in a short transaction using `FOR UPDATE SKIP LOCKED`, sets a lease and attempt count, then commits before doing expensive work. Job status is separate from work stage; the [lifecycle contract](../development/job_lifecycle.md) defines both.
+3. The browser polls `GET /jobs/{id}` for stage, completed sections, required action, retry time, or failure; it can later use server-sent events if polling proves inadequate. `GET /jobs/{id}/artifacts` returns authorized links to the Typst bundle and PDF only after completion.
 4. Workers renew leases during long tasks. Expired leases are retried with bounded attempts and idempotent artifact writes; permanent validation errors fail immediately. Store a short, safe error message for the user and a detailed internal diagnostic.
 5. A single Go binary can expose `serve` and `worker` commands, allowing both processes in development or separate replicas in production. PostgreSQL is the durable queue and status store; work is not kept only in a Go goroutine, because a server restart would lose it.
 

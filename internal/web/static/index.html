@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create editable project documentation from source code.">
+  <title>AI Doc Gen — project documentation from code</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/" aria-label="AI Doc Gen home"><span class="brand-mark">D</span><span>AI Doc Gen</span></a>
+      <span class="stage">Early build</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Documentation from real project evidence</p>
+        <h1 id="hero-title">From source code to a document you can edit.</h1>
+        <p class="lead">Choose a document, provide a public GitHub repository or ZIP archive, and receive Typst source and a PDF. The generation workflow is being built step by step.</p>
+        <div class="hero-tags" aria-label="Planned outputs"><span>Academic documents</span><span>Technical overview</span><span>Typst + PDF</span></div>
+      </div>
+
+      <div class="panel" aria-labelledby="panel-title">
+        <div class="panel-top"><span class="panel-step">01 / Project input</span><span class="panel-status">Preview</span></div>
+        <h2 id="panel-title">Start a document</h2>
+        <p class="panel-note">This form previews the planned workflow. Submission arrives in the next development step.</p>
+        <form>
+          <label for="repo">Public GitHub repository</label>
+          <input id="repo" type="url" placeholder="https://github.com/owner/repository" disabled>
+          <div class="separator"><span>or upload a ZIP archive</span></div>
+          <label class="upload" for="archive">Choose a .zip file <span>Source files only</span></label>
+          <input id="archive" type="file" accept=".zip,application/zip" disabled>
+          <label for="profile">Document</label>
+          <select id="profile" disabled><option>Academic document set</option><option>Technical project overview</option></select>
+          <label for="language">Document language</label>
+          <select id="language" disabled><option>English</option><option>Russian</option></select>
+          <label for="description">Short description <span class="optional">Optional</span></label>
+          <textarea id="description" rows="3" placeholder="What should the document emphasize?" disabled></textarea>
+          <button type="button" disabled>Generate document <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="form-footnote">Uploads and generation are not enabled in this first infrastructure step.</p>
+      </div>
+    </section>
+
+    <section class="process" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow">The workflow</p><h2 id="process-title">A clear path from repository to PDF</h2></div>
+        <div class="steps">
+          <article><span class="step-number">01</span><h3>Inspect</h3><p>Validate the source, select useful files, and preserve references to the code.</p></article>
+          <article><span class="step-number">02</span><h3>Draft</h3><p>Build each section from available evidence and flag missing information.</p></article>
+          <article><span class="step-number">03</span><h3>Review</h3><p>Edit the text, then download a Typst bundle and compiled PDF.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="container footer"><span>AI Doc Gen</span><span>Built for documents you can verify and revise.</span></footer>
+</body>
+</html>
