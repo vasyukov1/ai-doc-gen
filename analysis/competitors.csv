@@ -1,0 +1,6 @@
+product,category,audience,repository_input,editable_typst,pdf_output,price_usd_month_verified,source,checked,notes
+GitBook,documentation platform,teams,unknown,no,unknown,0,https://www.gitbook.com/pricing,2026-11-02,Free tier; paid site and seat prices vary
+Mintlify,documentation platform,developer teams,unknown,no,unknown,0,https://www.mintlify.com/pricing,2026-11-02,Free Starter tier; Pro listed at USD 450 per month
+ReadMe,API documentation platform,developer teams,unknown,no,yes,0,https://readme.com/pricing,2026-11-02,Free Starter tier; PDF export is listed in comparison table
+General AI chat,workflow substitute,mixed,manual upload or paste,possible through prompting,possible through external tools,,https://chatgpt.com/,2026-11-02,Capabilities and prices not compared in this scan
+Manual writing,workflow substitute,mixed,manual,possible,possible through local tooling,,https://typst.app/docs/reference/pdf/,2026-11-02,Time and skill cost require user research

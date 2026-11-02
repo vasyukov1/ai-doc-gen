@@ -1,0 +1,11 @@
+id,claim,kind,low,high,unit,source,checked,limitations
+E01,GitBook lists a free plan and paid site plans,research,,,,https://www.gitbook.com/pricing,2026-11-02,Vendor list prices can change
+E02,Mintlify lists a free Starter tier and paid Pro tier,research,,,,https://www.mintlify.com/pricing,2026-11-02,Vendor list prices can change
+E03,ReadMe lists a free Starter tier and PDF export in its plan comparison,research,,,,https://readme.com/pricing,2026-11-02,Feature availability by tier must be rechecked
+E04,ISO/IEC/IEEE 29148:2018 covers requirements engineering,research,,,,https://www.iso.org/standard/72089.html,2026-11-02,Summary page does not grant access to full standard
+E05,ISO/IEC/IEEE 42010:2022 covers architecture description,research,,,,https://www.iso.org/standard/74393.html,2026-11-02,Summary page does not establish template conformity
+E06,ISO/IEC/IEEE 26514:2022 covers information for software users,research,,,,https://www.iso.org/standard/77451.html,2026-11-02,Summary page does not grant access to full standard
+E07,Typst compiler can export PDF,open,,,,https://typst.app/docs/reference/pdf/,2026-11-02,Compilation does not validate document content
+H01,Students are the best first niche,assumption,,,,,2026-11-02,Test with interviews and real tasks
+H02,Code-linked claims reduce review effort,assumption,,,,,2026-11-02,Measure correction time in blinded comparison
+H03,A database-backed job queue is sufficient for an initial beta,assumption,,,,,2026-11-02,Revisit after workload measurements
