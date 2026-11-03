@@ -1,3 +1,3 @@
 # Storage
 
-Future PostgreSQL repositories and artifact storage adapters. Keep domain decisions in `internal/documents`.
+This package opens PostgreSQL, applies goose migrations, and persists jobs, inputs, status history, and progress events. Keep document rules in `internal/documents`.

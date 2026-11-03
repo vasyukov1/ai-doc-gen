@@ -14,14 +14,15 @@ internal/platform/           logging, metrics, locks, parsing, transactions,
                              identifiers and validation primitives
 internal/statemachine/       legal job and document state transitions
 internal/storage/            PostgreSQL repositories and artifact storage
+internal/storage/generated/  Jet schema and model code from migrated PostgreSQL
 internal/templates/          versioned document profile and Typst assets
 internal/tests/              integration and end-to-end tests at final milestone
 internal/web/                HTTP routes and temporary HTML UI
 migrations/                  goose SQL migrations
-docker-compose.yaml          local PostgreSQL
+docker-compose.yaml          local PostgreSQL, migrations, web, worker
 go.mod                       module definition
 ```
 
-Use `internal/documents` for orchestration and domain decisions about source files and sections. `internal/storage` persists data without deciding what a document means. `internal/pgqueue` owns queue mechanics, not document rules. `internal/platform` holds only small reusable infrastructure adapters; avoid putting arbitrary helpers there. `internal/web` remains a delivery adapter and may later serve a TypeScript frontend without moving business logic.
+Use `../../internal/documents` for orchestration and domain decisions about source files and sections. `internal/storage` persists data without deciding what a document means. `internal/pgqueue` owns queue mechanics, not document rules. `internal/platform` holds only small reusable infrastructure adapters; avoid putting arbitrary helpers there. `internal/web` remains a delivery adapter and may later serve a TypeScript frontend without moving business logic.
 
 The entry point wires configuration, storage, queue, worker and HTTP components explicitly. A worker mode can run from the same binary. Add Kafka or protobuf only when a concrete integration requires them.

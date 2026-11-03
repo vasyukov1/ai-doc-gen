@@ -1,3 +1,3 @@
 # PostgreSQL queue
 
-Future job claim, lease, heartbeat, retry and recovery operations. Add Go code with the durable-job milestone.
+This package claims jobs with PostgreSQL row locks, maintains worker leases, and records bounded retries and outcomes. It does not decide how to process document content.

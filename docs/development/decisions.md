@@ -2,7 +2,7 @@
 
 ## 2026-11-02 — Start with explicit Go wiring
 
-The first server uses `net/http`, `internal/config`, and a small handler package. Explicit constructors are sufficient for the current dependency graph. Reconsider `uber/fx` only if wiring becomes difficult to understand after real components exist. This avoids adding lifecycle and DI concepts before they solve a concrete problem.
+The first server uses `net/http`, `../../internal/config`, and a small handler package. Explicit constructors are sufficient for the current dependency graph. Reconsider `uber/fx` only if wiring becomes difficult to understand after real components exist. This avoids adding lifecycle and DI concepts before they solve a concrete problem.
 
 ## 2026-11-02 — Persist jobs in PostgreSQL, without Kafka
 
@@ -18,8 +18,12 @@ The user must receive a job ID immediately. Store stage changes and completed se
 
 ## 2026-11-02 — Use requested package boundaries
 
-The entry point is `cmd/ai-doc-gen/main.go`. `internal/documents` owns business logic, `internal/statemachine` owns transition rules, `internal/pgqueue` owns job leases, and `internal/storage` owns persistence. Kafka and protobuf remain reserved until a real interface requires them. Goose migrations live in `migrations/`.
+The entry point is `../../cmd/ai-doc-gen/main.go`. `internal/documents` owns business logic, `internal/statemachine` owns transition rules, `internal/pgqueue` owns job leases, and `internal/storage` owns persistence. Kafka and protobuf remain reserved until a real interface requires them. Goose migrations live in `migrations/`.
 
 ## 2026-11-02 — Defer automated tests to the final milestone
 
 At earlier steps, compile and manually verify the delivered behavior. Add the automated unit, integration, and end-to-end suite after the pipeline and UI are stable, as requested by the product owner. Record manual checks and known gaps in each milestone summary.
+
+## 2026-11-03 — Use Jet for database access
+
+Use Jet v2.16.0 to generate typed table definitions from the goose-migrated PostgreSQL schema. Keep generated files in `internal/storage/generated` and use Jet in `internal/storage` and `internal/pgqueue`. Migrations and their advisory lock remain SQL. Jet improves schema-aware query maintenance; it does not by itself improve query latency. Run migrations once before starting the web and worker processes. Keep the initial queue index until workload measurements justify a change.

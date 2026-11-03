@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ai_doc_gen
       POSTGRES_PASSWORD: local_dev_only
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:${PG_PORT:-5434}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -15,5 +15,47 @@ services:
       timeout: 3s
       retries: 10
 
+  migrate:
+    image: ai-doc-gen:local
+    build: .
+    command: migrate
+    environment:
+      DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    image: ai-doc-gen:local
+    pull_policy: never
+    command: serve
+    environment:
+      DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
+      UPLOAD_DIR: /data/uploads
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:8080"
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    image: ai-doc-gen:local
+    pull_policy: never
+    command: worker
+    environment:
+      DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  uploads:

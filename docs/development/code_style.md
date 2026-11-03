@@ -1,6 +1,6 @@
 # Go code style
 
-Use `gofmt` for syntax formatting and `.editorconfig` for text files. These rules add readable structure that `gofmt` does not choose for us.
+Use `gofmt` for syntax formatting and `../../.editorconfig` for text files. These rules add readable structure that `gofmt` does not choose for us.
 
 ## Function layout
 
@@ -36,6 +36,6 @@ func collectSections(items []Item) ([]Section, error) {
 
 ## Packages and tests
 
-- Put business rules in `internal/documents` and state rules in `internal/statemachine`; keep HTTP handlers and storage adapters thin.
+- Put business rules in `../../internal/documents` and state rules in `internal/statemachine`; keep HTTP handlers and storage adapters thin.
 - Keep interfaces near the package that consumes them. Do not make a generic `utils` package.
 - Automated tests are reserved for the final milestone. When added, use table-driven tests for state transitions, validation, and pure extraction rules. Use integration tests for PostgreSQL and end-to-end tests for the full document flow.

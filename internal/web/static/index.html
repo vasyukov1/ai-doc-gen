@@ -20,29 +20,29 @@
       <div class="hero-copy">
         <p class="eyebrow">Documentation from real project evidence</p>
         <h1 id="hero-title">From source code to a document you can edit.</h1>
-        <p class="lead">Choose a document, provide a public GitHub repository or ZIP archive, and receive Typst source and a PDF. The generation workflow is being built step by step.</p>
+        <p class="lead">Choose a document and provide a public GitHub repository or ZIP archive. Input intake is live; source analysis and document generation are the next steps.</p>
         <div class="hero-tags" aria-label="Planned outputs"><span>Academic documents</span><span>Technical overview</span><span>Typst + PDF</span></div>
       </div>
 
       <div class="panel" aria-labelledby="panel-title">
-        <div class="panel-top"><span class="panel-step">01 / Project input</span><span class="panel-status">Preview</span></div>
+        <div class="panel-top"><span class="panel-step">01 / Project input</span><span class="panel-status">Input intake</span></div>
         <h2 id="panel-title">Start a document</h2>
-        <p class="panel-note">This form previews the planned workflow. Submission arrives in the next development step.</p>
-        <form>
+        <p class="panel-note">Submit input now and follow its status. Document generation is not available yet.</p>
+        <form action="/jobs" method="post" enctype="multipart/form-data">
           <label for="repo">Public GitHub repository</label>
-          <input id="repo" type="url" placeholder="https://github.com/owner/repository" disabled>
+          <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
           <div class="separator"><span>or upload a ZIP archive</span></div>
           <label class="upload" for="archive">Choose a .zip file <span>Source files only</span></label>
-          <input id="archive" type="file" accept=".zip,application/zip" disabled>
+          <input id="archive" name="archive" type="file" accept=".zip,application/zip">
           <label for="profile">Document</label>
-          <select id="profile" disabled><option>Academic document set</option><option>Technical project overview</option></select>
+          <select id="profile" name="profile_id"><option value="academic">Academic document set</option><option value="technical-overview">Technical project overview</option></select>
           <label for="language">Document language</label>
-          <select id="language" disabled><option>English</option><option>Russian</option></select>
+          <select id="language" name="language"><option value="en">English</option><option value="ru">Russian</option></select>
           <label for="description">Short description <span class="optional">Optional</span></label>
-          <textarea id="description" rows="3" placeholder="What should the document emphasize?" disabled></textarea>
-          <button type="button" disabled>Generate document <span aria-hidden="true">→</span></button>
+          <textarea id="description" name="description" rows="3" placeholder="What should the document emphasize?"></textarea>
+          <button type="submit">Submit project input <span aria-hidden="true">→</span></button>
         </form>
-        <p class="form-footnote">Uploads and generation are not enabled in this first infrastructure step.</p>
+        <p class="form-footnote">Maximum ZIP size: 20 MB. A background worker checks the stored input.</p>
       </div>
     </section>
 

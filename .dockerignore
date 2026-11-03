@@ -1,0 +1,7 @@
+.git
+.idea
+.env
+artifacts
+bin
+tmp
+docs

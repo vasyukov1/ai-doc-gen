@@ -1,3 +1,3 @@
 # Domain
 
-Future types for jobs, documents, sources, evidence, sections, and artifacts. Add only types needed by a working milestone.
+This package defines job statuses, source types, and job input types. Add document, evidence, section, and artifact types when their milestones need them.

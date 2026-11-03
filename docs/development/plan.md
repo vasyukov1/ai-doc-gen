@@ -1,30 +1,42 @@
 # Incremental implementation plan
 
-One numbered item equals one Codex implementation request. A future agent should receive the text of one item, read `AGENTS.md` and this directory, implement all its subitems, and report build plus manual smoke results. Do not combine adjacent items. The initial site is local; there is no deployment request.
+One numbered item equals one Codex implementation request. A future agent should receive the text of one item, read `../../AGENTS.md` and this directory, implement all its subitems, and report build plus manual smoke results. Do not combine adjacent items. The initial site is local; there is no deployment request.
 
 ## 1. Foundation and minimal website — implemented in this request
 
-1.1. Create a Go module with `cmd/ai-doc-gen/main.go`, `internal/config`, a small `net/http` server, graceful shutdown, and a health endpoint.
+1.1. Create a Go module with `../../cmd/ai-doc-gen/main.go`, `internal/config`, a small `net/http` server, graceful shutdown, and a health endpoint.
 
 1.2. Add a responsive landing page showing repository/ZIP, profile, language, and optional description controls as a **disabled preview**. The page must say submission is not yet available.
 
-1.3. Add `docker-compose.yaml` for local PostgreSQL, reserve the requested package boundaries, and document them. Keep the web server independent of the database until jobs are implemented.
+1.3. Add `../../docker-compose.yaml` for local PostgreSQL, reserve the requested package boundaries, and document them. Keep the web server independent of the database until jobs are implemented.
 
 **Acceptance:** `go build ./...` succeeds; `/` serves the site and `/healthz` returns `ok`; unfinished controls cannot submit; PostgreSQL starts when Docker is available.
 
-## 2. Durable asynchronous jobs and working submission
+## 2. Durable asynchronous jobs and working submission — implemented in this request
 
-2.1. Add versioned goose migrations for jobs, inputs, progress events, status history, and artifact metadata in `migrations/`. Add a `DATABASE_URL` configuration with startup validation.
+2.1. Add versioned goose migrations for jobs, inputs, progress events, status history, and artifact metadata in `../../migrations`. Add a `DATABASE_URL` configuration with startup validation.
 
 2.2. Implement `POST /jobs` for one public GitHub URL or ZIP upload, optional description, selected document ID, and `ru`/`en`. Validate size, type, and required fields before persisting. Store uploads outside the web root and record a digest.
 
-2.3. Implement a separate `worker` mode in `cmd/ai-doc-gen`. Put job claims, leases, heartbeats, and bounded retries in `internal/pgqueue`. Claim jobs with `FOR UPDATE SKIP LOCKED`. Do not process generation in the HTTP request.
+2.3. Implement a separate `worker` mode in `../../cmd/ai-doc-gen`. Put job claims, leases, heartbeats, and bounded retries in `internal/pgqueue`. Claim jobs with `FOR UPDATE SKIP LOCKED`. Do not process generation in the HTTP request.
 
-2.4. Implement domain types in `internal/domain`, legal status transitions in `internal/statemachine`, and persistence in `internal/storage`. Follow [job_lifecycle.md](job_lifecycle.md): status and stage are separate, and terminal or actionable states are visible promptly. Avoid a state-machine library for this initial flow.
+2.4. Implement domain types in `../../internal/domain`, legal status transitions in `internal/statemachine`, and persistence in `internal/storage`. Follow [job_lifecycle.md](job_lifecycle.md): status and stage are separate, and terminal or actionable states are visible promptly. Avoid a state-machine library for this initial flow.
 
 2.5. Enable the form and add a status page that polls `GET /jobs/{id}`. Show stage, last update, needed input, retry time, and safe failure messages. Mark stale worker leases as recoverable rather than leaving the page indefinitely in `running`.
 
-**Acceptance:** submitting a valid input returns a job ID quickly; the worker advances status; a restart does not lose a queued job; invalid input never enters the queue; a forced worker failure becomes visible. No document is generated yet.
+**Acceptance:** submitting a valid input returns a job ID quickly; the worker advances status to `input_ready`; a restart does not lose a queued job; invalid input never enters the queue; a forced worker failure becomes visible. `input_ready` means the input was stored and checked. No document is generated yet.
+
+## 2.5. Typed database access and local commands — implemented
+
+2.5.1. Generate Jet table types from the goose-migrated PostgreSQL schema. Pin the generator version, keep generated code in the repository, and document regeneration.
+
+2.5.2. Move job and queue queries to Jet while preserving transactions, status history, progress events, leases, and `FOR UPDATE SKIP LOCKED`. Keep goose SQL migrations and PostgreSQL-specific migration locking as SQL.
+
+2.5.3. Keep migration execution separate from web and worker startup. Make queue state and lease updates atomic within their existing transactions.
+
+2.5.4. Add `Makefile` targets `run`, `build`, `test`, `down`, and `mocks`. `run` starts the complete local stack; `down` stops it. `mocks` is a documented placeholder until interfaces need generated mocks.
+
+**Acceptance:** `make build` succeeds; `make run` starts PostgreSQL, web and worker; `make down` stops all three; URL and ZIP jobs still reach `input_ready`; an expired lease can be reclaimed. Do not add automated test files before item 8.
 
 ## 3. Safe source intake and profile-aware file selection
 

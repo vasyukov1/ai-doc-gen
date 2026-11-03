@@ -10,6 +10,7 @@ Keep **status** separate from **stage**. Status controls what the user can do; s
 |---|---|---|
 | `queued` | Waiting for a worker | Show queue position only if it can be measured |
 | `running` | Worker owns a lease | Show current stage and completed sections |
+| `input_ready` | Saved input passed the basic check | State that source inspection and generation are not available yet |
 | `needs_input` | File selection, specification or required metadata is missing | Show a specific action and preserve completed work |
 | `retry_wait` | Transient dependency failure with a scheduled retry | Show the reason and next retry time |
 | `ready_for_review` | Draft sections are available | Let the user inspect and edit them |
@@ -19,7 +20,7 @@ Keep **status** separate from **stage**. Status controls what the user can do; s
 
 Stages are `validating`, `extracting`, `analyzing`, `generating`, and `rendering`. Store `stage`, `updated_at`, `last_heartbeat_at`, `completed_sections`, `total_sections`, and an append-only progress event for meaningful changes. Do not invent a percentage when the work size is unknown.
 
-Implement legal transitions in `internal/statemachine` and enforce them in the storage transaction. A worker lease prevents simultaneous processing; expired leases are recoverable. Repeated work must be idempotent by job, stage and artifact version.
+Implement legal transitions in `../../internal/statemachine` and enforce them in the storage transaction. A worker lease prevents simultaneous processing; expired leases are recoverable. Repeated work must be idempotent by job, stage and artifact version. `input_ready` is the honest stopping point for milestone 2; milestone 3 will move it back to `queued` after source inspection becomes available.
 
 ## Prompt user attention early
 

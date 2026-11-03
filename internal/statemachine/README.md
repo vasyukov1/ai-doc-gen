@@ -1,3 +1,3 @@
 # State machine
 
-Future explicit legal transitions for job status and stage. Start with a small transition table; add a library only when the model becomes hard to audit.
+This package defines legal job-status transitions. Stage remains a separate field. Add a library only if the transition table becomes hard to audit.

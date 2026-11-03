@@ -3,21 +3,75 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/config"
+	"github.com/vasyukov1/ai-doc-gen/internal/documents"
+	"github.com/vasyukov1/ai-doc-gen/internal/pgqueue"
+	"github.com/vasyukov1/ai-doc-gen/internal/platform"
+	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 	"github.com/vasyukov1/ai-doc-gen/internal/web"
 )
 
 func main() {
-	cfg := config.Load()
-	handler, err := web.NewHandler()
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	cfg, err := config.Load()
 	if err != nil {
-		log.Fatalf("create handler: %v", err)
+		return err
+	}
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	connectCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	db, err := storage.Open(connectCtx, cfg.DatabaseURL)
+	cancel()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	if len(os.Args) > 1 && os.Args[1] == "migrate" {
+		migrateCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+
+		return storage.Migrate(migrateCtx, db)
+	}
+
+	jobs := storage.NewRepository(db)
+	queue := pgqueue.New(db)
+
+	if len(os.Args) == 1 || os.Args[1] == "serve" {
+		return serve(ctx, cfg, jobs)
+	}
+	if os.Args[1] == "worker" {
+		owner, err := platform.NewID()
+		if err != nil {
+			return err
+		}
+
+		log.Printf("worker started: %s", owner)
+		return documents.NewWorker(queue, jobs, owner).Run(ctx)
+	}
+
+	return fmt.Errorf("unknown command: %s", os.Args[1])
+}
+
+func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository) error {
+	handler, err := web.NewHandler(jobs, cfg.UploadDir)
+	if err != nil {
+		return err
 	}
 
 	server := &http.Server{
@@ -26,13 +80,12 @@ func main() {
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer stop()
-
 	go func() {
 		<-ctx.Done()
+
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
+
 		if err := server.Shutdown(shutdownCtx); err != nil {
 			log.Printf("server shutdown: %v", err)
 		}
@@ -40,6 +93,8 @@ func main() {
 
 	log.Printf("listening on %s", cfg.HTTPAddr)
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatal(err)
+		return fmt.Errorf("serve HTTP: %w", err)
 	}
+
+	return nil
 }
