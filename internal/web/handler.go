@@ -14,10 +14,11 @@ import (
 var assets embed.FS
 
 type Handler struct {
-	jobs      *storage.Repository
-	uploadDir string
-	jobPage   *template.Template
-	filePage  *template.Template
+	jobs         *storage.Repository
+	uploadDir    string
+	jobPage      *template.Template
+	filePage     *template.Template
+	evidencePage *template.Template
 }
 
 func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error) {
@@ -35,7 +36,12 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 		return nil, fmt.Errorf("load file page: %w", err)
 	}
 
-	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage}
+	evidencePage, err := template.ParseFS(assets, "static/evidence.html")
+	if err != nil {
+		return nil, fmt.Errorf("load evidence page: %w", err)
+	}
+
+	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage}
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handler.health)
@@ -45,6 +51,9 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 	mux.HandleFunc("GET /jobs/{id}", handler.jobPageView)
 	mux.HandleFunc("GET /jobs/{id}/files", handler.filePageView)
 	mux.HandleFunc("POST /jobs/{id}/files", handler.saveFileSelection)
+	mux.HandleFunc("GET /jobs/{id}/evidence", handler.evidenceView)
+	mux.HandleFunc("POST /jobs/{id}/evidence", handler.confirmEvidence)
+	mux.HandleFunc("GET /api/jobs/{id}/evidence", handler.evidenceView)
 	mux.HandleFunc("GET /api/jobs/{id}", handler.jobJSON)
 	mux.HandleFunc("GET /api/jobs/{id}/files", handler.fileJSON)
 	mux.HandleFunc("GET /", handler.home)

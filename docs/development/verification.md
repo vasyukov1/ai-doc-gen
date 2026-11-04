@@ -43,3 +43,13 @@ Checked locally on 2026-11-02. No automated test files were added, as requested.
 - Invalid browser form input returned a readable `400` response.
 
 Still outside this milestone: fetching GitHub contents, inspecting ZIP entries, generating sections, rendering Typst, and testing provider rate limits. The status model and retry behavior for those stages are specified in [job_lifecycle.md](job_lifecycle.md) and will be implemented with their respective milestones.
+
+## Milestone 4 — 2026-11-04
+
+- `go build ./...` and `git diff --check` passed. No automated test files were added, per milestone sequence.
+- Started the existing Colima instance, built the Docker stack, and applied goose migration 4. Generated Jet table/model types for `job_evidence` from PostgreSQL.
+- Submitted a small ZIP with README, Go module and code, package.json, OpenAPI and CI files. Confirmed six files; the worker paused at `needs_input` / `reviewing_evidence`. JSON contained structured module/dependency/script facts, source paths and line spans, explicit excerpts, and separately attributed user description.
+- Rendered the review HTML, saved a correction plus additional context, and confirmed. Original source facts remained unchanged; saved review reached `input_ready` / `evidence_confirmed`. Duplicate review returned HTTP 409.
+- A second identical ZIP with the same selection and description produced the identical complete evidence record and SHA-256 digest. Confirmed evidence and user corrections survived web/worker restart.
+- Removed only the two smoke jobs and their uploaded/extracted files. The local stack remains running.
+- Limits: structured manifest parsing covers Go and package.json. Other manifests, README, API schemas and CI use bounded literal excerpts. Code extraction recognizes common Go/Python/JavaScript declaration prefixes; it does not verify runtime behavior. JSON facts cite files without fabricated line numbers. Extraction limits are visible in review. Browser visual layout, public GitHub extraction in this milestone, and forced analysis lease recovery were not manually exercised; intake and recovery use existing milestone 3 mechanics.

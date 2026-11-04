@@ -31,3 +31,9 @@ Use Jet v2.16.0 to generate typed table definitions from the goose-migrated Post
 ## 2026-11-03 — Pin and inspect source archives
 
 Use the GitHub REST API to resolve the public repository's default branch to a commit SHA, then download the ZIP for that SHA. Follow redirects only to GitHub API or codeload hosts. Inspect ZIP paths and file metadata before extraction, enforce size and entry limits, and unpack only eligible text files into a private worker directory. Persist the inventory and pause at `needs_input` for user selection. A server-side GitHub token is optional; API limits and permanent intake errors are visible to the user.
+
+## 2026-11-04 — Version deterministic evidence and preserve source facts
+
+Milestone 4 extracts evidence only from confirmed selected files. Extractor version `1` sorts paths and manifest keys, verifies each stored file digest, and hashes the canonical unreviewed record. Go and package.json manifests yield structured declarations; README, CI and API schema text remains explicitly labeled excerpts. Source facts cite file paths and lines where accurately known; JSON manifest facts cite the complete file. Extraction never executes project code or infers runtime behavior. Per-file bounds and unknown runtime behavior remain visible in review.
+
+Store one versioned JSON record per job with immutable extracted facts and separate user corrections. Optional submission descriptions and later corrections carry user attribution. Confirming review atomically persists corrections and moves the job to `input_ready` / `evidence_confirmed`; drafting remains unavailable until milestone 5. Worker recovery uses the persisted source inventory to dispatch analysis, avoiding repeated intake or selection loss. An evidence insert never overwrites an existing record.

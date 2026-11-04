@@ -2,6 +2,7 @@ package documents
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"io"
@@ -56,6 +57,16 @@ func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
 	go w.heartbeat(ctx, claim.ID, done)
 	defer close(done)
 
+	inventory, sourceErr := w.jobs.GetInventory(ctx, claim.ID)
+	if sourceErr == nil {
+		w.analyze(ctx, parent, claim, inventory)
+		return
+	}
+	if !errors.Is(sourceErr, sql.ErrNoRows) {
+		w.reportFailure(parent, claim, sourceErr)
+		return
+	}
+
 	input, err := w.jobs.GetInput(ctx, claim.ID)
 	if err != nil {
 		w.reportFailure(parent, claim, err)
@@ -72,7 +83,7 @@ func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
 		return
 	}
 
-	inventory, err := InspectSource(ctx, claim.ID, claim.ProfileID, w.sourceDir, w.token, input)
+	inventory, err = InspectSource(ctx, claim.ID, claim.ProfileID, w.sourceDir, w.token, input)
 	if err != nil {
 		w.reportFailure(parent, claim, err)
 		return
@@ -146,4 +157,24 @@ func (r *contextReader) Read(data []byte) (int, error) {
 	}
 
 	return r.reader.Read(data)
+}
+
+func (w *Worker) analyze(ctx, parent context.Context, claim *pgqueue.Claim, inventory domain.Inventory) {
+	if err := w.queue.Stage(ctx, claim.ID, w.owner, "analyzing", "analyzing", "Extracting source evidence."); err != nil {
+		w.reportFailure(parent, claim, err)
+		return
+	}
+	description, err := w.jobs.Description(ctx, claim.ID)
+	if err != nil {
+		w.reportFailure(parent, claim, err)
+		return
+	}
+	evidence, err := ExtractEvidence(ctx, inventory, description)
+	if err != nil {
+		w.reportFailure(parent, claim, err)
+		return
+	}
+	if err := w.queue.EvidenceReady(ctx, claim.ID, w.owner, evidence); err != nil {
+		w.reportFailure(parent, claim, err)
+	}
 }

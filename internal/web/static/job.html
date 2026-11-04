@@ -29,8 +29,9 @@
       {{if .Job.RequiredAction}}<p class="job-message">Action needed: {{.Job.RequiredAction}}</p>{{end}}
       {{if .Job.ErrorMessage}}<p class="job-error">{{.Job.ErrorMessage}}</p>{{end}}
       {{if .Job.NextRetryAt}}<p class="job-message">Next retry: {{.Job.NextRetryAt.Format "02 Jan 2006 15:04:05 MST"}}</p>{{end}}
-      {{if eq .Job.Status "needs_input"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">Review project files →</a></p>{{end}}
+      {{if eq .Job.Stage "selecting_files"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">Review project files →</a></p>{{end}}
       {{if eq .Job.Stage "source_selected"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">View selected files →</a></p>{{end}}
+      {{if or (eq .Job.Stage "reviewing_evidence") (eq .Job.Stage "evidence_confirmed")}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/evidence">Review project evidence →</a></p>{{end}}
       <p class="job-id">Job ID: {{.Job.ID}}</p>
     </div>
     {{if .Refresh}}<p class="refresh-note">This page refreshes every three seconds.</p>{{end}}

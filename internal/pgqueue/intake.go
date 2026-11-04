@@ -89,3 +89,27 @@ func (q *Queue) InventoryReady(ctx context.Context, id, owner string, inventory 
 
 	return nil
 }
+
+func (q *Queue) EvidenceReady(ctx context.Context, id, owner string, evidence domain.Evidence) error {
+	tx, err := q.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err := checkOwner(ctx, tx, id, owner); err != nil {
+		return err
+	}
+	if err := storage.SaveEvidenceTx(ctx, tx, id, evidence); err != nil {
+		return err
+	}
+	if err := storage.TransitionTx(ctx, tx, id, domain.StatusRunning, domain.StatusNeedsInput, "reviewing_evidence", "evidence_ready", "Review the extracted evidence before drafting."); err != nil {
+		return err
+	}
+	jobs := table.Jobs
+	query, args := jobs.UPDATE(jobs.LeaseOwner, jobs.LeaseUntil, jobs.RequiredAction).SET(postgres.NULL, postgres.NULL, "Review and confirm project evidence.").WHERE(jobs.ID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

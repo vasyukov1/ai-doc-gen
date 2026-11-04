@@ -177,11 +177,11 @@ func (r *Repository) ConfirmSelection(ctx context.Context, id string, paths []st
 		return ErrInvalidSelection
 	}
 
-	if err := TransitionTx(ctx, tx, id, domain.StatusNeedsInput, domain.StatusInputReady,
-		"source_selected", "files_selected", "File selection saved. Evidence extraction is the next step."); err != nil {
+	if err := TransitionTx(ctx, tx, id, domain.StatusNeedsInput, domain.StatusQueued,
+		"analyzing", "files_selected", "File selection saved. Evidence extraction is the next step."); err != nil {
 		return err
 	}
-	update := jobs.UPDATE(jobs.RequiredAction).SET("").
+	update := jobs.UPDATE(jobs.RequiredAction, jobs.Attempts).SET("", 0).
 		WHERE(jobs.ID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID()))
 	query, args = update.Sql()
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {

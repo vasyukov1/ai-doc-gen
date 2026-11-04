@@ -48,7 +48,7 @@ One numbered item equals one Codex implementation request. A future agent should
 
 **Acceptance:** a small public repository and ZIP produce a visible inventory; unsafe archives fail safely; included files and exclusions are explainable.
 
-## 4. Structured project evidence
+## 4. Structured project evidence — implemented
 
 4.1. Extract deterministic facts from repository structure, manifests, README, API schemas, CI files, and selected code. Attach source path and line span when possible.
 

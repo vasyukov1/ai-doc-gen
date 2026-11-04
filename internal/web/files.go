@@ -40,7 +40,7 @@ func (h *Handler) filePageView(w http.ResponseWriter, r *http.Request) {
 		Inventory  domain.Inventory
 		Editable   bool
 		NoEligible bool
-	}{Job: job, Inventory: inventory, Editable: job.Status == domain.StatusNeedsInput && hasEligible,
+	}{Job: job, Inventory: inventory, Editable: job.Status == domain.StatusNeedsInput && job.Stage == "selecting_files" && hasEligible,
 		NoEligible: !hasEligible}); err != nil {
 		log.Printf("render file list %s: %v", job.ID, err)
 	}
@@ -96,7 +96,7 @@ func (h *Handler) saveFileSelection(w http.ResponseWriter, r *http.Request) {
 
 	location := "/jobs/" + job.ID
 	if strings.Contains(r.Header.Get("Accept"), "application/json") {
-		writeJSON(w, http.StatusOK, map[string]string{"status": string(domain.StatusInputReady), "url": location})
+		writeJSON(w, http.StatusOK, map[string]string{"status": string(domain.StatusQueued), "url": location})
 		return
 	}
 
