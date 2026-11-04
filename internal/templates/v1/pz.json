@@ -1,0 +1,171 @@
+{
+  "id": "pz",
+  "version": "academic-1",
+  "academic": true,
+  "ru": "Пояснительная записка",
+  "en": "Explanatory note",
+  "code": "81",
+  "headings": [
+    {
+      "id": "pz-01",
+      "level": 1,
+      "ru": "ВВЕДЕНИЕ",
+      "en": "Introduction",
+      "draft": false
+    },
+    {
+      "id": "pz-02",
+      "level": 2,
+      "ru": "Наименование программы",
+      "en": "Program name",
+      "draft": true
+    },
+    {
+      "id": "pz-03",
+      "level": 2,
+      "ru": "Документ(ы), на основании которого(ых) ведется разработка",
+      "en": "Documents authorizing development",
+      "draft": true
+    },
+    {
+      "id": "pz-04",
+      "level": 1,
+      "ru": "НАЗНАЧЕНИЕ РАЗРАБОТКИ",
+      "en": "Development purpose",
+      "draft": false
+    },
+    {
+      "id": "pz-05",
+      "level": 2,
+      "ru": "Функциональное назначение",
+      "en": "Functional purpose",
+      "draft": true
+    },
+    {
+      "id": "pz-06",
+      "level": 2,
+      "ru": "Эксплуатационное назначение",
+      "en": "Operational purpose",
+      "draft": true
+    },
+    {
+      "id": "pz-07",
+      "level": 2,
+      "ru": "Краткая характеристика области применения программы",
+      "en": "Brief description of the application area",
+      "draft": true
+    },
+    {
+      "id": "pz-08",
+      "level": 1,
+      "ru": "ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ",
+      "en": "Technical characteristics",
+      "draft": false
+    },
+    {
+      "id": "pz-09",
+      "level": 2,
+      "ru": "Постановка задачи на разработку программы",
+      "en": "Program development problem statement",
+      "draft": true
+    },
+    {
+      "id": "pz-10",
+      "level": 2,
+      "ru": "Описание и обоснование выбора состава технических и программных средст",
+      "en": "Description and rationale of hardware and software selection",
+      "draft": false
+    },
+    {
+      "id": "pz-11",
+      "level": 3,
+      "ru": "Состав технических и программных средств",
+      "en": "Hardware and software components",
+      "draft": true
+    },
+    {
+      "id": "pz-12",
+      "level": 3,
+      "ru": "Обоснование выбора технических и программных средств",
+      "en": "Rationale for hardware and software selection",
+      "draft": true
+    },
+    {
+      "id": "pz-13",
+      "level": 2,
+      "ru": "Описание и обоснование архитектуры программы",
+      "en": "Description and rationale of program architecture",
+      "draft": true
+    },
+    {
+      "id": "pz-14",
+      "level": 2,
+      "ru": "Особенности функционала",
+      "en": "Functional characteristics",
+      "draft": false
+    },
+    {
+      "id": "pz-15",
+      "level": 3,
+      "ru": "Основной сценарий работы",
+      "en": "Main usage scenario",
+      "draft": true
+    },
+    {
+      "id": "pz-16",
+      "level": 2,
+      "ru": "Обоснование выбора метода организации входных и выходных данных",
+      "en": "Rationale for input and output organization",
+      "draft": true
+    },
+    {
+      "id": "pz-17",
+      "level": 1,
+      "ru": "ОЖИДАЕМЫЕ ТЕХНИКО-ЭКОНОМИЧЕСКИЕ ПОКАЗАТЕЛИ",
+      "en": "Expected technical and economic indicators",
+      "draft": false
+    },
+    {
+      "id": "pz-18",
+      "level": 2,
+      "ru": "Ориентировочная экономическая эффективность",
+      "en": "Estimated economic efficiency",
+      "draft": true
+    },
+    {
+      "id": "pz-19",
+      "level": 2,
+      "ru": "Предполагаемая потребность",
+      "en": "Expected demand",
+      "draft": true
+    },
+    {
+      "id": "pz-20",
+      "level": 2,
+      "ru": "Экономические преимущества разработки по сравнению с отечественными и зарубежными аналогами",
+      "en": "Economic advantages over domestic and foreign alternatives",
+      "draft": true
+    },
+    {
+      "id": "pz-21",
+      "level": 1,
+      "ru": "ПРИЛОЖЕНИЕ 1. СПИСОК ИСПОЛЬЗУЕМОЙ ЛИТЕРАТУРЫ",
+      "en": "Appendix 1. References",
+      "draft": true
+    },
+    {
+      "id": "pz-22",
+      "level": 1,
+      "ru": "ПРИЛОЖЕНИЕ 2. ССЫЛКИ НА АНАЛОГИ",
+      "en": "Appendix 2. Links to comparable products",
+      "draft": true
+    },
+    {
+      "id": "pz-23",
+      "level": 1,
+      "ru": "ПРИЛОЖЕНИЕ 3. ТЕРМИНОЛОГИЯ",
+      "en": "Appendix 3. Terminology",
+      "draft": true
+    }
+  ]
+}

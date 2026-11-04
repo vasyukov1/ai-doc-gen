@@ -1,0 +1,339 @@
+{
+  "id": "tz",
+  "version": "academic-1",
+  "academic": true,
+  "ru": "Техническое задание",
+  "en": "Technical specification",
+  "code": "ТЗ",
+  "headings": [
+    {
+      "id": "tz-01",
+      "level": 1,
+      "ru": "ВВЕДЕНИЕ",
+      "en": "Introduction",
+      "draft": false
+    },
+    {
+      "id": "tz-02",
+      "level": 2,
+      "ru": "Наименование программы",
+      "en": "Program name",
+      "draft": true
+    },
+    {
+      "id": "tz-03",
+      "level": 2,
+      "ru": "Краткая характеристика области применения программы",
+      "en": "Brief description of the application area",
+      "draft": true
+    },
+    {
+      "id": "tz-04",
+      "level": 1,
+      "ru": "ОСНОВАНИЯ ДЛЯ РАЗРАБОТКИ",
+      "en": "Basis for development",
+      "draft": false
+    },
+    {
+      "id": "tz-05",
+      "level": 2,
+      "ru": "Документ(ы), на основании которого(ых) ведется разработка",
+      "en": "Documents authorizing development",
+      "draft": true
+    },
+    {
+      "id": "tz-06",
+      "level": 2,
+      "ru": "Наименование темы разработки",
+      "en": "Development topic",
+      "draft": true
+    },
+    {
+      "id": "tz-07",
+      "level": 1,
+      "ru": "НАЗНАЧЕНИЕ РАЗРАБОТКИ",
+      "en": "Development purpose",
+      "draft": false
+    },
+    {
+      "id": "tz-08",
+      "level": 2,
+      "ru": "Функциональное назначение",
+      "en": "Functional purpose",
+      "draft": true
+    },
+    {
+      "id": "tz-09",
+      "level": 2,
+      "ru": "Эксплуатационное назначение",
+      "en": "Operational purpose",
+      "draft": true
+    },
+    {
+      "id": "tz-10",
+      "level": 1,
+      "ru": "ТРЕБОВАНИЯ К ПРОГРАММЕ",
+      "en": "Program requirements",
+      "draft": false
+    },
+    {
+      "id": "tz-11",
+      "level": 2,
+      "ru": "Требования к функциональным характеристикам",
+      "en": "Functional requirements",
+      "draft": false
+    },
+    {
+      "id": "tz-12",
+      "level": 3,
+      "ru": "Требования к составу выполняемых функций",
+      "en": "Required functions",
+      "draft": true
+    },
+    {
+      "id": "tz-13",
+      "level": 3,
+      "ru": "Требования к организации входных данных",
+      "en": "Input organization requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-14",
+      "level": 3,
+      "ru": "Требования к организации выходных данных",
+      "en": "Output organization requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-15",
+      "level": 3,
+      "ru": "Требования к временным характеристикам",
+      "en": "Timing requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-16",
+      "level": 3,
+      "ru": "Требования к интерфейсу",
+      "en": "Interface requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-17",
+      "level": 2,
+      "ru": "Требования к надежности",
+      "en": "Reliability requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-18",
+      "level": 2,
+      "ru": "Условия эксплуатации",
+      "en": "Operating conditions",
+      "draft": false
+    },
+    {
+      "id": "tz-19",
+      "level": 3,
+      "ru": "Климатические условия эксплуатации",
+      "en": "Environmental operating conditions",
+      "draft": true
+    },
+    {
+      "id": "tz-20",
+      "level": 3,
+      "ru": "Требования к видам обслуживания",
+      "en": "Maintenance requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-21",
+      "level": 3,
+      "ru": "Требования к численности и квалификации персонала",
+      "en": "Personnel count and qualification requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-22",
+      "level": 2,
+      "ru": "Требования к составу и параметрам технических средств",
+      "en": "Hardware configuration and parameters",
+      "draft": false
+    },
+    {
+      "id": "tz-23",
+      "level": 3,
+      "ru": "Программные средства",
+      "en": "Software tools",
+      "draft": true
+    },
+    {
+      "id": "tz-24",
+      "level": 3,
+      "ru": "Технические средства",
+      "en": "Hardware resources",
+      "draft": true
+    },
+    {
+      "id": "tz-25",
+      "level": 2,
+      "ru": "Требования к информационной и программной совместимости",
+      "en": "Data and software compatibility requirements",
+      "draft": false
+    },
+    {
+      "id": "tz-26",
+      "level": 3,
+      "ru": "Требования к информационным структурам и методам решения",
+      "en": "Data structures and solution methods",
+      "draft": true
+    },
+    {
+      "id": "tz-27",
+      "level": 3,
+      "ru": "Требования к программным средствам, используемым программой",
+      "en": "Required supporting software",
+      "draft": true
+    },
+    {
+      "id": "tz-28",
+      "level": 3,
+      "ru": "Требования к исходным кодам и языкам программирования",
+      "en": "Source code and programming language requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-29",
+      "level": 3,
+      "ru": "Требования к защите информации и программы",
+      "en": "Information and program protection requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-30",
+      "level": 2,
+      "ru": "Требования к маркировке и упаковке",
+      "en": "Labeling and packaging requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-31",
+      "level": 2,
+      "ru": "Требования к транспортированию и хранению",
+      "en": "Transport and storage requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-32",
+      "level": 2,
+      "ru": "Специальные требования",
+      "en": "Special requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-33",
+      "level": 1,
+      "ru": "ТРЕБОВАНИЯ К ПРОГРАММНОЙ ДОКУМЕНТАЦИИ",
+      "en": "Software documentation requirements",
+      "draft": false
+    },
+    {
+      "id": "tz-34",
+      "level": 2,
+      "ru": "Состав программной документации",
+      "en": "Software documentation set",
+      "draft": true
+    },
+    {
+      "id": "tz-35",
+      "level": 2,
+      "ru": "Специальные требования к программной документации",
+      "en": "Special documentation requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-36",
+      "level": 1,
+      "ru": "ТЕХНИКО-ЭКОНОМИЧЕСКИЕ ПОКАЗАТЕЛИ",
+      "en": "Technical and economic indicators",
+      "draft": false
+    },
+    {
+      "id": "tz-37",
+      "level": 2,
+      "ru": "Предполагаемая потребность",
+      "en": "Expected demand",
+      "draft": true
+    },
+    {
+      "id": "tz-38",
+      "level": 2,
+      "ru": "Целевая аудитория",
+      "en": "Target audience",
+      "draft": true
+    },
+    {
+      "id": "tz-39",
+      "level": 2,
+      "ru": "Преимущества перед аналогами",
+      "en": "Advantages over comparable products",
+      "draft": true
+    },
+    {
+      "id": "tz-40",
+      "level": 1,
+      "ru": "СТАДИИ И ЭТАПЫ РАЗРАБОТКИ",
+      "en": "Development stages and phases",
+      "draft": false
+    },
+    {
+      "id": "tz-41",
+      "level": 2,
+      "ru": "Стадии разработки, этапы и содержание работ",
+      "en": "Development stages, phases and work scope",
+      "draft": true
+    },
+    {
+      "id": "tz-42",
+      "level": 2,
+      "ru": "Сроки разработки и исполнители",
+      "en": "Development schedule and contributors",
+      "draft": true
+    },
+    {
+      "id": "tz-43",
+      "level": 1,
+      "ru": "ПОРЯДОК КОНТРОЛЯ И ПРИЕМКИ",
+      "en": "Control and acceptance procedure",
+      "draft": false
+    },
+    {
+      "id": "tz-44",
+      "level": 2,
+      "ru": "Виды испытаний",
+      "en": "Types of testing",
+      "draft": true
+    },
+    {
+      "id": "tz-45",
+      "level": 2,
+      "ru": "Общие требования к приемке работы",
+      "en": "General acceptance requirements",
+      "draft": true
+    },
+    {
+      "id": "tz-46",
+      "level": 1,
+      "ru": "СПИСОК ИСПОЛЬЗУЕМОЙ ЛИТЕРАТУРЫ",
+      "en": "References",
+      "draft": true
+    },
+    {
+      "id": "tz-47",
+      "level": 1,
+      "ru": "ПРИЛОЖЕНИЕ. ССЫЛКИ НА АНАЛОГИ",
+      "en": "Appendix. Links to comparable products",
+      "draft": true
+    }
+  ]
+}

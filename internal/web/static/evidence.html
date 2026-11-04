@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Project evidence</title><link rel="stylesheet" href="/assets/style.css"></head>
-<body><main class="container job-main"><a href="/jobs/{{.Job.ID}}">← Job status</a><div class="job-panel"><h1>Project evidence</h1>
+<body><main class="container job-main"><a href="/jobs/{{.Job.ID}}">← Job status</a><div class="job-panel"><h1>Project evidence</h1><p><a href="/jobs/{{.Job.ID}}/document">Document input and PDF / Typst rendering</a></p>
 <p>These are literal declarations and excerpts, not verified runtime behavior. Only selected files were inspected. Records contain at most 1000 extracted facts. Go and package.json manifests are parsed into at most 500 facts each. Manifest values over 4000 bytes are omitted. JSON facts cite the complete source file. Other files show at most 20 declarations or nonempty excerpt lines; lines longer than 300 bytes are omitted.</p>
 <p>Extractor version {{.Evidence.Version}} · {{len .Evidence.Selection}} selected files</p>
 {{if .Evidence.Confirmed}}<p>Review confirmed. Open draft sections from the job status page.</p>{{else}}<p>Review obvious gaps. Corrections are attributed to you and preserve the original source facts. Leave a correction blank to keep the original.</p>{{end}}

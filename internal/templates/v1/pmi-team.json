@@ -1,0 +1,171 @@
+{
+  "id": "pmi-team",
+  "version": "academic-1",
+  "academic": true,
+  "ru": "Программа и методика испытаний (командная)",
+  "en": "Test plan and methodology (team)",
+  "code": "51",
+  "headings": [
+    {
+      "id": "pmi-team-01",
+      "level": 1,
+      "ru": "ОБЪЕКТ ИСПЫТАНИЙ",
+      "en": "Test object",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-02",
+      "level": 2,
+      "ru": "Наименование программы",
+      "en": "Program name",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-03",
+      "level": 2,
+      "ru": "Краткая характеристика области применения программы",
+      "en": "Brief description of the application area",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-04",
+      "level": 1,
+      "ru": "ЦЕЛЬ ИСПЫТАНИЙ",
+      "en": "Test objectives",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-05",
+      "level": 1,
+      "ru": "ТРЕБОВАНИЯ К ПРОГРАММЕ",
+      "en": "Program requirements",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-06",
+      "level": 2,
+      "ru": "Требования к функциональным характеристикам",
+      "en": "Functional requirements",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-07",
+      "level": 3,
+      "ru": "Состав выполняемых функций",
+      "en": "Provided functions",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-08",
+      "level": 2,
+      "ru": "Требования к входным и выходным данным",
+      "en": "Input and output data requirements",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-09",
+      "level": 3,
+      "ru": "Организация  входных данных",
+      "en": "Input data organization",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-10",
+      "level": 3,
+      "ru": "Организация выходных данных",
+      "en": "Output data organization",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-11",
+      "level": 2,
+      "ru": "Требования к интерфейсу",
+      "en": "Interface requirements",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-12",
+      "level": 1,
+      "ru": "ТРЕБОВАНИЯ К ПРОГРАММНОЙ ДОКУМЕНТАЦИИ",
+      "en": "Software documentation requirements",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-13",
+      "level": 1,
+      "ru": "СРЕДСТВА И ПОРЯДОК ИСПЫТАНИЙ",
+      "en": "Test resources and procedure",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-14",
+      "level": 2,
+      "ru": "Технические средства",
+      "en": "Hardware resources",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-15",
+      "level": 2,
+      "ru": "Программные средства",
+      "en": "Software tools",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-16",
+      "level": 2,
+      "ru": "Порядок проведения испытаний",
+      "en": "Test execution procedure",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-17",
+      "level": 2,
+      "ru": "Требования к персоналу",
+      "en": "Personnel requirements",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-18",
+      "level": 1,
+      "ru": "МЕТОДЫ ИСПЫТАНИЙ",
+      "en": "Test methods",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-19",
+      "level": 2,
+      "ru": "Проверка требований к технической документации",
+      "en": "Technical documentation verification",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-20",
+      "level": 2,
+      "ru": "Проверка требований к интерфейсу",
+      "en": "Interface requirements verification",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-21",
+      "level": 2,
+      "ru": "Проверка требований к функциональным характеристикам",
+      "en": "Functional requirements verification",
+      "draft": false
+    },
+    {
+      "id": "pmi-team-22",
+      "level": 3,
+      "ru": "Основной интеграционный сценарий",
+      "en": "Main integration scenario",
+      "draft": true
+    },
+    {
+      "id": "pmi-team-23",
+      "level": 1,
+      "ru": "СПИСОК ИСПОЛЬЗУЕМОЙ ЛИТЕРАТУРЫ",
+      "en": "References",
+      "draft": true
+    }
+  ]
+}

@@ -22,6 +22,19 @@ func (w *Worker) generate(ctx, parent context.Context, claim *pgqueue.Claim, evi
 		w.generationFailure(parent, claim, err)
 		return
 	}
+	documentInput, inputErr := w.jobs.DocumentInput(ctx, claim.ID)
+	if inputErr != nil {
+		w.generationFailure(parent, claim, &ProviderError{Code: "document_input", Message: "Provide document metadata and a technical specification before generation."})
+		return
+	}
+	if _, inputErr = ValidateDocumentInput(documentInput, job.ProfileID, job.Language); inputErr != nil {
+		w.generationFailure(parent, claim, &ProviderError{Code: "document_input", Message: inputErr.Error()})
+		return
+	}
+	if documentInput.Specification != "" {
+		evidence.Facts = append([]domain.Fact{{ID: "technical_specification", Kind: "specification", Value: documentInput.Specification, Provenance: "user"}}, evidence.Facts...)
+	}
+
 	sections, err := w.jobs.Sections(ctx, claim.ID)
 	if err != nil {
 		w.generationFailure(parent, claim, err)
@@ -45,6 +58,10 @@ func (w *Worker) generate(ctx, parent context.Context, claim *pgqueue.Claim, evi
 	provider, model := adapter.Identity()
 	provider += "/account/" + storage.CredentialScope(key)
 	plan := Plan(job.ProfileID, job.Language)
+	if len(plan) == 0 {
+		w.generationFailure(parent, claim, &ProviderError{Code: "profile_obsolete", Message: "This legacy profile is unavailable. Submit the project using a specific document variant."})
+		return
+	}
 	if err := w.queue.SectionTotal(ctx, claim.ID, w.owner, len(plan)); err != nil {
 		w.generationFailure(parent, claim, err)
 		return

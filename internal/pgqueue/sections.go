@@ -38,7 +38,7 @@ func (q *Queue) SaveSection(ctx context.Context, id, owner string, position, tot
 }
 
 func (q *Queue) DraftReady(ctx context.Context, id, owner string) error {
-	return q.finish(ctx, id, owner, domain.StatusReadyForReview, "draft_ready", "Draft sections are ready for review. Rendering is not available yet.", "", "")
+	return q.finish(ctx, id, owner, domain.StatusReadyForReview, "draft_ready", "Draft sections are ready. Review them and provide document metadata to render Typst and PDF.", "", "")
 }
 
 func (q *Queue) SectionTotal(ctx context.Context, id, owner string, total int) error {

@@ -2,6 +2,7 @@ package documents
 
 import (
 	"errors"
+	"github.com/vasyukov1/ai-doc-gen/internal/templates"
 	"net/url"
 	"path"
 	"regexp"
@@ -30,7 +31,7 @@ func ValidateRequest(request Request) (Request, error) {
 	if request.GitHubURL != "" && request.HasArchive {
 		return Request{}, errors.New("provide one GitHub URL or ZIP archive")
 	}
-	if request.ProfileID != "academic" && request.ProfileID != "technical-overview" {
+	if _, err := templates.Load(request.ProfileID); err != nil {
 		return Request{}, errors.New("choose a document profile")
 	}
 	if request.Language != "en" && request.Language != "ru" {

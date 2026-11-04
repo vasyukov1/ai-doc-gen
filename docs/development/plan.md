@@ -72,7 +72,7 @@ One numbered item equals one Codex implementation request. A future agent should
 
 **Acceptance:** a real small repository yields reviewable, source-linked sections in Russian or English; a repeated identical request can reuse cached sections; unsupported claims are flagged; rate limits and partial results are visible without waiting for the whole job.
 
-## 6. Academic and technical Typst profiles
+## 6. Academic and technical Typst profiles — implemented; live model quality remains unverified
 
 6.1. Port the existing five academic document variants as versioned assets in this repository. Keep their section order and title-page structure. Accept the technical specification from upload or a structured web form.
 
@@ -83,6 +83,8 @@ One numbered item equals one Codex implementation request. A future agent should
 6.4. Render user-reviewed sections into Typst without allowing uploaded text to execute arbitrary Typst functions. Compile in an isolated worker with pinned Typst and bundled fonts/assets.
 
 **Acceptance:** every selected document compiles in both languages; mandatory headings and title-page fields are present; missing source material remains visible; exported Typst can reproduce the PDF.
+
+Implemented with explicit variant/leaf plans and preserved academic heading hierarchy. Minimal capability-protected retrieval is included solely to inspect rendered milestone 6 artifacts. Full ownership, retention, cancellation and lifecycle work remains milestone 7. Manual verification and provider limitations are recorded in [verification.md](verification.md).
 
 ## 7. Review, artifacts, and lifecycle
 

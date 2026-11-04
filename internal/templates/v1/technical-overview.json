@@ -1,0 +1,38 @@
+{
+  "id": "technical-overview",
+  "version": "technical-1",
+  "academic": false,
+  "ru": "Технический обзор проекта",
+  "en": "Technical project overview",
+  "code": "",
+  "headings": [
+    {
+      "id": "overview",
+      "level": 1,
+      "ru": "Обзор проекта",
+      "en": "Project overview",
+      "draft": true
+    },
+    {
+      "id": "architecture",
+      "level": 1,
+      "ru": "Архитектура и реализация",
+      "en": "Architecture and implementation",
+      "draft": true
+    },
+    {
+      "id": "interfaces",
+      "level": 1,
+      "ru": "Интерфейсы и зависимости",
+      "en": "Interfaces and dependencies",
+      "draft": true
+    },
+    {
+      "id": "verification",
+      "level": 1,
+      "ru": "Проверка и ограничения",
+      "en": "Verification and limitations",
+      "draft": true
+    }
+  ]
+}

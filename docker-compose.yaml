@@ -38,6 +38,7 @@ services:
       - "127.0.0.1:${HTTP_PORT:-8080}:8080"
     volumes:
       - uploads:/data/uploads
+      - sources:/data/sources:ro
     depends_on:
       migrate:
         condition: service_completed_successfully

@@ -123,5 +123,11 @@ func (r *Repository) ChangeSection(ctx context.Context, id, sectionID, body stri
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return err
 	}
+	documentInput := table.JobDocumentInputs
+	query, args = documentInput.UPDATE(documentInput.Reviewed, documentInput.CapabilityHash).SET(false, "").WHERE(documentInput.JobID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return err
+	}
+
 	return tx.Commit()
 }

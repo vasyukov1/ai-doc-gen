@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/vasyukov1/ai-doc-gen/internal/documents"
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 )
@@ -50,6 +51,16 @@ func (h *Handler) confirmEvidence(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Cross-origin request rejected.", 403)
 		return
 	}
+	input, inputErr := h.jobs.DocumentInput(r.Context(), job.ID)
+	if inputErr != nil {
+		http.Error(w, "Save document metadata and specification on the document input page before confirming evidence.", 409)
+		return
+	}
+	if _, inputErr = documents.ValidateDocumentInput(input, job.ProfileID, job.Language); inputErr != nil {
+		http.Error(w, inputErr.Error(), 400)
+		return
+	}
+
 	r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Could not read evidence review.", http.StatusBadRequest)

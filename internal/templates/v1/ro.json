@@ -1,0 +1,108 @@
+{
+  "id": "ro",
+  "version": "academic-1",
+  "academic": true,
+  "ru": "Руководство оператора",
+  "en": "Operator’s manual",
+  "code": "34",
+  "headings": [
+    {
+      "id": "ro-01",
+      "level": 1,
+      "ru": "НАЗНАЧЕНИЕ ПРОГРАММЫ",
+      "en": "Program purpose",
+      "draft": false
+    },
+    {
+      "id": "ro-02",
+      "level": 2,
+      "ru": "Функциональное назначение",
+      "en": "Functional purpose",
+      "draft": true
+    },
+    {
+      "id": "ro-03",
+      "level": 2,
+      "ru": "Эксплуатационное назначение",
+      "en": "Operational purpose",
+      "draft": true
+    },
+    {
+      "id": "ro-04",
+      "level": 1,
+      "ru": "УСЛОВИЯ ВЫПОЛНЕНИЯ ПРОГРАММЫ",
+      "en": "Program operating conditions",
+      "draft": false
+    },
+    {
+      "id": "ro-05",
+      "level": 2,
+      "ru": "Минимальный состав аппаратных средств",
+      "en": "Minimum hardware requirements",
+      "draft": true
+    },
+    {
+      "id": "ro-06",
+      "level": 2,
+      "ru": "Минимальный состав программных средств",
+      "en": "Minimum software requirements",
+      "draft": true
+    },
+    {
+      "id": "ro-07",
+      "level": 2,
+      "ru": "Требования к персоналу (пользователю)",
+      "en": "Personnel and user requirements",
+      "draft": true
+    },
+    {
+      "id": "ro-08",
+      "level": 1,
+      "ru": "Выполнение программы",
+      "en": "Program execution",
+      "draft": false
+    },
+    {
+      "id": "ro-09",
+      "level": 2,
+      "ru": "Установка программы",
+      "en": "Program installation",
+      "draft": true
+    },
+    {
+      "id": "ro-10",
+      "level": 2,
+      "ru": "Запуск программы и работа с приложением",
+      "en": "Starting and using the application",
+      "draft": false
+    },
+    {
+      "id": "ro-11",
+      "level": 3,
+      "ru": "Основной сценарий работы",
+      "en": "Main usage scenario",
+      "draft": true
+    },
+    {
+      "id": "ro-12",
+      "level": 1,
+      "ru": "СООБЩЕНИЯ ОПЕРАТОРУ",
+      "en": "Operator messages",
+      "draft": false
+    },
+    {
+      "id": "ro-13",
+      "level": 2,
+      "ru": "Тексты сообщений оператору",
+      "en": "Operator message texts",
+      "draft": true
+    },
+    {
+      "id": "ro-14",
+      "level": 2,
+      "ru": "Действия оператора в исключительных ситуациях",
+      "en": "Operator actions in exceptional situations",
+      "draft": true
+    }
+  ]
+}

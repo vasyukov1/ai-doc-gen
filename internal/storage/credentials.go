@@ -84,6 +84,15 @@ func (r *Repository) RetryGeneration(ctx context.Context, id, key, master string
 	if status != domain.StatusFailed {
 		return ErrSectionConflict
 	}
+	inputs := table.JobDocumentInputs
+	query, args = inputs.SELECT(inputs.Reviewed).WHERE(inputs.JobID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
+	var rendering bool
+	if err := tx.QueryRowContext(ctx, query, args...).Scan(&rendering); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	if rendering {
+		return ErrSectionConflict
+	}
 	credentials := table.JobGenerationCredentials
 	query, args = credentials.SELECT(credentials.Model).WHERE(credentials.JobID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
 	var model string

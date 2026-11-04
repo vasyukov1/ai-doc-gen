@@ -18,7 +18,7 @@
     <a class="back-link" href="/">← New input</a>
     <div class="job-panel">
       <p class="eyebrow">Project input</p>
-      <h1>Job status</h1>
+      <h1>Job status</h1><p><a href="/jobs/{{.Job.ID}}/document">Document input and PDF / Typst rendering</a></p>
       <p class="job-intro">The project is inspected in the background. Review its files when the inventory is ready. Confirm evidence to generate draft sections. Typst and PDF are not available yet.</p>
       <div class="status-row"><span>Status</span><strong>{{if .Job.RecoveryPending}}Recovering{{else}}{{.Job.Status}}{{end}}</strong></div>
       {{if .Job.Stage}}<div class="status-row"><span>Stage</span><strong>{{.Job.Stage}}</strong></div>{{end}}

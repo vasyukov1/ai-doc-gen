@@ -52,12 +52,22 @@ func (w *Worker) Run(ctx context.Context) error {
 }
 
 func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
-	ctx, cancel := context.WithTimeout(parent, 10*time.Minute)
+	ctx, cancel := context.WithTimeout(parent, 60*time.Minute)
 	defer cancel()
 
 	done := make(chan struct{})
 	go w.heartbeat(ctx, claim.ID, done)
 	defer close(done)
+
+	renderInput, renderErr := w.jobs.DocumentInput(ctx, claim.ID)
+	if renderErr == nil && renderInput.Reviewed {
+		w.render(ctx, parent, claim, renderInput)
+		return
+	}
+	if renderErr != nil && !errors.Is(renderErr, sql.ErrNoRows) {
+		w.reportFailure(parent, claim, renderErr)
+		return
+	}
 
 	evidence, evidenceErr := w.jobs.GetEvidence(ctx, claim.ID)
 	if evidenceErr == nil && evidence.Confirmed {
