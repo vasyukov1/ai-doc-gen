@@ -41,7 +41,7 @@ func (q *Queue) Claim(ctx context.Context, owner string) (*Claim, error) {
 		OR(jobs.Status.EQ(postgres.String(string(domain.StatusRunning))).
 			AND(jobs.LeaseUntil.LT(postgres.NOW())))
 	stmt := jobs.SELECT(jobs.ID, jobs.Status, jobs.ProfileID, jobs.Attempts, jobs.MaxAttempts).
-		WHERE(available).
+		WHERE(available.AND(jobs.OwnerHash.IS_NOT_NULL()).AND(jobs.PurgeAfter.IS_NULL()).AND(jobs.ExpiresAt.IS_NULL().OR(jobs.ExpiresAt.GT(postgres.NOW())))).
 		ORDER_BY(jobs.CreatedAt).
 		LIMIT(1).
 		FOR(postgres.UPDATE().SKIP_LOCKED())

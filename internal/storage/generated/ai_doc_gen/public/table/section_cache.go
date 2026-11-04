@@ -17,8 +17,9 @@ type sectionCacheTable struct {
 	postgres.Table
 
 	// Columns
-	CacheKey postgres.ColumnString
-	Record   postgres.ColumnString
+	CacheKey  postgres.ColumnString
+	Record    postgres.ColumnString
+	CreatedAt postgres.ColumnTimestampz
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -60,19 +61,21 @@ func newSectionCacheTable(schemaName, tableName, alias string) *SectionCacheTabl
 
 func newSectionCacheTableImpl(schemaName, tableName, alias string) sectionCacheTable {
 	var (
-		CacheKeyColumn = postgres.StringColumn("cache_key")
-		RecordColumn   = postgres.StringColumn("record")
-		allColumns     = postgres.ColumnList{CacheKeyColumn, RecordColumn}
-		mutableColumns = postgres.ColumnList{RecordColumn}
-		defaultColumns = postgres.ColumnList{}
+		CacheKeyColumn  = postgres.StringColumn("cache_key")
+		RecordColumn    = postgres.StringColumn("record")
+		CreatedAtColumn = postgres.TimestampzColumn("created_at")
+		allColumns      = postgres.ColumnList{CacheKeyColumn, RecordColumn, CreatedAtColumn}
+		mutableColumns  = postgres.ColumnList{RecordColumn, CreatedAtColumn}
+		defaultColumns  = postgres.ColumnList{CreatedAtColumn}
 	)
 
 	return sectionCacheTable{
 		Table: postgres.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		CacheKey: CacheKeyColumn,
-		Record:   RecordColumn,
+		CacheKey:  CacheKeyColumn,
+		Record:    RecordColumn,
+		CreatedAt: CreatedAtColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

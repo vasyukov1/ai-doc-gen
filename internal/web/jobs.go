@@ -15,6 +15,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/documents"
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
@@ -28,6 +29,11 @@ var errArchiveTooLarge = errors.New("ZIP archive is too large")
 var errArchiveInvalid = errors.New("file is not a ZIP archive")
 
 func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
+	owner, err := ownerCookie(w, r, true)
+	if err != nil {
+		http.Error(w, "Could not create private session.", 503)
+		return
+	}
 	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBytes)
 	if err := r.ParseMultipartForm(1 << 20); err != nil {
 		var sizeError *http.MaxBytesError
@@ -87,6 +93,7 @@ func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
 	}
 
 	job := domain.NewJob{
+		OwnerHash: owner, ExpiresAt: time.Now().Add(h.retention),
 		ID: id, ProfileID: request.ProfileID, Language: request.Language,
 		Description: request.Description, Input: input,
 	}

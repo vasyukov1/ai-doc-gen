@@ -25,6 +25,7 @@ const (
 
 type Job struct {
 	ID                string     `json:"id"`
+	ExpiresAt         *time.Time `json:"expires_at,omitempty"`
 	Status            Status     `json:"status"`
 	Stage             string     `json:"stage"`
 	ProfileID         string     `json:"profile_id"`
@@ -52,6 +53,8 @@ type Input struct {
 }
 
 type NewJob struct {
+	OwnerHash   string
+	ExpiresAt   time.Time
 	ID          string
 	ProfileID   string
 	Language    string

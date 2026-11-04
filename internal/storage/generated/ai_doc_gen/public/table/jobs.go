@@ -36,6 +36,10 @@ type jobsTable struct {
 	TotalSections     postgres.ColumnInteger
 	CreatedAt         postgres.ColumnTimestampz
 	UpdatedAt         postgres.ColumnTimestampz
+	OwnerHash         postgres.ColumnString
+	ExpiresAt         postgres.ColumnTimestampz
+	PurgeAfter        postgres.ColumnTimestampz
+	ResumeStatus      postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -96,8 +100,12 @@ func newJobsTableImpl(schemaName, tableName, alias string) jobsTable {
 		TotalSectionsColumn     = postgres.IntegerColumn("total_sections")
 		CreatedAtColumn         = postgres.TimestampzColumn("created_at")
 		UpdatedAtColumn         = postgres.TimestampzColumn("updated_at")
-		allColumns              = postgres.ColumnList{IDColumn, StatusColumn, StageColumn, ProfileIDColumn, LanguageColumn, DescriptionColumn, AttemptsColumn, MaxAttemptsColumn, LeaseOwnerColumn, LeaseUntilColumn, LastHeartbeatAtColumn, NextRetryAtColumn, ErrorCodeColumn, ErrorMessageColumn, RequiredActionColumn, CompletedSectionsColumn, TotalSectionsColumn, CreatedAtColumn, UpdatedAtColumn}
-		mutableColumns          = postgres.ColumnList{StatusColumn, StageColumn, ProfileIDColumn, LanguageColumn, DescriptionColumn, AttemptsColumn, MaxAttemptsColumn, LeaseOwnerColumn, LeaseUntilColumn, LastHeartbeatAtColumn, NextRetryAtColumn, ErrorCodeColumn, ErrorMessageColumn, RequiredActionColumn, CompletedSectionsColumn, TotalSectionsColumn, CreatedAtColumn, UpdatedAtColumn}
+		OwnerHashColumn         = postgres.StringColumn("owner_hash")
+		ExpiresAtColumn         = postgres.TimestampzColumn("expires_at")
+		PurgeAfterColumn        = postgres.TimestampzColumn("purge_after")
+		ResumeStatusColumn      = postgres.StringColumn("resume_status")
+		allColumns              = postgres.ColumnList{IDColumn, StatusColumn, StageColumn, ProfileIDColumn, LanguageColumn, DescriptionColumn, AttemptsColumn, MaxAttemptsColumn, LeaseOwnerColumn, LeaseUntilColumn, LastHeartbeatAtColumn, NextRetryAtColumn, ErrorCodeColumn, ErrorMessageColumn, RequiredActionColumn, CompletedSectionsColumn, TotalSectionsColumn, CreatedAtColumn, UpdatedAtColumn, OwnerHashColumn, ExpiresAtColumn, PurgeAfterColumn, ResumeStatusColumn}
+		mutableColumns          = postgres.ColumnList{StatusColumn, StageColumn, ProfileIDColumn, LanguageColumn, DescriptionColumn, AttemptsColumn, MaxAttemptsColumn, LeaseOwnerColumn, LeaseUntilColumn, LastHeartbeatAtColumn, NextRetryAtColumn, ErrorCodeColumn, ErrorMessageColumn, RequiredActionColumn, CompletedSectionsColumn, TotalSectionsColumn, CreatedAtColumn, UpdatedAtColumn, OwnerHashColumn, ExpiresAtColumn, PurgeAfterColumn, ResumeStatusColumn}
 		defaultColumns          = postgres.ColumnList{StageColumn, DescriptionColumn, AttemptsColumn, MaxAttemptsColumn, ErrorCodeColumn, ErrorMessageColumn, RequiredActionColumn, CompletedSectionsColumn, TotalSectionsColumn, CreatedAtColumn, UpdatedAtColumn}
 	)
 
@@ -124,6 +132,10 @@ func newJobsTableImpl(schemaName, tableName, alias string) jobsTable {
 		TotalSections:     TotalSectionsColumn,
 		CreatedAt:         CreatedAtColumn,
 		UpdatedAt:         UpdatedAtColumn,
+		OwnerHash:         OwnerHashColumn,
+		ExpiresAt:         ExpiresAtColumn,
+		PurgeAfter:        PurgeAfterColumn,
+		ResumeStatus:      ResumeStatusColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

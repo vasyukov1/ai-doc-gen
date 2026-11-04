@@ -32,4 +32,8 @@ type Jobs struct {
 	TotalSections     int32
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
+	OwnerHash         *string
+	ExpiresAt         *time.Time
+	PurgeAfter        *time.Time
+	ResumeStatus      *string
 }

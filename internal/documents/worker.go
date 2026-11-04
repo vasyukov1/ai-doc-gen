@@ -12,6 +12,7 @@ import (
 
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 	"github.com/vasyukov1/ai-doc-gen/internal/pgqueue"
+	"github.com/vasyukov1/ai-doc-gen/internal/platform"
 	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 )
 
@@ -31,6 +32,11 @@ func NewWorker(queue *pgqueue.Queue, jobs *storage.Repository, owner, sourceDir,
 
 func (w *Worker) Run(ctx context.Context) error {
 	for {
+		owner, err := platform.NewID()
+		if err != nil {
+			return err
+		}
+		w.owner = owner
 		claim, err := w.queue.Claim(ctx, w.owner)
 		if err != nil {
 			if ctx.Err() != nil {
@@ -52,12 +58,19 @@ func (w *Worker) Run(ctx context.Context) error {
 }
 
 func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
+	release, err := w.jobs.GuardJob(parent, claim.ID)
+	if err != nil {
+		log.Printf("guard job %s: %v", claim.ID, err)
+		return
+	}
+	defer release()
 	ctx, cancel := context.WithTimeout(parent, 60*time.Minute)
 	defer cancel()
 
 	done := make(chan struct{})
-	go w.heartbeat(ctx, claim.ID, done)
-	defer close(done)
+	heartbeatDone := make(chan struct{})
+	go func() { defer close(heartbeatDone); w.heartbeat(ctx, claim.ID, done, cancel) }()
+	defer func() { close(done); <-heartbeatDone }()
 
 	renderInput, renderErr := w.jobs.DocumentInput(ctx, claim.ID)
 	if renderErr == nil && renderInput.Reviewed {
@@ -126,8 +139,8 @@ func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
 	}
 }
 
-func (w *Worker) heartbeat(ctx context.Context, id string, done <-chan struct{}) {
-	ticker := time.NewTicker(10 * time.Second)
+func (w *Worker) heartbeat(ctx context.Context, id string, done <-chan struct{}, cancel context.CancelFunc) {
+	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
 
 	for {
@@ -137,7 +150,11 @@ func (w *Worker) heartbeat(ctx context.Context, id string, done <-chan struct{})
 		case <-done:
 			return
 		case <-ticker.C:
-			if err := w.queue.Heartbeat(ctx, id, w.owner); err != nil {
+			heartbeatCtx, finish := context.WithTimeout(ctx, 3*time.Second)
+			err := w.queue.Heartbeat(heartbeatCtx, id, w.owner)
+			finish()
+			if err != nil {
+				cancel()
 				log.Printf("heartbeat job %s: %v", id, err)
 				return
 			}

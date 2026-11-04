@@ -19,7 +19,7 @@
     <div class="job-panel">
       <p class="eyebrow">Project input</p>
       <h1>Job status</h1><p><a href="/jobs/{{.Job.ID}}/document">Document input and PDF / Typst rendering</a></p>
-      <p class="job-intro">The project is inspected in the background. Review its files when the inventory is ready. Confirm evidence to generate draft sections. Typst and PDF are not available yet.</p>
+      <p class="job-intro">The project is inspected in the background. Review its files when the inventory is ready. Confirm evidence to generate draft sections. Review saved sections, then explicitly compile Typst and PDF on the final review page.</p>
       <div class="status-row"><span>Status</span><strong>{{if .Job.RecoveryPending}}Recovering{{else}}{{.Job.Status}}{{end}}</strong></div>
       {{if .Job.Stage}}<div class="status-row"><span>Stage</span><strong>{{.Job.Stage}}</strong></div>{{end}}
       <div class="status-row"><span>Document</span><strong>{{.Job.ProfileID}}</strong></div>
@@ -33,7 +33,9 @@
       {{if eq .Job.Stage "selecting_files"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">Review project files →</a></p>{{end}}
       {{if eq .Job.Stage "source_selected"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">View selected files →</a></p>{{end}}
       {{if or (eq .Job.Stage "reviewing_evidence") (eq .Job.Stage "evidence_confirmed")}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/evidence">Review project evidence →</a></p>{{end}}
-      <p class="job-id">Job ID: {{.Job.ID}}</p>
+      <p>Expires: {{.Job.ExpiresAt}}. Source, drafts, credentials and artifacts are removed after expiry. <a href="/jobs">My jobs</a></p>
+ <form method="post" action="/jobs/{{.Job.ID}}/lifecycle">{{if or (eq .Job.Status "queued") (eq .Job.Status "running") (eq .Job.Status "retry_wait") (eq .Job.Status "needs_input") (eq .Job.Status "ready_for_review")}}<button name="action" value="cancel">Cancel processing</button>{{end}}{{if or (eq .Job.Status "failed") (eq .Job.Status "cancelled") (eq .Job.Status "retry_wait")}}<button name="action" value="retry">Retry saved stage</button>{{end}}<button name="action" value="delete" onclick="return confirm('Permanently delete this job and all its data?')">Delete job and data</button></form><p>Deletion hides the job immediately, cancels work and purges data after a short worker shutdown grace period.</p>
+ <p class="job-id">Job ID: {{.Job.ID}}</p>
     </div>
     {{if .Refresh}}<p class="refresh-note">This page refreshes every three seconds.</p>{{end}}
   <p><a href="/jobs/{{.Job.ID}}/sections">Review draft sections</a></p></main>

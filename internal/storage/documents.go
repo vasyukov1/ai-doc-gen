@@ -2,10 +2,6 @@ package storage
 
 import (
 	"context"
-	"crypto/sha256"
-	"crypto/subtle"
-	"database/sql"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 
@@ -45,7 +41,7 @@ func (r *Repository) SaveDocumentInput(ctx context.Context, id string, input dom
 	if err = tx.QueryRowContext(ctx, query, args...).Scan(&status, &count); err != nil {
 		return err
 	}
-	if status != domain.StatusNeedsInput || count != 0 {
+	if !((status == domain.StatusNeedsInput && count == 0) || status == domain.StatusReadyForReview || status == domain.StatusCompleted || status == domain.StatusFailed) {
 		return ErrDocumentConflict
 	}
 	raw, err := json.Marshal(input)
@@ -56,6 +52,11 @@ func (r *Repository) SaveDocumentInput(ctx context.Context, id string, input dom
 	query, args = t.INSERT(t.JobID, t.Record, t.Reviewed).VALUES(id, string(raw), false).ON_CONFLICT(t.JobID).DO_UPDATE(postgres.SET(t.Record.SET(t.EXCLUDED.Record), t.Reviewed.SET(postgres.Bool(false)))).Sql()
 	if _, err = tx.ExecContext(ctx, query, args...); err != nil {
 		return err
+	}
+	if status == domain.StatusCompleted {
+		if err = TransitionTx(ctx, tx, id, status, domain.StatusReadyForReview, "reviewing_document", "document_changed", "Document input saved. Review and rebuild artifacts explicitly."); err != nil {
+			return err
+		}
 	}
 	return tx.Commit()
 }
@@ -97,17 +98,9 @@ func (r *Repository) QueueRender(ctx context.Context, id, hash string) error {
 }
 
 func (r *Repository) Artifact(ctx context.Context, id, kind, capability string) (domain.Artifact, error) {
-	input, err := r.DocumentInput(ctx, id)
-	if err != nil {
-		return domain.Artifact{}, err
-	}
-	hash := sha256.Sum256([]byte(capability))
-	if input.CapabilityHash == "" || subtle.ConstantTimeCompare([]byte(input.CapabilityHash), []byte(hex.EncodeToString(hash[:]))) != 1 {
-		return domain.Artifact{}, sql.ErrNoRows
-	}
 	t := table.JobArtifacts
 	query, args := t.SELECT(t.Kind, t.StoragePath, t.Sha256).WHERE(t.JobID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID()).AND(t.Kind.EQ(postgres.String(kind)))).ORDER_BY(t.ID.DESC()).LIMIT(1).Sql()
 	var artifact domain.Artifact
-	err = r.db.QueryRowContext(ctx, query, args...).Scan(&artifact.Kind, &artifact.Path, &artifact.SHA256)
+	err := r.db.QueryRowContext(ctx, query, args...).Scan(&artifact.Kind, &artifact.Path, &artifact.SHA256)
 	return artifact, err
 }

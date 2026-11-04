@@ -83,7 +83,7 @@ func (r *Repository) ChangeSection(ctx context.Context, id, sectionID, body stri
 	if err := tx.QueryRowContext(ctx, query, args...).Scan(&status); err != nil {
 		return err
 	}
-	if status != domain.StatusReadyForReview && status != domain.StatusFailed {
+	if status != domain.StatusReadyForReview && status != domain.StatusFailed && status != domain.StatusCompleted {
 		return ErrSectionConflict
 	}
 	t := table.JobSections
@@ -117,6 +117,11 @@ func (r *Repository) ChangeSection(ctx context.Context, id, sectionID, body stri
 		}
 		section.Body = body
 		section.Edited = true
+		if status == domain.StatusCompleted {
+			if err := TransitionTx(ctx, tx, id, status, domain.StatusReadyForReview, "reviewing_document", "document_changed", "Saved edit. Review and rebuild artifacts explicitly."); err != nil {
+				return err
+			}
+		}
 		raw, _ = json.Marshal(section)
 		query, args = t.UPDATE(t.Record).SET(string(raw)).WHERE(condition).Sql()
 	}

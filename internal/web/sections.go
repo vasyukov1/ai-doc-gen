@@ -33,7 +33,7 @@ func (h *Handler) sectionsView(w http.ResponseWriter, r *http.Request) {
 		Sections []domain.Section
 		Editable bool
 		Refresh  bool
-	}{job, sections, job.Status == domain.StatusReadyForReview || job.Status == domain.StatusFailed, job.Status == domain.StatusRunning || job.Status == domain.StatusQueued || job.Status == domain.StatusRetryWait})
+	}{job, sections, job.Status == domain.StatusReadyForReview || job.Status == domain.StatusFailed || job.Status == domain.StatusCompleted, job.Status == domain.StatusRunning || job.Status == domain.StatusQueued || job.Status == domain.StatusRetryWait})
 }
 
 func (h *Handler) changeSection(w http.ResponseWriter, r *http.Request) {

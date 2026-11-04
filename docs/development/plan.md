@@ -84,9 +84,9 @@ One numbered item equals one Codex implementation request. A future agent should
 
 **Acceptance:** every selected document compiles in both languages; mandatory headings and title-page fields are present; missing source material remains visible; exported Typst can reproduce the PDF.
 
-Implemented with explicit variant/leaf plans and preserved academic heading hierarchy. Minimal capability-protected retrieval is included solely to inspect rendered milestone 6 artifacts. Full ownership, retention, cancellation and lifecycle work remains milestone 7. Manual verification and provider limitations are recorded in [verification.md](verification.md).
+Implemented with explicit variant/leaf plans and preserved academic heading hierarchy. Minimal capability-protected retrieval is included solely to inspect rendered milestone 6 artifacts. Milestone 7 below adds full browser ownership, retention, cancellation and lifecycle work. Manual verification and provider limitations are recorded in [verification.md](verification.md).
 
-## 7. Review, artifacts, and lifecycle
+## 7. Review, artifacts, and lifecycle — implemented; provider quality remains unverified
 
 7.1. Add a section editor and final review page. Preserve user changes and show missing-evidence warnings.
 
@@ -95,6 +95,8 @@ Implemented with explicit variant/leaf plans and preserved academic heading hier
 7.3. Add cancellation, retry for transient failures, and clear job progress. Verify that duplicate requests and worker restarts do not create inconsistent artifacts. Show errors and intermediate sections as soon as the corresponding progress event is stored.
 
 **Acceptance:** a user can submit a project, review and edit sections, download reproducible artifacts, and see a clear failure or cancellation state.
+
+Milestone 7 adds browser ownership, private downloads, completed-document editing with explicit rebuild, cancellation and durable retry, creation-time expiry, tombstoned deletion and bounded cleanup. Legacy ownerless records are preserved and excluded from execution. See [verification.md](verification.md) for manual checks and remaining limits. Automated tests remain deferred to milestone 8.
 
 ## 8. Final verification and release preparation
 

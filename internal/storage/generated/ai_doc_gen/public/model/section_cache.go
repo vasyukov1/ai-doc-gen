@@ -7,7 +7,12 @@
 
 package model
 
+import (
+	"time"
+)
+
 type SectionCache struct {
-	CacheKey string `sql:"primary_key"`
-	Record   string
+	CacheKey  string `sql:"primary_key"`
+	Record    string
+	CreatedAt time.Time
 }

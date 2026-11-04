@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"time"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 )
@@ -20,9 +21,10 @@ type Handler struct {
 	filePage      *template.Template
 	evidencePage  *template.Template
 	encryptionKey string
+	retention     time.Duration
 }
 
-func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string) (http.Handler, error) {
+func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration) (http.Handler, error) {
 	static, err := fs.Sub(assets, "static")
 	if err != nil {
 		return nil, fmt.Errorf("load static assets: %w", err)
@@ -42,13 +44,15 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string) (http
 		return nil, fmt.Errorf("load evidence page: %w", err)
 	}
 
-	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage, encryptionKey: encryptionKey}
+	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage, encryptionKey: encryptionKey, retention: retention}
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handler.health)
 	mux.HandleFunc("GET /readyz", handler.ready)
 	mux.Handle("GET /assets/", http.StripPrefix("/assets/", http.FileServer(http.FS(static))))
 	mux.HandleFunc("POST /jobs", handler.createJob)
+	mux.HandleFunc("POST /jobs/{id}/lifecycle", handler.lifecycle)
+	mux.HandleFunc("GET /jobs", handler.listJobs)
 	mux.HandleFunc("GET /jobs/{id}", handler.jobPageView)
 	mux.HandleFunc("GET /jobs/{id}/files", handler.filePageView)
 	mux.HandleFunc("POST /jobs/{id}/files", handler.saveFileSelection)
@@ -66,7 +70,7 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string) (http
 	mux.HandleFunc("GET /api/jobs/{id}/files", handler.fileJSON)
 	mux.HandleFunc("GET /", handler.home)
 
-	return mux, nil
+	return handler.authorize(mux), nil
 }
 
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {

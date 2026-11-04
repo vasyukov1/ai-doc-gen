@@ -1,10 +1,7 @@
 package web
 
 import (
-	"crypto/rand"
-	"crypto/sha256"
 	"database/sql"
-	"encoding/hex"
 	"errors"
 	"html/template"
 	"io"
@@ -57,7 +54,7 @@ func (h *Handler) documentView(w http.ResponseWriter, r *http.Request) {
 		Title                                 string
 		Fields                                []metadataField
 		Editable, CanRender, Refresh, Russian bool
-	}{job, input, profile.Title(job.Language), fields, job.Status == domain.StatusNeedsInput && job.CompletedSections == 0, job.Status == domain.StatusReadyForReview || job.Status == domain.StatusFailed, job.Status == domain.StatusRunning || job.Status == domain.StatusQueued || job.Status == domain.StatusRetryWait, job.Language == "ru"})
+	}{job, input, profile.Title(job.Language), fields, (job.Status == domain.StatusNeedsInput && job.CompletedSections == 0) || job.Status == domain.StatusReadyForReview || job.Status == domain.StatusCompleted || job.Status == domain.StatusFailed, job.Status == domain.StatusReadyForReview || job.Status == domain.StatusFailed, job.Status == domain.StatusRunning || job.Status == domain.StatusQueued || job.Status == domain.StatusRetryWait, job.Language == "ru"})
 }
 
 func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
@@ -106,18 +103,11 @@ func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-		token := make([]byte, 32)
-		if _, err = rand.Read(token); err != nil {
-			http.Error(w, "Could not create download capability.", 503)
-			return
-		}
-		capability := hex.EncodeToString(token)
-		hash := sha256.Sum256([]byte(capability))
-		if err = h.jobs.QueueRender(r.Context(), job.ID, hex.EncodeToString(hash[:])); err != nil {
+		if err = h.jobs.QueueRender(r.Context(), job.ID, ""); err != nil {
 			http.Error(w, "Rendering is unavailable until all sections are ready for review.", 409)
 			return
 		}
-		http.SetCookie(w, &http.Cookie{Name: "artifact_capability", Value: capability, Path: "/jobs/" + job.ID, MaxAge: 7 * 24 * 3600, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode})
+
 		http.Redirect(w, r, "/jobs/"+job.ID+"/document", 303)
 		return
 	}
@@ -209,14 +199,9 @@ func (h *Handler) downloadArtifact(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	cookie, err := r.Cookie("artifact_capability")
-	if err != nil {
-		http.Error(w, "Download capability is required. Use the browser that queued rendering.", 403)
-		return
-	}
-	artifact, err := h.jobs.Artifact(r.Context(), job.ID, kind, cookie.Value)
+	artifact, err := h.jobs.Artifact(r.Context(), job.ID, kind, "")
 	if err != nil || job.Status != domain.StatusCompleted {
-		http.Error(w, "Artifact unavailable or capability invalid.", 403)
+		http.Error(w, "Artifact unavailable. Review and rebuild saved changes.", 409)
 		return
 	}
 	name, contentType := "document.pdf", "application/pdf"

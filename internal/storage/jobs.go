@@ -33,8 +33,8 @@ func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob) error {
 	defer tx.Rollback()
 
 	jobs := table.Jobs
-	stmt := jobs.INSERT(jobs.ID, jobs.Status, jobs.ProfileID, jobs.Language, jobs.Description).
-		VALUES(job.ID, domain.StatusQueued, job.ProfileID, job.Language, job.Description)
+	stmt := jobs.INSERT(jobs.ID, jobs.Status, jobs.ProfileID, jobs.Language, jobs.Description, jobs.OwnerHash, jobs.ExpiresAt).
+		VALUES(job.ID, domain.StatusQueued, job.ProfileID, job.Language, job.Description, job.OwnerHash, job.ExpiresAt)
 	query, args := stmt.Sql()
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return fmt.Errorf("save job: %w", err)
@@ -64,15 +64,15 @@ func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob) error {
 func (r *Repository) GetJob(ctx context.Context, id string) (domain.Job, error) {
 	jobs := table.Jobs
 	stmt := jobs.SELECT(jobs.ID, jobs.Status, jobs.Stage, jobs.ProfileID, jobs.Language,
-		jobs.CreatedAt, jobs.UpdatedAt, jobs.LastHeartbeatAt, jobs.LeaseUntil, jobs.NextRetryAt,
+		jobs.CreatedAt, jobs.UpdatedAt, jobs.ExpiresAt, jobs.LastHeartbeatAt, jobs.LeaseUntil, jobs.NextRetryAt,
 		jobs.ErrorCode, jobs.ErrorMessage, jobs.RequiredAction, jobs.CompletedSections, jobs.TotalSections).
 		WHERE(jobs.ID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID()))
 	query, args := stmt.Sql()
 
 	var job domain.Job
-	var heartbeat, leaseUntil, retryAt sql.NullTime
+	var heartbeat, leaseUntil, retryAt, expires sql.NullTime
 	err := r.db.QueryRowContext(ctx, query, args...).Scan(&job.ID, &job.Status, &job.Stage,
-		&job.ProfileID, &job.Language, &job.CreatedAt, &job.UpdatedAt, &heartbeat, &leaseUntil,
+		&job.ProfileID, &job.Language, &job.CreatedAt, &job.UpdatedAt, &expires, &heartbeat, &leaseUntil,
 		&retryAt, &job.ErrorCode, &job.ErrorMessage, &job.RequiredAction, &job.CompletedSections,
 		&job.TotalSections)
 	if err != nil {
@@ -89,6 +89,9 @@ func (r *Repository) GetJob(ctx context.Context, id string) (domain.Job, error) 
 		return domain.Job{}, fmt.Errorf("get job progress: %w", err)
 	}
 
+	if expires.Valid {
+		job.ExpiresAt = &expires.Time
+	}
 	if heartbeat.Valid {
 		job.LastHeartbeatAt = &heartbeat.Time
 	}

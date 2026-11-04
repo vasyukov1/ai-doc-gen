@@ -55,7 +55,11 @@ func run() error {
 	if len(os.Args) == 1 || os.Args[1] == "serve" {
 		return serve(ctx, cfg, jobs)
 	}
+	if os.Args[1] == "cleanup" {
+		return documents.NewCleaner(jobs, cfg.DataDir, cfg.UploadDir, cfg.SourceDir).Once(ctx)
+	}
 	if os.Args[1] == "worker" {
+		go documents.NewCleaner(jobs, cfg.DataDir, cfg.UploadDir, cfg.SourceDir).Run(ctx)
 		owner, err := platform.NewID()
 		if err != nil {
 			return err
@@ -74,7 +78,7 @@ func run() error {
 }
 
 func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository) error {
-	handler, err := web.NewHandler(jobs, cfg.UploadDir, cfg.LLMEncryptionKey)
+	handler, err := web.NewHandler(jobs, cfg.UploadDir, cfg.LLMEncryptionKey, cfg.Retention)
 	if err != nil {
 		return err
 	}

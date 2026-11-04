@@ -27,12 +27,16 @@ var allowed = map[domain.Status]map[domain.Status]bool{
 		domain.StatusCancelled:  true,
 	},
 	domain.StatusRetryWait: {
+		domain.StatusQueued:    true,
 		domain.StatusRunning:   true,
 		domain.StatusFailed:    true,
 		domain.StatusCancelled: true,
 	},
+	domain.StatusCompleted: {domain.StatusReadyForReview: true, domain.StatusQueued: true, domain.StatusCancelled: true},
+	domain.StatusCancelled: {domain.StatusQueued: true, domain.StatusNeedsInput: true, domain.StatusReadyForReview: true},
 	domain.StatusFailed: {
-		domain.StatusQueued: true,
+		domain.StatusCancelled: true,
+		domain.StatusQueued:    true,
 	},
 	domain.StatusReadyForReview: {
 		domain.StatusQueued:    true,
