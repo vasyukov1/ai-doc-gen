@@ -19,7 +19,7 @@
     <div class="job-panel">
       <p class="eyebrow">Project input</p>
       <h1>Job status</h1>
-      <p class="job-intro">The input is being checked by a background worker. Document generation is not available in this step.</p>
+      <p class="job-intro">The project is inspected in the background. Review its files when the inventory is ready. Document generation is not available in this step.</p>
       <div class="status-row"><span>Status</span><strong>{{if .Job.RecoveryPending}}Recovering{{else}}{{.Job.Status}}{{end}}</strong></div>
       {{if .Job.Stage}}<div class="status-row"><span>Stage</span><strong>{{.Job.Stage}}</strong></div>{{end}}
       <div class="status-row"><span>Document</span><strong>{{.Job.ProfileID}}</strong></div>
@@ -29,6 +29,8 @@
       {{if .Job.RequiredAction}}<p class="job-message">Action needed: {{.Job.RequiredAction}}</p>{{end}}
       {{if .Job.ErrorMessage}}<p class="job-error">{{.Job.ErrorMessage}}</p>{{end}}
       {{if .Job.NextRetryAt}}<p class="job-message">Next retry: {{.Job.NextRetryAt.Format "02 Jan 2006 15:04:05 MST"}}</p>{{end}}
+      {{if eq .Job.Status "needs_input"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">Review project files →</a></p>{{end}}
+      {{if eq .Job.Stage "source_selected"}}<p><a class="action-link" href="/jobs/{{.Job.ID}}/files">View selected files →</a></p>{{end}}
       <p class="job-id">Job ID: {{.Job.ID}}</p>
     </div>
     {{if .Refresh}}<p class="refresh-note">This page refreshes every three seconds.</p>{{end}}

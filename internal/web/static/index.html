@@ -20,14 +20,14 @@
       <div class="hero-copy">
         <p class="eyebrow">Documentation from real project evidence</p>
         <h1 id="hero-title">From source code to a document you can edit.</h1>
-        <p class="lead">Choose a document and provide a public GitHub repository or ZIP archive. Input intake is live; source analysis and document generation are the next steps.</p>
+        <p class="lead">Choose a document and provide a public GitHub repository or ZIP archive. Review the selected source files before the documentation stages begin.</p>
         <div class="hero-tags" aria-label="Planned outputs"><span>Academic documents</span><span>Technical overview</span><span>Typst + PDF</span></div>
       </div>
 
       <div class="panel" aria-labelledby="panel-title">
         <div class="panel-top"><span class="panel-step">01 / Project input</span><span class="panel-status">Input intake</span></div>
         <h2 id="panel-title">Start a document</h2>
-        <p class="panel-note">Submit input now and follow its status. Document generation is not available yet.</p>
+        <p class="panel-note">Submit a project, then review the file inventory. Document generation is not available yet.</p>
         <form action="/jobs" method="post" enctype="multipart/form-data">
           <label for="repo">Public GitHub repository</label>
           <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
@@ -42,7 +42,7 @@
           <textarea id="description" name="description" rows="3" placeholder="What should the document emphasize?"></textarea>
           <button type="submit">Submit project input <span aria-hidden="true">→</span></button>
         </form>
-        <p class="form-footnote">Maximum ZIP size: 20 MB. A background worker checks the stored input.</p>
+        <p class="form-footnote">Maximum ZIP size: 20 MiB. A background worker inspects the source and prepares the file list.</p>
       </div>
     </section>
 

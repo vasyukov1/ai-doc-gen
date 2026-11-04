@@ -11,8 +11,10 @@ package table
 // this method only once at the beginning of the program.
 func UseSchema(schema string) {
 	JobArtifacts = JobArtifacts.FromSchema(schema)
+	JobFiles = JobFiles.FromSchema(schema)
 	JobInputs = JobInputs.FromSchema(schema)
 	JobProgressEvents = JobProgressEvents.FromSchema(schema)
+	JobSources = JobSources.FromSchema(schema)
 	JobStatusHistory = JobStatusHistory.FromSchema(schema)
 	Jobs = Jobs.FromSchema(schema)
 }

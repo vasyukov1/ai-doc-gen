@@ -17,6 +17,7 @@ type Handler struct {
 	jobs      *storage.Repository
 	uploadDir string
 	jobPage   *template.Template
+	filePage  *template.Template
 }
 
 func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error) {
@@ -29,8 +30,12 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 	if err != nil {
 		return nil, fmt.Errorf("load job page: %w", err)
 	}
+	filePage, err := template.ParseFS(assets, "static/files.html")
+	if err != nil {
+		return nil, fmt.Errorf("load file page: %w", err)
+	}
 
-	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage}
+	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage}
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handler.health)
@@ -38,7 +43,10 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 	mux.Handle("GET /assets/", http.StripPrefix("/assets/", http.FileServer(http.FS(static))))
 	mux.HandleFunc("POST /jobs", handler.createJob)
 	mux.HandleFunc("GET /jobs/{id}", handler.jobPageView)
+	mux.HandleFunc("GET /jobs/{id}/files", handler.filePageView)
+	mux.HandleFunc("POST /jobs/{id}/files", handler.saveFileSelection)
 	mux.HandleFunc("GET /api/jobs/{id}", handler.jobJSON)
+	mux.HandleFunc("GET /api/jobs/{id}/files", handler.fileJSON)
 	mux.HandleFunc("GET /", handler.home)
 
 	return mux, nil

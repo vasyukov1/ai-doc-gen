@@ -38,7 +38,7 @@ One numbered item equals one Codex implementation request. A future agent should
 
 **Acceptance:** `make build` succeeds; `make run` starts PostgreSQL, web and worker; `make down` stops all three; URL and ZIP jobs still reach `input_ready`; an expired lease can be reclaimed. Do not add automated test files before item 8.
 
-## 3. Safe source intake and profile-aware file selection
+## 3. Safe source intake and profile-aware file selection — implemented
 
 3.1. Fetch a public GitHub repository at a pinned commit or unpack a ZIP in an isolated work directory. Apply compressed/expanded size, file-count, path, symlink, and nested-archive limits. Never run source code.
 

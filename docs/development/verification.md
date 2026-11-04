@@ -1,5 +1,18 @@
 # Manual verification record
 
+## Milestone 3 — source intake and file selection
+
+Checked locally on 2026-11-03. No automated test files were added.
+
+- `go build ./...`, `make run`, `docker compose config --quiet`, and `git diff --check` passed. The Jet generator produced models for `job_sources` and `job_files` after goose migration `00002_source_inventory.sql`.
+- A public GitHub repository resolved to a commit SHA and produced a visible file inventory. A ZIP upload reached `needs_input` at `selecting_files`; the HTML page and JSON endpoint showed selected files and exclusion reasons.
+- Academic selection left test files available but unselected. Technical overview selected them by default. A 600-file source selected at most 500 files by default.
+- Saving a valid selection moved the job to `input_ready` at `source_selected`. An excluded file was rejected, and a second confirmation returned a conflict.
+- Unsafe ZIP paths, symlinks, conflicting paths, more than 2,000 entries, and more than 100 MiB declared expanded size failed with clear error codes. Known credential files, dependencies, binaries, and nested archives were excluded. A source with only excluded files kept its inventory visible and asked for another project.
+- A queued ZIP job completed after a worker restart. The inventory API did not expose the private workspace path.
+
+Section generation and document rendering remain in later milestones.
+
 ## Milestone 2.5 — Jet and local commands
 
 Checked locally on 2026-11-03. No automated test files were added.

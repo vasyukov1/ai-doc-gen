@@ -62,7 +62,8 @@ func run() error {
 		}
 
 		log.Printf("worker started: %s", owner)
-		return documents.NewWorker(queue, jobs, owner).Run(ctx)
+
+		return documents.NewWorker(queue, jobs, owner, cfg.SourceDir, cfg.GitHubToken).Run(ctx)
 	}
 
 	return fmt.Errorf("unknown command: %s", os.Args[1])

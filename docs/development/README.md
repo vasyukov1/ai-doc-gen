@@ -1,8 +1,8 @@
 # Development guide
 
-This directory turns the product analysis into bounded implementation requests. Each top-level item in [plan.md](plan.md) is one Codex request. Finish its subitems and acceptance criteria, then review the result before starting the next item. Items 1, 2, and 2.5 are implemented: the site accepts input, the worker checks it, and database queries use Jet. Source inspection and document generation remain future items.
+This directory turns the product analysis into bounded implementation requests. Each top-level item in [plan.md](plan.md) is one Codex request. Finish its subitems and acceptance criteria, then review the result before starting the next item. Items 1, 2, 2.5, and 3 are implemented: the site accepts input, the worker inspects source, and users review file selection. Evidence extraction and document generation remain future items.
 
-Read [structure.md](structure.md) for package ownership, [code_style.md](code_style.md) for Go style, [job_lifecycle.md](job_lifecycle.md) for progress and failures, and [decisions.md](decisions.md) for trade-offs.
+Read [structure.md](structure.md) for package ownership, [code_style.md](code_style.md) for Go style, [job_lifecycle.md](job_lifecycle.md) for progress and failures, [source_intake.md](source_intake.md) for intake limits, and [decisions.md](decisions.md) for trade-offs.
 
 ## Local start
 

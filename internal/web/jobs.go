@@ -21,7 +21,7 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/platform"
 )
 
-const maxArchiveBytes = 20 << 20
+const maxArchiveBytes = documents.MaxArchiveBytes
 const maxRequestBytes = maxArchiveBytes + (1 << 20)
 
 var errArchiveTooLarge = errors.New("ZIP archive is too large")

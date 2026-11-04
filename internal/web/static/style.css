@@ -375,3 +375,16 @@ body {
     margin-bottom:7px
   }
 }
+
+.file-panel { margin-top:24px; padding:32px; border:1px solid #e2e8e2; border-radius:16px; background:#fff }
+.file-panel h1 { margin:0 0 10px; font-size:38px; letter-spacing:-.05em }
+.source-meta { overflow-wrap:anywhere; color:#617269; font-size:13px }
+.file-list { margin-top:25px; border-top:1px solid #e8ede7 }
+.file-row { display:grid; grid-template-columns:20px minmax(0,1fr) 145px 70px; gap:12px; align-items:center; padding:11px 4px; border-bottom:1px solid #e8ede7; font-size:13px }
+.file-row.excluded { color:#8a9990; background:#f9faf8 }
+.file-path { overflow-wrap:anywhere; font-weight:600 }
+.file-reason,.file-size { color:#75867b; font-size:12px }
+.file-size { text-align:right }
+.save-selection { margin-top:22px; padding:12px 16px; border:0; border-radius:8px; background:#166953; color:white; font:inherit; font-weight:700; cursor:pointer }
+.action-link { display:inline-block; padding:11px 15px; border-radius:8px; background:#166953; color:white; text-decoration:none; font-weight:700 }
+@media(max-width:650px) { .file-row { grid-template-columns:20px minmax(0,1fr); gap:6px 10px } .file-reason { grid-column:2 } .file-size { grid-column:2; text-align:left } }

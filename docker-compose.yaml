@@ -49,8 +49,11 @@ services:
     environment:
       DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
       UPLOAD_DIR: /data/uploads
+      SOURCE_DIR: /data/sources
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     volumes:
       - uploads:/data/uploads
+      - sources:/data/sources
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -59,3 +62,4 @@ services:
 volumes:
   postgres_data:
   uploads:
+  sources:

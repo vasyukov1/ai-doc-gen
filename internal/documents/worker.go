@@ -2,8 +2,6 @@ package documents
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -17,13 +15,15 @@ import (
 )
 
 type Worker struct {
-	queue *pgqueue.Queue
-	jobs  *storage.Repository
-	owner string
+	queue     *pgqueue.Queue
+	jobs      *storage.Repository
+	owner     string
+	sourceDir string
+	token     string
 }
 
-func NewWorker(queue *pgqueue.Queue, jobs *storage.Repository, owner string) *Worker {
-	return &Worker{queue: queue, jobs: jobs, owner: owner}
+func NewWorker(queue *pgqueue.Queue, jobs *storage.Repository, owner, sourceDir, token string) *Worker {
+	return &Worker{queue: queue, jobs: jobs, owner: owner, sourceDir: sourceDir, token: token}
 }
 
 func (w *Worker) Run(ctx context.Context) error {
@@ -49,7 +49,7 @@ func (w *Worker) Run(ctx context.Context) error {
 }
 
 func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
-	ctx, cancel := context.WithTimeout(parent, 20*time.Second)
+	ctx, cancel := context.WithTimeout(parent, 2*time.Minute)
 	defer cancel()
 
 	done := make(chan struct{})
@@ -57,17 +57,39 @@ func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
 	defer close(done)
 
 	input, err := w.jobs.GetInput(ctx, claim.ID)
-	if err == nil {
-		err = validateInput(ctx, input)
-	}
-
 	if err != nil {
 		w.reportFailure(parent, claim, err)
 		return
 	}
 
-	if err := w.queue.InputReady(parent, claim.ID, w.owner); err != nil {
-		log.Printf("finish job %s: %v", claim.ID, err)
+	stage, message := "extracting", "Checking the uploaded archive."
+	if input.SourceType == domain.SourceGitHub {
+		stage, message = "fetching", "Fetching the repository at a pinned commit."
+	}
+	if err := w.queue.Stage(ctx, claim.ID, w.owner, stage, stage, message); err != nil {
+		log.Printf("update job stage %s: %v", claim.ID, err)
+		w.reportFailure(parent, claim, err)
+		return
+	}
+
+	inventory, err := InspectSource(ctx, claim.ID, claim.ProfileID, w.sourceDir, w.token, input)
+	if err != nil {
+		w.reportFailure(parent, claim, err)
+		return
+	}
+
+	if err := w.queue.Stage(ctx, claim.ID, w.owner, "saving_inventory", "inventory", "Saving the file inventory."); err != nil {
+		_ = os.RemoveAll(inventory.Source.WorkspacePath)
+		log.Printf("update job stage %s: %v", claim.ID, err)
+		w.reportFailure(parent, claim, err)
+		return
+	}
+	if err := w.queue.InventoryReady(ctx, claim.ID, w.owner, inventory); err != nil {
+		if !errors.Is(err, pgqueue.ErrCommitUnknown) {
+			_ = os.RemoveAll(inventory.Source.WorkspacePath)
+			w.reportFailure(parent, claim, err)
+		}
+		log.Printf("save inventory %s: %v", claim.ID, err)
 	}
 }
 
@@ -91,52 +113,26 @@ func (w *Worker) heartbeat(ctx context.Context, id string, done <-chan struct{})
 }
 
 func (w *Worker) reportFailure(ctx context.Context, claim *pgqueue.Claim, err error) {
-	if errors.Is(err, os.ErrNotExist) {
-		if failErr := w.queue.Fail(ctx, claim.ID, w.owner, "source_missing", "Uploaded source is unavailable. Submit it again."); failErr != nil {
+	var intakeErr *IntakeError
+	if errors.As(err, &intakeErr) && !intakeErr.Temporary {
+		if failErr := w.queue.Fail(ctx, claim.ID, w.owner, intakeErr.Code, intakeErr.Message); failErr != nil {
 			log.Printf("fail job %s: %v", claim.ID, failErr)
 		}
 		return
 	}
 
 	if claim.Attempts >= 3 {
-		if failErr := w.queue.Fail(ctx, claim.ID, w.owner, "input_error", "The input could not be checked. Submit it again."); failErr != nil {
+		if failErr := w.queue.Fail(ctx, claim.ID, w.owner, "source_unavailable", "The source could not be inspected. Submit it again."); failErr != nil {
 			log.Printf("fail job %s: %v", claim.ID, failErr)
 		}
 		return
 	}
 
 	delay := time.Duration(claim.Attempts*5) * time.Second
-	if retryErr := w.queue.Retry(ctx, claim.ID, w.owner, "input_retry", "Input check paused. Retrying shortly.", delay); retryErr != nil {
+	if retryErr := w.queue.Retry(ctx, claim.ID, w.owner, "source_retry", "Source inspection paused. Retrying shortly.", delay); retryErr != nil {
 		log.Printf("retry job %s: %v", claim.ID, retryErr)
 	}
-}
-
-func validateInput(ctx context.Context, input domain.Input) error {
-	if input.SourceType == domain.SourceGitHub {
-		if input.GitHubURL == "" {
-			return errors.New("GitHub URL is empty")
-		}
-		return nil
-	}
-	if input.SourceType != domain.SourceZIP {
-		return errors.New("unsupported input type")
-	}
-
-	file, err := os.Open(input.UploadPath)
-	if err != nil {
-		return fmt.Errorf("open upload: %w", err)
-	}
-	defer file.Close()
-
-	hash := sha256.New()
-	if _, err := io.Copy(hash, &contextReader{ctx: ctx, reader: file}); err != nil {
-		return fmt.Errorf("read upload: %w", err)
-	}
-	if hex.EncodeToString(hash.Sum(nil)) != input.SHA256 {
-		return errors.New("upload digest changed")
-	}
-
-	return nil
+	log.Printf("inspect source %s: %v", claim.ID, err)
 }
 
 type contextReader struct {
@@ -146,7 +142,7 @@ type contextReader struct {
 
 func (r *contextReader) Read(data []byte) (int, error) {
 	if err := r.ctx.Err(); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("read source: %w", err)
 	}
 
 	return r.reader.Read(data)

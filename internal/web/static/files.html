@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project files — AI Doc Gen</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/"><span class="brand-mark">D</span><span>AI Doc Gen</span></a>
+      <span class="stage">Early build</span>
+    </div>
+  </header>
+  <main class="container job-main">
+    <a class="back-link" href="/jobs/{{.Job.ID}}">← Job status</a>
+    <div class="file-panel">
+      <p class="eyebrow">Source inventory</p>
+      <h1>Project files</h1>
+      <p class="job-intro">Choose the text files to use for documentation. Excluded files show why they cannot be selected. Select up to 500 files.</p>
+      {{if .Inventory.Source.RepositoryURL}}<p class="source-meta">Repository: {{.Inventory.Source.RepositoryURL}}</p>{{end}}
+      {{if .Inventory.Source.CommitSHA}}<p class="source-meta">Commit: <code>{{.Inventory.Source.CommitSHA}}</code></p>{{end}}
+      {{if .NoEligible}}<p class="job-error">No selectable text files were found. Review the exclusions and submit another project.</p>{{else if not .Editable}}<p class="job-message">The selection is saved. Evidence extraction is the next step.</p>{{end}}
+      <form method="post" action="/jobs/{{.Job.ID}}/files">
+        <div class="file-list">
+          {{range .Inventory.Files}}
+          <label class="file-row{{if not .Eligible}} excluded{{end}}">
+            <input type="checkbox" name="file" value="{{.Path}}" {{if .Selected}}checked{{end}} {{if or (not .Eligible) (not $.Editable)}}disabled{{end}}>
+            <span class="file-path">{{.Path}}</span>
+            <span class="file-reason">{{.ReasonCode}}</span>
+            <span class="file-size">{{.SizeBytes}} B</span>
+          </label>
+          {{end}}
+        </div>
+        {{if .Editable}}<button class="save-selection" type="submit">Save file selection</button>{{end}}
+      </form>
+    </div>
+  </main>
+</body>
+</html>

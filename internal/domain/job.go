@@ -58,3 +58,26 @@ type NewJob struct {
 	Description string
 	Input       Input
 }
+
+type Source struct {
+	JobID         string     `json:"job_id"`
+	SourceType    SourceType `json:"source_type"`
+	RepositoryURL string     `json:"repository_url,omitempty"`
+	CommitSHA     string     `json:"commit_sha,omitempty"`
+	SourceDigest  string     `json:"source_digest"`
+	WorkspacePath string     `json:"-"`
+}
+
+type SourceFile struct {
+	Path       string `json:"path"`
+	SizeBytes  int64  `json:"size_bytes"`
+	SHA256     string `json:"sha256,omitempty"`
+	ReasonCode string `json:"reason_code"`
+	Eligible   bool   `json:"eligible"`
+	Selected   bool   `json:"selected"`
+}
+
+type Inventory struct {
+	Source Source       `json:"source"`
+	Files  []SourceFile `json:"files"`
+}

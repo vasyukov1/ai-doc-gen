@@ -18,8 +18,9 @@ type Queue struct {
 }
 
 type Claim struct {
-	ID       string
-	Attempts int
+	ID        string
+	ProfileID string
+	Attempts  int
 }
 
 func New(db *sql.DB) *Queue {
@@ -39,7 +40,7 @@ func (q *Queue) Claim(ctx context.Context, owner string) (*Claim, error) {
 			AND(jobs.NextRetryAt.LT_EQ(postgres.NOW()))).
 		OR(jobs.Status.EQ(postgres.String(string(domain.StatusRunning))).
 			AND(jobs.LeaseUntil.LT(postgres.NOW())))
-	stmt := jobs.SELECT(jobs.ID, jobs.Status, jobs.Attempts, jobs.MaxAttempts).
+	stmt := jobs.SELECT(jobs.ID, jobs.Status, jobs.ProfileID, jobs.Attempts, jobs.MaxAttempts).
 		WHERE(available).
 		ORDER_BY(jobs.CreatedAt).
 		LIMIT(1).
@@ -48,8 +49,9 @@ func (q *Queue) Claim(ctx context.Context, owner string) (*Claim, error) {
 
 	var id string
 	var status domain.Status
+	var profileID string
 	var attempts, maxAttempts int
-	err = tx.QueryRowContext(ctx, query, args...).Scan(&id, &status, &attempts, &maxAttempts)
+	err = tx.QueryRowContext(ctx, query, args...).Scan(&id, &status, &profileID, &attempts, &maxAttempts)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -96,7 +98,7 @@ func (q *Queue) Claim(ctx context.Context, owner string) (*Claim, error) {
 		return nil, fmt.Errorf("commit claim: %w", err)
 	}
 
-	return &Claim{ID: id, Attempts: attempts + 1}, nil
+	return &Claim{ID: id, ProfileID: profileID, Attempts: attempts + 1}, nil
 }
 
 func (q *Queue) Heartbeat(ctx context.Context, id, owner string) error {

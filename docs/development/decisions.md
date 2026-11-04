@@ -27,3 +27,7 @@ At earlier steps, compile and manually verify the delivered behavior. Add the au
 ## 2026-11-03 — Use Jet for database access
 
 Use Jet v2.16.0 to generate typed table definitions from the goose-migrated PostgreSQL schema. Keep generated files in `internal/storage/generated` and use Jet in `internal/storage` and `internal/pgqueue`. Migrations and their advisory lock remain SQL. Jet improves schema-aware query maintenance; it does not by itself improve query latency. Run migrations once before starting the web and worker processes. Keep the initial queue index until workload measurements justify a change.
+
+## 2026-11-03 — Pin and inspect source archives
+
+Use the GitHub REST API to resolve the public repository's default branch to a commit SHA, then download the ZIP for that SHA. Follow redirects only to GitHub API or codeload hosts. Inspect ZIP paths and file metadata before extraction, enforce size and entry limits, and unpack only eligible text files into a private worker directory. Persist the inventory and pause at `needs_input` for user selection. A server-side GitHub token is optional; API limits and permanent intake errors are visible to the user.

@@ -4,8 +4,12 @@ import (
 	"errors"
 	"net/url"
 	"path"
+	"regexp"
 	"strings"
 )
+
+var githubOwner = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9-]{0,38}$`)
+var githubRepo = regexp.MustCompile(`^[A-Za-z0-9._-]{1,100}$`)
 
 type Request struct {
 	GitHubURL   string
@@ -44,19 +48,23 @@ func ValidateRequest(request Request) (Request, error) {
 	}
 
 	parsed, err := url.Parse(request.GitHubURL)
-	if err != nil || parsed.Scheme != "https" || !strings.EqualFold(parsed.Host, "github.com") {
+	if err != nil || parsed.Scheme != "https" || !strings.EqualFold(parsed.Hostname(), "github.com") || parsed.Port() != "" {
 		return Request{}, errors.New("use a public github.com URL")
 	}
-	if parsed.User != nil || parsed.RawQuery != "" || parsed.Fragment != "" {
+	if parsed.User != nil || parsed.RawQuery != "" || parsed.Fragment != "" || parsed.EscapedPath() != parsed.Path {
 		return Request{}, errors.New("use a repository URL without extra parameters")
 	}
 
 	parts := strings.Split(strings.Trim(parsed.Path, "/"), "/")
-	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+	repo := ""
+	if len(parts) == 2 {
+		repo = strings.TrimSuffix(parts[1], ".git")
+	}
+	if len(parts) != 2 || !githubOwner.MatchString(parts[0]) || !githubRepo.MatchString(repo) || repo == "." || repo == ".." {
 		return Request{}, errors.New("use a repository URL")
 	}
 
-	request.GitHubURL = "https://github.com/" + parts[0] + "/" + strings.TrimSuffix(parts[1], ".git")
+	request.GitHubURL = "https://github.com/" + parts[0] + "/" + repo
 
 	return request, nil
 }

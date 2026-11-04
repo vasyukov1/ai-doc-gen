@@ -159,9 +159,13 @@ func addStatus(ctx context.Context, tx *sql.Tx, id string, from, to domain.Statu
 		return fmt.Errorf("save job status: %w", err)
 	}
 
+	return AddProgressTx(ctx, tx, id, code, message)
+}
+
+func AddProgressTx(ctx context.Context, tx *sql.Tx, id, code, message string) error {
 	events := table.JobProgressEvents
-	stmt = events.INSERT(events.JobID, events.Code, events.Message).VALUES(id, code, message)
-	query, args = stmt.Sql()
+	stmt := events.INSERT(events.JobID, events.Code, events.Message).VALUES(id, code, message)
+	query, args := stmt.Sql()
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return fmt.Errorf("save job event: %w", err)
 	}
