@@ -7,11 +7,12 @@ import (
 )
 
 type Config struct {
-	HTTPAddr    string
-	DatabaseURL string
-	UploadDir   string
-	SourceDir   string
-	GitHubToken string
+	HTTPAddr         string
+	DatabaseURL      string
+	UploadDir        string
+	SourceDir        string
+	GitHubToken      string
+	LLMEncryptionKey string
 }
 
 func Load() (Config, error) {
@@ -44,10 +45,11 @@ func Load() (Config, error) {
 	}
 
 	return Config{
-		HTTPAddr:    addr,
-		DatabaseURL: databaseURL,
-		UploadDir:   uploadDir,
-		SourceDir:   sourceDir,
-		GitHubToken: os.Getenv("GITHUB_TOKEN"),
+		HTTPAddr:         addr,
+		DatabaseURL:      databaseURL,
+		UploadDir:        uploadDir,
+		SourceDir:        sourceDir,
+		GitHubToken:      os.Getenv("GITHUB_TOKEN"),
+		LLMEncryptionKey: os.Getenv("LLM_ENCRYPTION_KEY"),
 	}, nil
 }

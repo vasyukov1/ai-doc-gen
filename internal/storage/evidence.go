@@ -49,7 +49,7 @@ func (r *Repository) GetEvidence(ctx context.Context, id string) (domain.Evidenc
 	return evidence, err
 }
 
-func (r *Repository) ConfirmEvidence(ctx context.Context, id, digest string, corrections map[string]string) error {
+func (r *Repository) ConfirmEvidence(ctx context.Context, id, digest string, corrections map[string]string, model, key, master string) error {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -87,6 +87,10 @@ func (r *Repository) ConfirmEvidence(ctx context.Context, id, digest string, cor
 			return ErrInvalidEvidence
 		}
 	}
+	if err := saveCredentialsTx(ctx, tx, id, model, key, master); err != nil {
+		return err
+	}
+
 	evidence.Corrections = corrections
 	evidence.Confirmed = true
 	payload, err = json.Marshal(evidence)
@@ -97,10 +101,10 @@ func (r *Repository) ConfirmEvidence(ctx context.Context, id, digest string, cor
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return err
 	}
-	if err := TransitionTx(ctx, tx, id, status, domain.StatusInputReady, "evidence_confirmed", "evidence_confirmed", "Evidence confirmed. Document drafting is not available yet."); err != nil {
+	if err := TransitionTx(ctx, tx, id, status, domain.StatusQueued, "generating", "evidence_confirmed", "Evidence confirmed. Section generation queued."); err != nil {
 		return err
 	}
-	query, args = jobs.UPDATE(jobs.RequiredAction).SET("").WHERE(jobs.ID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
+	query, args = jobs.UPDATE(jobs.RequiredAction, jobs.Attempts).SET("", 0).WHERE(jobs.ID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).Sql()
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return err
 	}

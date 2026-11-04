@@ -14,14 +14,15 @@ import (
 var assets embed.FS
 
 type Handler struct {
-	jobs         *storage.Repository
-	uploadDir    string
-	jobPage      *template.Template
-	filePage     *template.Template
-	evidencePage *template.Template
+	jobs          *storage.Repository
+	uploadDir     string
+	jobPage       *template.Template
+	filePage      *template.Template
+	evidencePage  *template.Template
+	encryptionKey string
 }
 
-func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error) {
+func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string) (http.Handler, error) {
 	static, err := fs.Sub(assets, "static")
 	if err != nil {
 		return nil, fmt.Errorf("load static assets: %w", err)
@@ -41,7 +42,7 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 		return nil, fmt.Errorf("load evidence page: %w", err)
 	}
 
-	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage}
+	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage, encryptionKey: encryptionKey}
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handler.health)
@@ -54,6 +55,10 @@ func NewHandler(jobs *storage.Repository, uploadDir string) (http.Handler, error
 	mux.HandleFunc("GET /jobs/{id}/evidence", handler.evidenceView)
 	mux.HandleFunc("POST /jobs/{id}/evidence", handler.confirmEvidence)
 	mux.HandleFunc("GET /api/jobs/{id}/evidence", handler.evidenceView)
+	mux.HandleFunc("POST /jobs/{id}/generation/retry", handler.retryGeneration)
+	mux.HandleFunc("GET /jobs/{id}/sections", handler.sectionsView)
+	mux.HandleFunc("GET /api/jobs/{id}/sections", handler.sectionsView)
+	mux.HandleFunc("POST /jobs/{id}/sections/{section}", handler.changeSection)
 	mux.HandleFunc("GET /api/jobs/{id}", handler.jobJSON)
 	mux.HandleFunc("GET /api/jobs/{id}/files", handler.fileJSON)
 	mux.HandleFunc("GET /", handler.home)

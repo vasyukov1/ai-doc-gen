@@ -32,6 +32,7 @@ services:
     command: serve
     environment:
       DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
+      LLM_ENCRYPTION_KEY: ${LLM_ENCRYPTION_KEY:-}
       UPLOAD_DIR: /data/uploads
     ports:
       - "127.0.0.1:${HTTP_PORT:-8080}:8080"
@@ -48,6 +49,7 @@ services:
     command: worker
     environment:
       DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
+      LLM_ENCRYPTION_KEY: ${LLM_ENCRYPTION_KEY:-}
       UPLOAD_DIR: /data/uploads
       SOURCE_DIR: /data/sources
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}

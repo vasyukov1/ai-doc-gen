@@ -10,7 +10,7 @@ Keep **status** separate from **stage**. Status controls what the user can do; s
 |---|---|---|
 | `queued` | Waiting for a worker | Show queue position only if it can be measured |
 | `running` | Worker owns a lease | Show current stage and completed sections |
-| `input_ready` | Evidence review is confirmed | State that document drafting is not available yet |
+| `input_ready` | Evidence review is confirmed | Legacy boundary before generation is queued |
 | `needs_input` | File selection, specification or required metadata is missing | Show a specific action and preserve completed work |
 | `retry_wait` | Transient dependency failure with a scheduled retry | Show the reason and next retry time |
 | `ready_for_review` | Draft sections are available | Let the user inspect and edit them |
@@ -20,7 +20,7 @@ Keep **status** separate from **stage**. Status controls what the user can do; s
 
 Stages include `validating`, `fetching`, `extracting`, `saving_inventory`, `selecting_files`, `source_selected`, `analyzing`, `generating`, and `rendering`. Store `stage`, `updated_at`, `last_heartbeat_at`, `completed_sections`, `total_sections`, and an append-only progress event for meaningful changes. Do not invent a percentage when the work size is unknown.
 
-Implement legal transitions in `../../internal/statemachine` and enforce them in the storage transaction. A worker lease prevents simultaneous processing; expired leases are recoverable. Repeated work must be idempotent by job, stage and artifact version. Milestone 3 requeues old `input_ready` jobs once during migration and moves new jobs to `needs_input` for file selection. Confirmed selections queue `analyzing`, resetting the attempt budget. Extraction pauses at `needs_input` / `reviewing_evidence`. Evidence confirmation reaches `input_ready` / `evidence_confirmed`, the boundary before milestone 5. The worker dispatches from persisted inventory during retries, preserving intake and selection.
+Implement legal transitions in `../../internal/statemachine` and enforce them in the storage transaction. A worker lease prevents simultaneous processing; expired leases are recoverable. Repeated work must be idempotent by job, stage and artifact version. Milestone 3 requeues old `input_ready` jobs once during migration and moves new jobs to `needs_input` for file selection. Confirmed selections queue `analyzing`, resetting the attempt budget. Extraction pauses at `needs_input` / `reviewing_evidence`. Evidence confirmation with model credentials now queues `generating`; migration 5 requeues legacy `input_ready` / `evidence_confirmed` jobs, which fail actionably if credentials are missing. The worker dispatches from persisted inventory during retries, preserving intake and selection.
 
 ## Prompt user attention early
 

@@ -53,3 +53,14 @@ Still outside this milestone: fetching GitHub contents, inspecting ZIP entries, 
 - A second identical ZIP with the same selection and description produced the identical complete evidence record and SHA-256 digest. Confirmed evidence and user corrections survived web/worker restart.
 - Removed only the two smoke jobs and their uploaded/extracted files. The local stack remains running.
 - Limits: structured manifest parsing covers Go and package.json. Other manifests, README, API schemas and CI use bounded literal excerpts. Code extraction recognizes common Go/Python/JavaScript declaration prefixes; it does not verify runtime behavior. JSON facts cite files without fabricated line numbers. Extraction limits are visible in review. Browser visual layout, public GitHub extraction in this milestone, and forced analysis lease recovery were not manually exercised; intake and recovery use existing milestone 3 mechanics.
+
+## Milestone 5 — 2026-11-04
+
+- `go build ./...`, `git diff --check`, and `docker compose config --quiet` passed. No automated test files were added. Goose migrations 5 and 6 applied; Jet regenerated all 13 table definitions. The configured Go proxy was unavailable, so regeneration used `GOPROXY=https://proxy.golang.org`.
+- A temporary fake HTTP provider outside the repository produced four persisted sections in English and Russian from an uploaded small Go/README ZIP. Evidence confirmation accepted a selected model and encrypted per-job key. The sections HTML returned HTTP 200 and source citation links point to evidence entries.
+- Repeating an identical Russian request produced four sections with zero provider call records, confirming cache reuse. Editing the overview then regenerating interfaces preserved the overview edit.
+- A fake 429 showed `retry_wait`, `provider_rate_limit` and a retry timestamp, then resumed. An exhausted-quota response failed immediately. An invented citation was rejected as `provider_invalid_output` and recovered on retry. A zero-section failed job accepted a replacement key and completed on retry. A cross-origin regenerate POST returned HTTP 403.
+- These checks exercised the provider interface using explicit fixture mode, not a real OpenRouter request. Model quality, real provider accounting, real timeout behavior and browser visual layout remain unverified. Semantic claim support still requires human review; schema/reference checks alone cannot establish truth. The source-linked review UI flags uncited paragraphs and missing information.
+- Keys remain encrypted until their job is deleted. Automatic retention cleanup and ownership controls remain milestone 7. No Typst or PDF work was started.
+
+- Docker image rebuild passed. Removed nine smoke jobs and their local uploaded/extracted files, stopped temporary fake services, and restored the normal Compose web/worker stack without fixture mode.

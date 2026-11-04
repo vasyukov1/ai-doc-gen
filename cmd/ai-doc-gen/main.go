@@ -63,14 +63,18 @@ func run() error {
 
 		log.Printf("worker started: %s", owner)
 
-		return documents.NewWorker(queue, jobs, owner, cfg.SourceDir, cfg.GitHubToken).Run(ctx)
+		var fixture documents.Provider
+		if os.Getenv("LLM_FIXTURE_MODE") == "1" {
+			fixture = &documents.ChatProvider{Endpoint: os.Getenv("LLM_ENDPOINT"), Model: os.Getenv("LLM_MODEL"), Key: os.Getenv("LLM_API_KEY")}
+		}
+		return documents.NewWorker(queue, jobs, owner, cfg.SourceDir, cfg.GitHubToken, fixture, cfg.LLMEncryptionKey).Run(ctx)
 	}
 
 	return fmt.Errorf("unknown command: %s", os.Args[1])
 }
 
 func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository) error {
-	handler, err := web.NewHandler(jobs, cfg.UploadDir)
+	handler, err := web.NewHandler(jobs, cfg.UploadDir, cfg.LLMEncryptionKey)
 	if err != nil {
 		return err
 	}

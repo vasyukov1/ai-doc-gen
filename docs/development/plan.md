@@ -58,9 +58,9 @@ One numbered item equals one Codex implementation request. A future agent should
 
 **Acceptance:** the same pinned source and selection produce a reproducible evidence record; every displayed technical fact has a source or user attribution.
 
-## 5. Section generation through an LLM API
+## 5. Section generation through an LLM API — implemented; live-provider acceptance pending
 
-5.1. Add a replaceable model provider interface with server-side credentials, per-call timeouts, usage recording, and bounded retries. Classify rate limits, exhausted quota, invalid credentials, malformed output, and network timeouts.
+5.1. Add a replaceable model provider interface with server-side encrypted per-job OpenRouter credentials supplied through the website, per-call timeouts, usage recording, and bounded retries. Classify rate limits, exhausted quota, invalid credentials, malformed output, and network timeouts.
 
 5.2. Plan required sections from a versioned profile. Retrieve only relevant evidence for each section; request structured output, preserve required headings, and mark missing information instead of inventing it.
 

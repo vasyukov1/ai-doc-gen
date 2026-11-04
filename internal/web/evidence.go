@@ -46,6 +46,10 @@ func (h *Handler) confirmEvidence(w http.ResponseWriter, r *http.Request) {
 		writeJobError(w, err)
 		return
 	}
+	if !sameOrigin(r) {
+		http.Error(w, "Cross-origin request rejected.", 403)
+		return
+	}
 	r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Could not read evidence review.", http.StatusBadRequest)
@@ -57,7 +61,16 @@ func (h *Handler) confirmEvidence(w http.ResponseWriter, r *http.Request) {
 			corrections[strings.TrimPrefix(key, "correction.")] = strings.TrimSpace(values[0])
 		}
 	}
-	if err := h.jobs.ConfirmEvidence(r.Context(), job.ID, r.PostForm.Get("digest"), corrections); err != nil {
+	model, key := r.FormValue("model"), r.FormValue("api_key")
+	if !validModel(model) || len(key) < 8 || len(key) > 1000 {
+		http.Error(w, "Select a supported model and enter your OpenRouter API key.", 400)
+		return
+	}
+	if job.Status != domain.StatusNeedsInput || job.Stage != "reviewing_evidence" {
+		http.Error(w, "Evidence review is no longer available.", 409)
+		return
+	}
+	if err := h.jobs.ConfirmEvidence(r.Context(), job.ID, r.PostForm.Get("digest"), corrections, model, key, h.encryptionKey); err != nil {
 		if errors.Is(err, storage.ErrInvalidEvidence) {
 			http.Error(w, "Keep corrections below 4000 bytes.", http.StatusBadRequest)
 			return
@@ -67,7 +80,7 @@ func (h *Handler) confirmEvidence(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		log.Printf("confirm evidence %s: %v", job.ID, err)
-		http.Error(w, "Could not save evidence review.", http.StatusServiceUnavailable)
+		http.Error(w, "Could not save review. Configure LLM_ENCRYPTION_KEY on the server.", http.StatusServiceUnavailable)
 		return
 	}
 	http.Redirect(w, r, "/jobs/"+job.ID+"/evidence", http.StatusSeeOther)

@@ -16,15 +16,17 @@ import (
 )
 
 type Worker struct {
-	queue     *pgqueue.Queue
-	jobs      *storage.Repository
-	owner     string
-	sourceDir string
-	token     string
+	queue         *pgqueue.Queue
+	jobs          *storage.Repository
+	owner         string
+	sourceDir     string
+	token         string
+	provider      Provider
+	encryptionKey string
 }
 
-func NewWorker(queue *pgqueue.Queue, jobs *storage.Repository, owner, sourceDir, token string) *Worker {
-	return &Worker{queue: queue, jobs: jobs, owner: owner, sourceDir: sourceDir, token: token}
+func NewWorker(queue *pgqueue.Queue, jobs *storage.Repository, owner, sourceDir, token string, provider Provider, encryptionKey string) *Worker {
+	return &Worker{queue: queue, jobs: jobs, owner: owner, sourceDir: sourceDir, token: token, provider: provider, encryptionKey: encryptionKey}
 }
 
 func (w *Worker) Run(ctx context.Context) error {
@@ -50,12 +52,22 @@ func (w *Worker) Run(ctx context.Context) error {
 }
 
 func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
-	ctx, cancel := context.WithTimeout(parent, 2*time.Minute)
+	ctx, cancel := context.WithTimeout(parent, 10*time.Minute)
 	defer cancel()
 
 	done := make(chan struct{})
 	go w.heartbeat(ctx, claim.ID, done)
 	defer close(done)
+
+	evidence, evidenceErr := w.jobs.GetEvidence(ctx, claim.ID)
+	if evidenceErr == nil && evidence.Confirmed {
+		w.generate(ctx, parent, claim, evidence)
+		return
+	}
+	if evidenceErr != nil && !errors.Is(evidenceErr, sql.ErrNoRows) {
+		w.reportFailure(parent, claim, evidenceErr)
+		return
+	}
 
 	inventory, sourceErr := w.jobs.GetInventory(ctx, claim.ID)
 	if sourceErr == nil {
