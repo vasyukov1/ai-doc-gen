@@ -176,3 +176,19 @@ Visual contact-sheet review covered RU/EN approval sheets, title sheets, body/ou
 The independent review found one material issue: HTML text inputs would strip line breaks from the default institution banner. Organization, supervisor/approver positions and author/team fields now use textareas. A deployed owner-session smoke verified that the exact multiline institution default survived a save round trip; checking `resolve_missing` cleared only the edited section's warnings and preserved warnings in all other sections. The synthetic no-provider TZ compiled in 1.26 seconds with all 35 sections and no API calls; this measures layout/infrastructure, not model prose. That synthetic production job was deleted through its owner route.
 
 The updated Docker site is running. Prior user jobs and PDFs were not automatically rewritten. Rebuilding existing reviewed content or creating a new job uses the FKN layout. Font rendering intentionally uses the bundled Liberation Serif rather than an unlicensed/system-dependent Times New Roman copy; full pixel identity and formal institutional approval are not claimed.
+
+## 2026-11-05 — SRS and arc42 profiles
+
+Manual checks only; no automated suite or real model key was used. `go build ./...` and `git diff --check` passed. A separate PostgreSQL smoke database ran the existing migrations unchanged; no profile migration is necessary.
+
+- Native rendering compiled SRS and arc42 in RU and EN. SRS sample PDFs contain 22 editable leaves across seven major headings (12 physical pages); arc42 samples contain all twelve numbered sections (17 pages). Visual review of title, annotation, body and source-context pages confirmed neutral layout, localized headings, red TODOs, literal table text and no FKN institution defaults or inventory frames. Annotation carries the SRS scope qualification or arc42 attribution.
+- Controlled HTTP-provider runs through the website completed SRS RU with 22 saved sections in seven calls (0.87 seconds) and arc42 EN with 12 sections in six calls (1.26 seconds). The fixture checked that every request contained nonempty profile guidance and guidance for every requested section, and recorded the seven/six logical groups. These are infrastructure times, not real-provider speed or prose-quality evidence.
+- No-key runs completed SRS EN (22 outline sections, 0.84 seconds) and arc42 RU (12 outline sections, 1.25 seconds). Separate submissions without any input specification also completed as honest outlines (SRS 1.28 seconds; arc42 1.24 seconds), retaining missing-context TODOs.
+- Recompiling exported SRS RU and arc42 EN roots with pinned Typst/fonts/timestamp reproduced identical PDF bytes. Both source bundles contain the profile assets and ARC42-NOTICE.md.
+- A scoped independent review found no material defects in the profile, grouping, cache, selection or rendering changes. Profile/section instructions participate in cache identities; empty optional fields preserve existing-profile plan serialization.
+
+Live-provider SRS requirement correctness, cross-chapter requirement-level traceability and arc42 architecture accuracy require human review. Neither ISO conformity nor a live five-minute content benchmark is established by the controlled responses.
+
+Repeated identical SRS and arc42 fixture submissions restored all model sections from cache with zero API calls (1.27 and 1.25 seconds respectively), confirming both new profiles use the existing validated section cache.
+
+The local Docker site was rebuilt and restarted after confirming no active production jobs. Both options appeared in the submission form; deployed no-key SRS RU and arc42 EN jobs rendered successfully (1.26 and 0.83 seconds). Only these synthetic production jobs were deleted through their owner session. Temporary native workers/provider and the isolated smoke database were stopped/removed; prior user jobs were preserved.

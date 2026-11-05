@@ -133,3 +133,7 @@ The previous baseline-PDF target is superseded by [generation_quality_plan.md](g
 ### Academic template correction — FKN layout and visible manual fields
 
 Use the supplied FKN layout for all five academic variants. Keep the technical overview separate, preserve document IDs and user prose, and render manual-completion fields as red TODOs. Add explicit resolution of section-gap warnings in the editor. Acceptance: build, compile the five profiles in RU/EN, visually inspect front matter/body/change register, verify literal TODO/table rendering and reproducible bundles. No new numbered milestone or automated suite is started.
+
+### Additional document profiles — SRS and arc42
+
+Add independently selectable `srs` and `arc42` profiles with bilingual structure, profile/section-specific generation instructions, neutral PDF layout, private reproducible bundles and red manual TODOs. SRS uses an independently authored requirements structure informed by ISO/IEC/IEEE 29148:2018, not copied normative text or a conformity certificate. arc42 preserves its twelve sections and is not renamed ISO/IEC/IEEE 42010. Use seven and six semantic request groups respectively to leave room for discovery/repair within the existing persisted budget. Preserve the FKN profiles and existing jobs. Acceptance: build, manual bilingual render and website generation checks, grouped provider-fixture inspection, visual TODO/profile verification. No final automated testing milestone is started.

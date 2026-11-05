@@ -18,3 +18,9 @@ Official references checked during implementation:
 Academic profiles use the embedded `fkn.typ` adaptation of the user-supplied MIT-licensed FKN layout (copyright Alexander Vasyukov; see `v1/FKN-LICENSE`). The layout preserves the two front sheets, vertical inventory cells, approval-sheet counter reset, main-page footer, heading hierarchy and ten-column change register. Localized labels support RU/EN. `main.typ` renders all data literally and highlights TODO text in dark red. The generic overview remains independent.
 
 `fkn-2` identifies the layout revision. The bundled Liberation Serif family is used instead of the reference's system-dependent Times New Roman. Annotations are generated from the actual profile headings; copying a template does not assert verified standards compliance. User fields and project-specific facts are never copied from the reference. The downloaded source bundle includes the adapted layout and license; no external runtime import is needed.
+
+## International requirements and architecture profiles
+
+`srs.json` defines an independently authored SRS with 22 editable leaves and seven request groups, informed by the public scope of ISO/IEC/IEEE 29148:2018. It is not a reproduction of the licensed standard or a certification of conformity. `arc42.json` preserves the twelve arc42 sections in six generation groups; see `ARC42-NOTICE.md` for author credit, CC BY-SA 4.0 and adaptation details. arc42 is distinct from ISO/IEC/IEEE 42010:2022.
+
+Optional profile/section guidance and explicit chapter labels travel into prompts and cache identities. Both new profiles use neutral front matter and ordinary PDF headings, not FKN frames or institution defaults. The same literal JSON/table renderer, red TODO styling and private source export apply. Profile attribution appears in the annotation and notices are included in exported source bundles.

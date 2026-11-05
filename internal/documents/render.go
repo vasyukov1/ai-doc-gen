@@ -142,11 +142,23 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 	if data.Specification == "" {
 		data.Specification = missing("technical specification")
 	}
+	if p.ID == "srs" || p.ID == "arc42" {
+		data.Labels["specification"] = "Source requirements and context"
+		if job.Language == "ru" {
+			data.Labels["specification"] = "Исходные требования и контекст"
+		}
+		if input.Specification == "" {
+			data.Specification = "TODO: supply source requirements and stakeholder context."
+			if job.Language == "ru" {
+				data.Specification = "TODO: предоставить исходные требования и сведения от заинтересованных сторон."
+			}
+		}
+	}
 	data.DocumentCode = "RU.17701729." + meta["code"] + " " + p.Code + " 01-1"
 	if !p.Academic {
-		data.DocumentCode = "Technical overview / " + p.Version
-		if job.Language == "ru" {
-			data.DocumentCode = "Технический обзор / " + p.Version
+		data.DocumentCode = p.Title(job.Language) + " / " + p.Version
+		if p.Code != "" {
+			data.DocumentCode = p.Code + " / " + p.Version
 		}
 	}
 	for key, value := range fknLabels(job.Language) {
@@ -161,7 +173,7 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		data.Annotation = "Документ описывает проект в порядке разделов выбранного профиля. Черновики со ссылками на источники и требования пользователя сохранены раздельно. Выполнение испытаний и сертификация соответствия стандартам не подразумеваются."
 	}
 
-	if p.Academic {
+	if p.Academic || p.ID == "srs" || p.ID == "arc42" {
 		chapters := []string{}
 		for _, h := range p.Headings {
 			if h.Level == 1 {
@@ -172,6 +184,9 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		if job.Language == "ru" {
 			data.Annotation = p.Title(job.Language) + " к проекту «" + meta["project"] + "».\n\nДокумент содержит разделы: " + strings.Join(chapters, "; ") + "."
 		}
+	}
+	if notice := p.Notice(job.Language); notice != "" {
+		data.Annotation += "\n\n" + notice
 	}
 	if job.FreeDraft {
 		baseline, model, edited := 0, 0, 0

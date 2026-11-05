@@ -17,11 +17,14 @@ const ProfileVersion = "sections-2"
 const PromptVersion = "grounded-3"
 
 type SectionPlan struct {
-	ID       string
-	Heading  string
-	Language string
-	Topic    string
-	Kinds    []string
+	Chapter         string `json:",omitempty"`
+	Guidance        string `json:",omitempty"`
+	ProfileGuidance string `json:",omitempty"`
+	ID              string
+	Heading         string
+	Language        string
+	Topic           string
+	Kinds           []string
 }
 
 func Plan(profile, language string) []SectionPlan {
@@ -32,7 +35,7 @@ func Plan(profile, language string) []SectionPlan {
 	plan := []SectionPlan{}
 	for _, h := range profileAsset.Headings {
 		if h.Draft {
-			plan = append(plan, SectionPlan{ID: h.ID, Heading: h.Title(language), Language: language, Topic: h.EN, Kinds: headingKinds(h.EN)})
+			plan = append(plan, SectionPlan{ID: h.ID, Heading: h.Title(language), Language: language, Topic: h.EN, Kinds: headingKinds(h.EN + " " + h.Guidance), Chapter: h.Chapter, Guidance: h.Guidance, ProfileGuidance: profileAsset.Guidance})
 		}
 	}
 	return plan

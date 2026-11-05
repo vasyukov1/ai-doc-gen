@@ -1,0 +1,260 @@
+{
+  "id": "srs",
+  "version": "srs-29148-1",
+  "academic": false,
+  "ru": "Спецификация требований к ПО — SRS",
+  "en": "Software Requirements Specification — SRS",
+  "code": "SRS",
+  "guidance": "Prepare an SRS informed by ISO/IEC/IEEE 29148:2018 requirements-engineering principles. User requirements are authoritative input, not verified implementation. Separate required behavior, observed implementation, proposals and assumptions. Requirements should be atomic, unambiguous and verifiable; preserve supplied requirement IDs and never invent agreed priorities, measurements or acceptance. Do not claim full standards conformity or reproduce standard text.",
+  "notice_ru": "Самостоятельно разработанная структура SRS с ориентиром на ISO/IEC/IEEE 29148:2018: https://www.iso.org/standard/72089.html. Полный текст стандарта не воспроизводится; автоматическая генерация не подтверждает соответствие всем его требованиям.",
+  "notice_en": "Independently authored SRS structure informed by ISO/IEC/IEEE 29148:2018: https://www.iso.org/standard/72089.html. The full standard is not reproduced; generated output does not establish conformity with all its requirements.",
+  "headings": [
+    {
+      "id": "srs-01",
+      "level": 1,
+      "ru": "Введение",
+      "en": "Introduction",
+      "draft": false
+    },
+    {
+      "id": "srs-02",
+      "level": 2,
+      "ru": "Назначение и область действия",
+      "en": "Purpose and scope",
+      "draft": true,
+      "chapter": "Introduction",
+      "guidance": "State the software purpose, system boundary, intended readers and included/excluded capabilities."
+    },
+    {
+      "id": "srs-03",
+      "level": 2,
+      "ru": "Заинтересованные стороны и цели",
+      "en": "Stakeholders and objectives",
+      "draft": true,
+      "chapter": "Introduction",
+      "guidance": "Identify supplied stakeholder roles, business goals and intended benefits; unknown contacts and approvals are TODO."
+    },
+    {
+      "id": "srs-04",
+      "level": 2,
+      "ru": "Термины и ссылки",
+      "en": "Definitions and references",
+      "draft": true,
+      "chapter": "Introduction",
+      "guidance": "Define project terms and cite only supplied sources. Do not fabricate standards clauses or document versions."
+    },
+    {
+      "id": "srs-05",
+      "level": 1,
+      "ru": "Общее описание",
+      "en": "Overall description",
+      "draft": false
+    },
+    {
+      "id": "srs-06",
+      "level": 2,
+      "ru": "Контекст и функции продукта",
+      "en": "Product perspective and functions",
+      "draft": true,
+      "chapter": "Overall description",
+      "guidance": "Describe how the product fits its environment and summarize capabilities without duplicating the detailed requirements."
+    },
+    {
+      "id": "srs-07",
+      "level": 2,
+      "ru": "Классы пользователей",
+      "en": "User classes and characteristics",
+      "draft": true,
+      "chapter": "Overall description",
+      "guidance": "Describe user roles, skills, access needs and accessibility considerations supported by requirements."
+    },
+    {
+      "id": "srs-08",
+      "level": 2,
+      "ru": "Среда эксплуатации",
+      "en": "Operating environment",
+      "draft": true,
+      "chapter": "Overall description",
+      "guidance": "Distinguish declared software/platform dependencies from required deployment environment; unknown platform versions and sizing are TODO."
+    },
+    {
+      "id": "srs-09",
+      "level": 2,
+      "ru": "Ограничения, допущения и зависимости",
+      "en": "Constraints, assumptions and dependencies",
+      "draft": true,
+      "chapter": "Overall description",
+      "guidance": "Separate mandated constraints, assumptions requiring confirmation and external dependencies; mark conflicting requirements and code explicitly."
+    },
+    {
+      "id": "srs-10",
+      "level": 1,
+      "ru": "Требования к внешним интерфейсам",
+      "en": "External interface requirements",
+      "draft": false
+    },
+    {
+      "id": "srs-11",
+      "level": 2,
+      "ru": "Пользовательские интерфейсы",
+      "en": "User interfaces",
+      "draft": true,
+      "chapter": "External interface requirements",
+      "guidance": "Describe required user interactions, inputs, outputs, navigation and error feedback; do not infer a graphical UI from an API."
+    },
+    {
+      "id": "srs-12",
+      "level": 2,
+      "ru": "Программные и аппаратные интерфейсы",
+      "en": "Software and hardware interfaces",
+      "draft": true,
+      "chapter": "External interface requirements",
+      "guidance": "Specify supported system integrations, data contracts and hardware interfaces; mark hardware interfaces not applicable only when justified."
+    },
+    {
+      "id": "srs-13",
+      "level": 2,
+      "ru": "Коммуникационные интерфейсы",
+      "en": "Communication interfaces",
+      "draft": true,
+      "chapter": "External interface requirements",
+      "guidance": "Describe protocols, message/API formats, authentication requirements and failure behavior from evidence."
+    },
+    {
+      "id": "srs-14",
+      "level": 1,
+      "ru": "Функциональные требования и данные",
+      "en": "Functional and data requirements",
+      "draft": false
+    },
+    {
+      "id": "srs-15",
+      "level": 2,
+      "ru": "Функциональные требования",
+      "en": "Functional requirements",
+      "draft": true,
+      "chapter": "Functional and data requirements",
+      "guidance": "Write atomic, verifiable requirements with distinct IDs prefixed FR-, actor, trigger, expected behavior, source and priority if supplied. Preserve existing user requirement IDs. Code-derived requirements are proposals requiring confirmation."
+    },
+    {
+      "id": "srs-16",
+      "level": 2,
+      "ru": "Сценарии и обработка ошибок",
+      "en": "Use cases and error handling",
+      "draft": true,
+      "chapter": "Functional and data requirements",
+      "guidance": "Describe preconditions, normal flow, alternative/error paths and postconditions. Never claim scenarios were executed."
+    },
+    {
+      "id": "srs-17",
+      "level": 2,
+      "ru": "Данные и правила их обработки",
+      "en": "Data requirements",
+      "draft": true,
+      "chapter": "Functional and data requirements",
+      "guidance": "Describe entities, constraints, validation, persistence and lifecycle requirements; retention periods and privacy rules need supplied authority or TODO."
+    },
+    {
+      "id": "srs-18",
+      "level": 1,
+      "ru": "Требования к качеству",
+      "en": "Quality requirements",
+      "draft": false
+    },
+    {
+      "id": "srs-19",
+      "level": 2,
+      "ru": "Производительность и ёмкость",
+      "en": "Performance and capacity",
+      "draft": true,
+      "chapter": "Quality requirements",
+      "guidance": "Describe response-time, throughput, capacity and resource criteria with sources. Do not invent numerical targets or measured performance."
+    },
+    {
+      "id": "srs-20",
+      "level": 2,
+      "ru": "Надёжность и доступность",
+      "en": "Reliability and availability",
+      "draft": true,
+      "chapter": "Quality requirements",
+      "guidance": "Describe fault tolerance, recovery, data integrity and availability criteria. Missing SLO, RTO and RPO values are TODO."
+    },
+    {
+      "id": "srs-21",
+      "level": 2,
+      "ru": "Безопасность и конфиденциальность",
+      "en": "Security and privacy",
+      "draft": true,
+      "chapter": "Quality requirements",
+      "guidance": "Describe authentication, authorization, data protection and auditing requirements. Distinguish implemented controls from requirements; do not assert compliance."
+    },
+    {
+      "id": "srs-22",
+      "level": 2,
+      "ru": "Удобство использования и доступность интерфейса",
+      "en": "Usability and accessibility",
+      "draft": true,
+      "chapter": "Quality requirements",
+      "guidance": "Describe usability and accessibility criteria for supported user roles and interfaces; unknown acceptance thresholds are TODO."
+    },
+    {
+      "id": "srs-23",
+      "level": 2,
+      "ru": "Сопровождаемость, переносимость и совместимость",
+      "en": "Maintainability, portability and compatibility",
+      "draft": true,
+      "chapter": "Quality requirements",
+      "guidance": "Describe supported platforms, compatibility, configuration, diagnostics, maintenance and migration requirements; do not invent support commitments."
+    },
+    {
+      "id": "srs-24",
+      "level": 1,
+      "ru": "Проверка и прослеживаемость",
+      "en": "Verification and traceability",
+      "draft": false
+    },
+    {
+      "id": "srs-25",
+      "level": 2,
+      "ru": "Методы проверки и критерии приёмки",
+      "en": "Verification methods and acceptance criteria",
+      "draft": true,
+      "chapter": "Verification and traceability",
+      "guidance": "Propose inspection, analysis, demonstration or test for requirements with measurable expected results. Missing acceptance authority and thresholds are TODO; no test results may be fabricated."
+    },
+    {
+      "id": "srs-26",
+      "level": 2,
+      "ru": "Прослеживаемость требований",
+      "en": "Requirements traceability",
+      "draft": true,
+      "chapter": "Verification and traceability",
+      "guidance": "Map only requirement IDs actually present in supplied evidence to source, component and proposed verification. If generated requirements from other chapters are unavailable, use their stable section IDs and mark requirement-level links TODO; never invent cross-chapter IDs."
+    },
+    {
+      "id": "srs-27",
+      "level": 2,
+      "ru": "Открытые вопросы и согласование",
+      "en": "Open issues and approval",
+      "draft": true,
+      "chapter": "Verification and traceability",
+      "guidance": "List unresolved decisions and conflicts requiring stakeholder confirmation; owners, approval dates and signatures are TODO if not supplied."
+    },
+    {
+      "id": "srs-28",
+      "level": 1,
+      "ru": "Дополнительные сведения",
+      "en": "Supporting information",
+      "draft": false
+    },
+    {
+      "id": "srs-29",
+      "level": 2,
+      "ru": "Приоритеты, этапы поставки и изменения",
+      "en": "Priorities, delivery increments and changes",
+      "draft": true,
+      "chapter": "Supporting information",
+      "guidance": "Document supplied priorities and allocation to delivery increments, change/version information and approval process. Unspecified schedules are TODO, not inferred from code dates."
+    }
+  ]
+}

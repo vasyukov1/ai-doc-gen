@@ -1,0 +1,121 @@
+{
+  "id": "arc42",
+  "version": "arc42-1",
+  "academic": false,
+  "ru": "Описание архитектуры — arc42",
+  "en": "Architecture documentation — arc42",
+  "code": "arc42",
+  "guidance": "Follow the twelve arc42 views. Keep requirements, observed structure, inferred runtime scenarios and proposed design decisions distinct. This is an arc42 document, not a claim of ISO/IEC/IEEE 42010 conformance.",
+  "notice_ru": "Структура arc42: Gernot Starke и Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Адаптация: русский перевод, задания для генерации и вёрстка PDF. Содержание проекта не является частью лицензии шаблона. Соответствие ISO/IEC/IEEE 42010 не заявляется.",
+  "notice_en": "arc42 structure by Gernot Starke and Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Adapted with Russian labels, generation guidance and PDF layout. Project content is separate from the template license. ISO/IEC/IEEE 42010 conformance is not asserted.",
+  "headings": [
+    {
+      "id": "arc42-01",
+      "level": 1,
+      "ru": "Введение и цели",
+      "en": "Introduction and Goals",
+      "draft": true,
+      "chapter": "Context and drivers",
+      "guidance": "Explain the business task, stakeholders and their concerns, and the top quality goals; distinguish requirements from observed implementation."
+    },
+    {
+      "id": "arc42-02",
+      "level": 1,
+      "ru": "Архитектурные ограничения",
+      "en": "Architecture Constraints",
+      "draft": true,
+      "chapter": "Context and drivers",
+      "guidance": "List technical, organizational and external constraints. Separate mandatory constraints from selected technologies and unresolved assumptions."
+    },
+    {
+      "id": "arc42-03",
+      "level": 1,
+      "ru": "Контекст и границы системы",
+      "en": "Context and Scope",
+      "draft": true,
+      "chapter": "Context and drivers",
+      "guidance": "Describe the system boundary, actors, external systems, business interactions and technical interfaces with their data and protocols."
+    },
+    {
+      "id": "arc42-04",
+      "level": 1,
+      "ru": "Стратегия решения",
+      "en": "Solution Strategy",
+      "draft": true,
+      "chapter": "Structure and strategy",
+      "guidance": "Explain the main architecture approach and how it addresses the stated goals. Do not invent the historical rationale for observed technology choices."
+    },
+    {
+      "id": "arc42-05",
+      "level": 1,
+      "ru": "Представление строительных блоков",
+      "en": "Building Block View",
+      "draft": true,
+      "chapter": "Structure and strategy",
+      "guidance": "Describe top-level components, their responsibilities, interfaces, dependencies and important internal modules; map each to source paths."
+    },
+    {
+      "id": "arc42-06",
+      "level": 1,
+      "ru": "Представление времени выполнения",
+      "en": "Runtime View",
+      "draft": true,
+      "chapter": "Runtime and deployment",
+      "guidance": "Explain source-supported end-to-end scenarios step by step, including data flow and failure handling. Static scenarios are inferred from source, not proof of execution."
+    },
+    {
+      "id": "arc42-07",
+      "level": 1,
+      "ru": "Представление развёртывания",
+      "en": "Deployment View",
+      "draft": true,
+      "chapter": "Runtime and deployment",
+      "guidance": "Map software components to declared infrastructure, environments, configuration and deployment artifacts. Mark absent production topology and sizing as TODO."
+    },
+    {
+      "id": "arc42-08",
+      "level": 1,
+      "ru": "Сквозные концепции",
+      "en": "Crosscutting Concepts",
+      "draft": true,
+      "chapter": "Concepts and decisions",
+      "guidance": "Explain shared concepts for persistence, validation, authentication, errors, messaging, logging and configuration only where supported by source."
+    },
+    {
+      "id": "arc42-09",
+      "level": 1,
+      "ru": "Архитектурные решения",
+      "en": "Architecture Decisions",
+      "draft": true,
+      "chapter": "Concepts and decisions",
+      "guidance": "Record documented decisions, context, alternatives and consequences. Separate observed implementation from proposed decisions; unknown historical rationale is TODO."
+    },
+    {
+      "id": "arc42-10",
+      "level": 1,
+      "ru": "Требования к качеству",
+      "en": "Quality Requirements",
+      "draft": true,
+      "chapter": "Quality and risks",
+      "guidance": "Describe quality goals and scenarios: stimulus, environment, affected component, response and measurable acceptance. Unknown numerical targets are TODO."
+    },
+    {
+      "id": "arc42-11",
+      "level": 1,
+      "ru": "Риски и технический долг",
+      "en": "Risks and Technical Debt",
+      "draft": true,
+      "chapter": "Quality and risks",
+      "guidance": "Describe evidence-backed risks, impact and possible mitigations. Label inferred risks and proposed actions; do not equate absent evidence with a proven vulnerability."
+    },
+    {
+      "id": "arc42-12",
+      "level": 1,
+      "ru": "Глоссарий",
+      "en": "Glossary",
+      "draft": true,
+      "chapter": "Terminology",
+      "guidance": "Define domain and architecture terms used in the project. Keep names consistent with sources and avoid a generic programming dictionary."
+    }
+  ]
+}

@@ -121,3 +121,19 @@ The user requested the FKN template family and conspicuous manual-completion mar
 Data still enters through literal JSON/text, never executable model or uploaded Typst. Personal names, dates, signatures, project code and missing requirements are not fabricated. Empty fields and section gaps render with `TODO` in dark red; literal TODO text in prose and table cells uses the same style. Institution/faculty/program labels default to the FKN Software Engineering profile and remain editable. The bundled Liberation Serif fonts remain the deterministic, distributable substitute for the reference's Times New Roman; there is no dependency on system fonts or remote packages. The source copyright/license is retained in `FKN-LICENSE` and exported with the bundle. Profile annotations describe actual section headings instead of copying unverified compliance assertions or unrelated project claims.
 
 The editor can clear a section's missing-information warnings only through an explicit checked “missing information is filled in” action on save. Ordinary saves retain warnings; other sections and stored artifacts are unchanged until an explicit rebuild. Signature/date TODOs are deliberate paper-signing placeholders. Blank archival/change-registration cells remain form cells rather than invented change records. Previously downloaded bundles retain their own layout and remain reproducible.
+
+## 2026-11-05 — Distinct SRS and arc42 document profiles
+
+The user requested an SRS profile and arc42. The supplied architecture URL identifies ISO/IEC/IEEE 42010:2022, not arc42; implement the explicitly named arc42 format using its official twelve-part structure. SRS is an independently authored requirements specification informed by ISO/IEC/IEEE 29148:2018's public scope. Neither a complete licensed standard reproduction nor formal conformity is claimed.
+
+Profile assets own optional generation guidance and logical chapter labels. Stable leaf IDs, profile guidance and section guidance participate in section cache keys through the section plan. SRS has 22 editable leaves in seven groups; arc42 has 12 numbered sections in six related groups. Both retain the existing 12-admission and 240-second model budget. Source selection includes build/deployment and test files for these profiles without executing them. Model instructions distinguish requirements from observed implementation, proposed decisions and inferred scenarios; unknown thresholds/approvals are TODO. Traceability must not invent requirement IDs from unseen generated chapters.
+
+Both profiles use neutral document rendering without FKN university defaults, approval sheets, inventory frames or change registers. Display the actual profile identifier/version and localized annotation. User requirements/context are optional input so a source-based architecture draft or SRS outline can be produced when no complete specification exists. Missing stakeholder decisions remain visible. Existing jobs and profile IDs are unchanged; no database migration is required because profile IDs are text and evidence/sections are JSONB.
+
+The adapted arc42 asset credits Gernot Starke and Peter Hruschka and uses CC BY-SA 4.0 for the template, separately from project-specific content. Attribution and adaptation notes appear in the document annotation and the exported ARC42-NOTICE.md. No external runtime template dependency is added.
+
+References checked on 2026-11-05:
+- https://www.iso.org/standard/72089.html — ISO/IEC/IEEE 29148:2018 public scope.
+- https://www.iso.org/standard/74393.html — ISO/IEC/IEEE 42010:2022 architecture description.
+- https://arc42.org/overview/ — twelve sections.
+- https://arc42.org/license/ — template attribution and adaptation terms.

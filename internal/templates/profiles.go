@@ -12,11 +12,13 @@ var Assets embed.FS
 const TypstVersion = "0.15.1"
 
 type Heading struct {
-	ID    string `json:"id"`
-	Level int    `json:"level"`
-	RU    string `json:"ru"`
-	EN    string `json:"en"`
-	Draft bool   `json:"draft"`
+	Chapter  string `json:"chapter,omitempty"`
+	Guidance string `json:"guidance,omitempty"`
+	ID       string `json:"id"`
+	Level    int    `json:"level"`
+	RU       string `json:"ru"`
+	EN       string `json:"en"`
+	Draft    bool   `json:"draft"`
 }
 
 func (h Heading) Title(language string) string {
@@ -27,6 +29,9 @@ func (h Heading) Title(language string) string {
 }
 
 type Profile struct {
+	Guidance string    `json:"guidance,omitempty"`
+	NoticeRU string    `json:"notice_ru,omitempty"`
+	NoticeEN string    `json:"notice_en,omitempty"`
 	ID       string    `json:"id"`
 	Version  string    `json:"version"`
 	Academic bool      `json:"academic"`
@@ -45,7 +50,7 @@ func (p Profile) Title(language string) string {
 func Load(id string) (Profile, error) {
 	var profile Profile
 	switch id {
-	case "tz", "pz", "ro", "pmi", "pmi-team", "technical-overview":
+	case "tz", "pz", "ro", "pmi", "pmi-team", "technical-overview", "srs", "arc42":
 	default:
 		return profile, fmt.Errorf("unknown document profile")
 	}
@@ -55,4 +60,11 @@ func Load(id string) (Profile, error) {
 	}
 	err = json.Unmarshal(raw, &profile)
 	return profile, err
+}
+
+func (p Profile) Notice(language string) string {
+	if language == "ru" {
+		return p.NoticeRU
+	}
+	return p.NoticeEN
 }
