@@ -5,7 +5,7 @@ DATABASE_URL ?= postgres://ai_doc_gen:local_dev_only@127.0.0.1:$(PG_PORT)/ai_doc
 
 export PG_PORT HTTP_PORT DATABASE_URL
 
-.PHONY: run build ui test down mocks db-generate
+.PHONY: run build ui test down mocks db-generate models
 
 run:
 	@docker info >/dev/null 2>&1 || { echo "Docker is not running. Start it first, for example: colima start"; exit 1; }
@@ -28,6 +28,11 @@ down:
 
 mocks:
 	@echo "Mock generation is not configured yet."
+
+models:
+	@docker info >/dev/null 2>&1 || { echo "Docker is not running. Start it first, for example: colima start"; exit 1; }
+	docker compose up -d ollama
+	docker compose exec ollama ollama pull $${LOCAL_MODEL:-qwen2.5:7b-instruct}
 
 db-generate:
 	docker compose up -d postgres

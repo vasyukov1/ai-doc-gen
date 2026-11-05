@@ -14,7 +14,7 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 )
 
-const AnalysisVersion = "source-context-3"
+const AnalysisVersion = "source-context-4"
 
 // sourceFacts keeps whole declarations and paragraphs within explicit bounds.
 func sourceFacts(path string, data []byte) []domain.Fact {
@@ -53,6 +53,20 @@ func sourceFacts(path string, data []byte) []domain.Fact {
 					add("api_entity", name+": "+string(defs[name]), 0, 0)
 				}
 			}
+			return facts
+		}
+	}
+	switch sourceLanguage(path) {
+	case "script":
+		if facts, ok := scriptFacts(path, data); ok {
+			return facts
+		}
+	case "python":
+		if facts, ok := pythonFacts(path, data); ok {
+			return facts
+		}
+	case "yaml":
+		if facts, ok := yamlOpenAPIFacts(path, data); ok {
 			return facts
 		}
 	}

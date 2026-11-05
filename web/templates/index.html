@@ -123,19 +123,19 @@
             <details class="group">
               <summary>Model keys <span class="optional">Optional</span></summary>
               <div class="details-body">
-                <p class="form-note">A source-linked draft is generated without keys. Connect free-tier models to improve it. Keys are encrypted on this server.</p>
+                <p class="form-note">A source-linked draft is generated without keys. Connect free-tier models to improve it. Separate several keys with commas or new lines: each key gets its own free-tier window. Keys are encrypted on this server.</p>
                 <input type="hidden" name="generation_mode" value="free">
 
                 <div class="providers">
                   <fieldset class="provider">
                     <legend>Gemini</legend>
-                    <div class="field"><label for="gemini_key">API key</label><input id="gemini_key" name="gemini_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" maxlength="150"></div>
+                    <div class="field"><label for="gemini_key">API key or keys</label><input id="gemini_key" name="gemini_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" value="gemini-2.5-flash" maxlength="150"></div>
                     <label class="checkbox"><input type="checkbox" name="gemini_free" value="yes"> This project has no billing enabled.</label>
                     <details>
                       <summary>Account rate limits</summary>
                       <div class="form-grid details-body">
-                        <div class="field"><span>Requests per minute</span><input name="gemini_rpm" type="number" value="5" min="1" max="60"></div>
+                        <div class="field"><span>Requests per minute</span><input name="gemini_rpm" type="number" value="10" min="1" max="60"></div>
                         <div class="field"><span>Tokens per minute</span><input name="gemini_tpm" type="number" value="15000" min="4000" max="100000"></div>
                       </div>
                     </details>
@@ -143,29 +143,43 @@
 
                   <fieldset class="provider">
                     <legend>Groq</legend>
-                    <div class="field"><label for="groq_key">API key</label><input id="groq_key" name="groq_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="groq_model">Model ID</label><input id="groq_model" name="groq_model" maxlength="150"></div>
+                    <div class="field"><label for="groq_key">API key or keys</label><input id="groq_key" name="groq_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="groq_model">Model ID</label><input id="groq_model" name="groq_model" value="openai/gpt-oss-120b" maxlength="150"></div>
                     <label class="checkbox"><input type="checkbox" name="groq_free" value="yes"> My Groq account uses the free plan.</label>
                     <details>
                       <summary>Account rate limits</summary>
                       <div class="form-grid details-body">
                         <div class="field"><span>Requests per minute</span><input name="groq_rpm" type="number" value="5" min="1" max="60"></div>
-                        <div class="field"><span>Tokens per minute</span><input name="groq_tpm" type="number" value="15000" min="4000" max="100000"></div>
+                        <div class="field"><span>Tokens per minute</span><input name="groq_tpm" type="number" value="8000" min="4000" max="100000"></div>
                       </div>
                     </details>
                   </fieldset>
 
                   <fieldset class="provider">
                     <legend>OpenRouter</legend>
-                    <div class="field"><label for="openrouter_key">API key</label><input id="openrouter_key" name="openrouter_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="openrouter_model">Model ID</label><input id="openrouter_model" name="openrouter_model" maxlength="150"></div>
+                    <div class="field"><label for="openrouter_key">API key or keys</label><input id="openrouter_key" name="openrouter_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="openrouter_model">Model ID</label><input id="openrouter_model" name="openrouter_model" value="nvidia/nemotron-3.5-lightning:free" maxlength="150"></div>
                     <label class="checkbox"><input type="checkbox" name="openrouter_free" value="yes"> Only use models with zero pricing.</label>
                     <details>
                       <summary>Account rate limits</summary>
                       <div class="form-grid details-body">
-                        <div class="field"><span>Requests per minute</span><input name="openrouter_rpm" type="number" value="5" min="1" max="60"></div>
+                        <div class="field"><span>Requests per minute</span><input name="openrouter_rpm" type="number" value="20" min="1" max="60"></div>
                         <div class="field"><span>Tokens per minute</span><input name="openrouter_tpm" type="number" value="15000" min="4000" max="100000"></div>
                       </div>
+                    </details>
+                  </fieldset>
+
+                  <fieldset class="provider">
+                    <legend>Local model</legend>
+                    <label class="checkbox"><input type="checkbox" name="local_enabled" value="yes"> Run a model in this Docker setup without an API key.</label>
+                    <details>
+                      <summary>Local model settings</summary>
+                      <div class="form-grid details-body">
+                        <div class="field"><label for="local_model">Model ID</label><input id="local_model" name="local_model" value="qwen2.5:7b-instruct" maxlength="150"></div>
+                        <div class="field"><span>Requests per minute</span><input name="local_rpm" type="number" value="1" min="1" max="60"></div>
+                        <div class="field"><span>Tokens per minute</span><input name="local_tpm" type="number" value="24000" min="1000" max="100000"></div>
+                      </div>
+                      <p class="form-note">Run <code>make models</code> once and keep the Ollama service running. CPU-only generation is slow and produces weaker prose than hosted models.</p>
                     </details>
                   </fieldset>
                 </div>

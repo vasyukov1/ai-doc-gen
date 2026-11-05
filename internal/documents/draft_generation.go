@@ -154,7 +154,13 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 								continue
 							}
 							available = true
-							adapter := Provider(&ChatProvider{Endpoint: ProviderEndpoint(connection.Provider), Model: connection.Model, Key: connection.Key, MaxTokens: 6000, FreeOnly: connection.Provider == "openrouter"})
+							local := connection.Provider == "local"
+							timeout := time.Duration(0)
+							if local {
+								// A CPU-only model needs a longer window than a hosted endpoint.
+								timeout = 180 * time.Second
+							}
+							adapter := Provider(&ChatProvider{Endpoint: ProviderEndpoint(connection.Provider), Model: connection.Model, Key: connection.Key, MaxTokens: 6000, FreeOnly: connection.Provider == "openrouter", Keyless: local, Timeout: timeout})
 							if w.provider != nil {
 								adapter = w.provider
 								if p, ok := adapter.(*ChatProvider); ok {
@@ -344,6 +350,14 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 								if failure.OutputLimit > 0 {
 									outputCaps[limitKey] = failure.OutputLimit
 								}
+								if failure.Code == "provider_context_budget" {
+									// The real window is smaller than the form TPM; halve the pack
+									// so the next attempt has a chance to fit.
+									bound := max(2000, estimateTokens(prompt)/2)
+									if inputCaps[limitKey] == 0 || bound < inputCaps[limitKey] {
+										inputCaps[limitKey] = bound
+									}
+								}
 								if failure.Rejected != "" {
 									group.Previous = clipText(failure.Rejected, 12000)
 									group.Issues = []domain.ValidationIssue{{
@@ -358,6 +372,11 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 							diagnostic := CallDiagnostics{Stage: "generation", PromptVersion: DraftVersion, EstimatedTokens: estimateTokens(prompt)}
 							if p, ok := adapter.(*ChatProvider); ok {
 								diagnostic = p.Diagnostics
+							}
+							// A published per-minute window smaller than the form value wins;
+							// fit later calls to it instead of retrying 429 responses.
+							if diagnostic.LimitTokens > 0 && (inputCaps[limitKey] == 0 || diagnostic.LimitTokens < inputCaps[limitKey]) {
+								inputCaps[limitKey] = diagnostic.LimitTokens
 							}
 							diagnostic.Issues = group.Issues
 							diagnostic.ReservedTokens = reservedTokens

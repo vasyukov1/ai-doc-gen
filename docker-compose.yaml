@@ -59,6 +59,7 @@ services:
       UPLOAD_DIR: /data/uploads
       SOURCE_DIR: /data/sources
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      LOCAL_LLM_ENDPOINT: ${LOCAL_LLM_ENDPOINT:-http://ollama:11434/v1/chat/completions}
     volumes:
       - uploads:/data/uploads
       - sources:/data/sources
@@ -66,6 +67,16 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+
+  ollama:
+    image: ${OLLAMA_IMAGE:-ollama/ollama:latest}
+    ports:
+      - "127.0.0.1:${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_models:/root/.ollama
     restart: unless-stopped
 
 volumes:
@@ -73,3 +84,4 @@ volumes:
   uploads:
   sources:
   state:
+  ollama_models:

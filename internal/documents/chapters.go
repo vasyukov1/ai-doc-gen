@@ -105,7 +105,13 @@ func chapterSources(e domain.Evidence, plans []SectionPlan, budget int) []domain
 		fact  domain.Fact
 		score int
 	}
-	buckets := map[string][]candidate{}
+	type entry struct {
+		candidate
+		service string
+	}
+	entries := []entry{}
+	texts := []string{}
+	seenValues := map[string]bool{}
 	for _, f := range e.Facts {
 		if f.Provenance == "unknown" || f.Kind == "selected_file" || f.Kind == "import" || f.Kind == "dependency" {
 			continue
@@ -114,6 +120,10 @@ func chapterSources(e domain.Evidence, plans []SectionPlan, budget int) []domain
 			f.Value = v
 			f.Provenance = "user"
 		}
+		if seenValues[f.Value] {
+			continue
+		}
+		seenValues[f.Value] = true
 		score := 0
 		switch f.Kind {
 		case "project_title", "project_context", "specification":
@@ -124,13 +134,6 @@ func chapterSources(e domain.Evidence, plans []SectionPlan, budget int) []domain
 			score = 14
 		case "code_function", "code_type", "sql_declaration", "configuration":
 			score = 10
-		}
-		for _, p := range plans {
-			for _, word := range topicWords(p) {
-				if strings.Contains(strings.ToLower(f.Kind+" "+f.Path+" "+f.Value), word) {
-					score++
-				}
-			}
 		}
 		service := strings.Split(f.Path, "/")[0]
 		if f.Provenance == "user" {
@@ -143,8 +146,15 @@ func chapterSources(e domain.Evidence, plans []SectionPlan, budget int) []domain
 		case "api_operation", "api_entity":
 			category = "interfaces"
 		}
-		service += "/" + category
-		buckets[service] = append(buckets[service], candidate{f, score})
+		entries = append(entries, entry{candidate{f, score}, service + "/" + category})
+		texts = append(texts, f.Kind+" "+f.Path+" "+f.Value)
+	}
+	bm := newBM25(texts)
+	query := queryWords(plans)
+	buckets := map[string][]candidate{}
+	for index, item := range entries {
+		item.score += int(bm.score(query, index) * 6)
+		buckets[item.service] = append(buckets[item.service], item.candidate)
 	}
 	for key := range buckets {
 		sort.SliceStable(buckets[key], func(i, j int) bool { return buckets[key][i].score > buckets[key][j].score })

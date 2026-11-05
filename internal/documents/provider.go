@@ -46,6 +46,8 @@ type CallDiagnostics struct {
 	RequestBytes    int                      `json:"request_bytes"`
 	ResponseBytes   int                      `json:"response_bytes"`
 	EstimatedTokens int                      `json:"estimated_tokens"`
+	LimitTokens     int                      `json:"limit_tokens,omitempty"`
+	LimitRequests   int                      `json:"limit_requests,omitempty"`
 	RetryAfter      string                   `json:"retry_after,omitempty"`
 	Stage           string                   `json:"stage"`
 	PromptVersion   string                   `json:"prompt_version"`
@@ -61,7 +63,11 @@ type ChatProvider struct {
 	Client      *http.Client
 	MaxTokens   int
 	FreeOnly    bool
-	Cooldown    time.Duration
+	// Keyless providers (a local model) need no Authorization header.
+	Keyless bool
+	// Timeout overrides the default 45-second request window.
+	Timeout  time.Duration
+	Cooldown time.Duration
 }
 
 func (p *ChatProvider) Identity() (string, string) { return p.Endpoint, p.Model }
@@ -70,10 +76,14 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 	var usage domain.Usage
 	p.Diagnostics = CallDiagnostics{Stage: "generation", PromptVersion: DraftVersion, EstimatedTokens: estimateTokens(prompt)}
 	p.Cooldown = 0
-	if p.Endpoint == "" || p.Model == "" || p.Key == "" {
+	if p.Endpoint == "" || p.Model == "" || (p.Key == "" && !p.Keyless) {
 		return "", usage, &ProviderError{Code: "provider_configuration", Message: "Configure LLM_ENDPOINT, LLM_MODEL and LLM_API_KEY on the worker."}
 	}
-	ctx, cancel := context.WithTimeout(ctx, 45*time.Second)
+	timeout := 45 * time.Second
+	if p.Timeout > 0 {
+		timeout = p.Timeout
+	}
+	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	limit := p.MaxTokens
 	if limit == 0 {
@@ -92,7 +102,9 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 	if err != nil {
 		return "", usage, &ProviderError{Code: "provider_configuration", Message: "Check the configured provider endpoint."}
 	}
-	request.Header.Set("Authorization", "Bearer "+p.Key)
+	if p.Key != "" {
+		request.Header.Set("Authorization", "Bearer "+p.Key)
+	}
 	request.Header.Set("Content-Type", "application/json")
 	client := p.Client
 	if client == nil {
@@ -105,6 +117,13 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 	defer response.Body.Close()
 	p.Cooldown = responseCooldown(response.Header)
 	p.Diagnostics.HTTPStatus = response.StatusCode
+	// Published per-minute limits are authoritative and smaller than the form value.
+	if value, err := strconv.Atoi(response.Header.Get("x-ratelimit-limit-tokens")); err == nil && value > 0 {
+		p.Diagnostics.LimitTokens = value
+	}
+	if value, err := strconv.Atoi(response.Header.Get("x-ratelimit-limit-requests")); err == nil && value > 0 {
+		p.Diagnostics.LimitRequests = value
+	}
 	p.Diagnostics.RequestID = clipText(response.Header.Get("X-Request-ID"), 200)
 	p.Diagnostics.RetryAfter = clipText(response.Header.Get("Retry-After"), 100)
 	data, err := io.ReadAll(io.LimitReader(response.Body, 2<<20+1))
@@ -149,7 +168,10 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 			failure.Rejected = clipText(result.Error.FailedGeneration, 20000)
 		case strings.Contains(code, "context_length") || strings.Contains(message, "context length") || strings.Contains(message, "reduce the length"):
 			failure.Code = "provider_context_budget"
-			failure.Message = "The chapter prompt exceeds the model context window. Choose a model with a larger window."
+			failure.Message = "The chapter prompt exceeds the model context window; retrying with a smaller pack."
+			// Keep the provider: the next pass fits a smaller pack instead of
+			// leaving every later chapter without a model.
+			failure.Temporary = true
 		case response.StatusCode == 402, strings.Contains(code, "insufficient_quota"), strings.Contains(code, "daily_limit"), response.StatusCode == 429 && (strings.Contains(message, "tokens per day") || strings.Contains(message, "requests per day") || strings.Contains(message, "requestsperday") || strings.Contains(message, "tokensperday")):
 			failure.Code = "provider_quota"
 			failure.Message = "Model quota is exhausted. Wait for a reset or use another free provider."

@@ -247,3 +247,26 @@ Manual checks only; no automated suite was added. `go build ./...`, `npm --prefi
 - The same body was rendered through the real Typst 0.15.1 pipeline for the `ro` profile in Russian and English; both runs produced a PDF above 1 KB. The Russian pages were exported as PNG and inspected visually: bold, emphasis, both list kinds, the quote, the code span, the table header and cells rendered correctly, and the literal `#`, `$`, `[` and `@` appeared as ordinary characters.
 - A body containing a raw Typst line rendered as literal prose in the PDF, confirming that model text cannot become executable Typst.
 - `normalizeMarkdown` neutralized `#set …` and closed an unterminated code fence in isolation. Its effect on a live provider response was not exercised end to end; no provider was called during this check.
+
+## 2026-11-05 — Phase C: deterministic multi-language extraction and BM25
+
+- Temporary in-package checks (removed afterwards) exercised the extractors directly and through `ExtractEvidence` on a temporary workspace with `users.ts`, `app.py`, `openapi.yaml` and `README.md`. `go test ./internal/documents -run 'TestSourceLanguageCheck|TestLongDeclarationKeepsSignature|TestRankingCheck|TestEvidenceIntegrationCheck'` reported four passing checks.
+- TypeScript: two imports, a function, a class, an arrow function, an Express route and an HTTP call became facts with paths and line ranges. Python: two imports, functions, a class and a FastAPI decorator became facts. YAML OpenAPI: three operations and exactly one component entity (`User`), not nested schema keys.
+- A 400-line Go function produced a fact that starts with `func Long(` and stays within the 6,000-rune bound.
+- Ranking: duplicate values collapsed to one fact and the database fact outranked marketing copy for a Database section.
+- Not verified: extraction on a large real repository, ranking quality on real chapters, and the effect on generated prose. No provider was called and no live generation ran.
+
+## 2026-11-05 — Phase D: local model provider
+
+- `docker compose config` accepted the new `ollama` service, the persisted `ollama_models` volume and the worker's `LOCAL_LLM_ENDPOINT`.
+- `go build ./...` and the template check passed after adding the provider, the keyless request path and the form block.
+- Not verified: the Ollama container was not started and no model was pulled, because Docker is unavailable in this sandbox. Throughput, JSON validity, the 180-second window and the quality of `qwen2.5:7b-instruct` on CPU remain unmeasured. The first real check is `make models`, then one document with only the local model enabled.
+- A temporary in-package check (removed afterwards) ran the local provider against a stub OpenAI-compatible server: a keyless request sent no `Authorization` header, the JSON body parsed, usage was recorded, and the model-list verification succeeded. `LOCAL_LLM_ENDPOINT` overrode the endpoint, the local connection passed validation, and a keyless Groq connection was rejected.
+- Live diagnosis on 2026-11-05: the host Ollama (0.40.14) answered `/api/tags` with `{"models":[]}`, so every local run failed with `provider_model_missing`. The verification now names the cause and the fix instead of a generic model-list message. Checked against the real empty instance and stub lists: an empty list returns `Ollama is reachable but has no models installed. Run "ollama pull qwen2.5:7b-instruct"…`, a list containing `qwen2.5:7b-instruct:latest` verifies successfully, and an unrelated list names the available models.
+
+## 2026-11-05 — Live provider limits and request economy
+
+- Catalog probes with the owner's keys: Gemini 61 models in 0.43 s, Groq 11 models in 0.38 s, OpenRouter 418 models in 0.82 s.
+- JSON requests: `gemini-2.5-flash` 1.69 s, `openai/gpt-oss-120b` 0.31 s with `x-ratelimit-limit-tokens: 8000`, `x-ratelimit-limit-requests: 1000`; OpenRouter `google/gemma-4-31b-it:free` returned an upstream 429 in 0.42 s, while `nvidia/nemotron-3.5-lightning:free` and `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` answered in 1.98 s and 0.64 s.
+- Root cause of the Gemini model check failure: the OpenAI catalog lists `models/gemini-2.5-flash`, while chat requests use `gemini-2.5-flash`. Identity comparison now normalizes the prefix and `:latest`.
+- Not verified: a full document generation with these keys through the worker. The measured numbers cover one small request per provider, not chapter-sized prompts, multi-key rotation or the daily quotas. The OpenRouter key reports a 2026-11-06 expiry.

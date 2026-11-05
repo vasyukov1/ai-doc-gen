@@ -47,13 +47,16 @@ func topicWords(plan SectionPlan) []string {
 	return result
 }
 
-// CompactFacts ranks specific evidence before general README context.
+// CompactFacts ranks specific evidence before general README context. BM25
+// supplies the relevance signal; kind bonuses keep section intent in control.
 func CompactFacts(evidence domain.Evidence, plan SectionPlan) []domain.Fact {
-	type ranked struct {
+	type candidate struct {
 		fact  domain.Fact
 		score int
 	}
-	candidates := []ranked{}
+	topic := strings.ToLower(plan.Topic)
+	entries := []candidate{}
+	seen := map[string]bool{}
 	for _, fact := range evidence.Facts {
 		if fact.Provenance == "unknown" || fact.Kind == "selected_file" {
 			continue
@@ -63,65 +66,57 @@ func CompactFacts(evidence domain.Evidence, plan SectionPlan) []domain.Fact {
 			fact.Provenance = "user"
 		}
 		score := 0
-		topic := strings.ToLower(plan.Topic)
 		if strings.Contains(fact.Kind, "readme") && (strings.Contains(topic, "overview") || strings.Contains(topic, "purpose") || strings.Contains(topic, "application")) {
-			score += 4
+			score += 40
 		}
 		if strings.Contains(fact.Kind, "api") && (strings.Contains(topic, "interface") || strings.Contains(topic, "input") || strings.Contains(topic, "output")) {
-			score += 4
-		}
-		text := strings.ToLower(fact.Kind + " " + fact.Path + " " + fact.Value)
-		for _, word := range topicWords(plan) {
-			if strings.Contains(text, word) {
-				score += 3
-			}
+			score += 40
 		}
 		for _, kind := range plan.Kinds {
 			if kind != "readme" && kind != "description" && kind != "unknown" && strings.Contains(strings.ToLower(fact.Kind+" "+fact.Path), kind) {
-				score += 2
+				score += 20
 			}
 		}
-		if strings.Contains(strings.ToLower(plan.Topic), "name") && fact.Kind == "project_title" {
-			score += 20
+		if strings.Contains(topic, "name") && fact.Kind == "project_title" {
+			score += 200
 		}
 		if fact.Kind == "specification" {
-			// Select a relevant excerpt instead of repeating the entire specification.
-			best := ""
-			bestScore := 0
-			for _, line := range strings.FieldsFunc(fact.Value, func(r rune) bool { return r == '\n' || r == '.' || r == ';' }) {
-				n := 0
-				for _, word := range topicWords(plan) {
-					if strings.Contains(strings.ToLower(line), word) {
-						n++
-					}
-				}
-				if n > bestScore {
-					bestScore = n
-					best = line
-				}
-			}
-			if bestScore == 0 {
+			best := specificationExcerpt(fact.Value, plan)
+			if best == "" {
 				continue
 			}
-			fact.Value = strings.TrimSpace(best)
-			score = bestScore * 3
-		}
-		if score == 0 {
-			continue
+			fact.Value = best
 		}
 		fact.Value = clipText(fact.Value, 450)
-		candidates = append(candidates, ranked{fact, score})
+		if seen[fact.Value] {
+			continue
+		}
+		seen[fact.Value] = true
+		entries = append(entries, candidate{fact, score})
 	}
-	sort.SliceStable(candidates, func(i, j int) bool { return candidates[i].score > candidates[j].score })
+	texts := make([]string, len(entries))
+	for index, entry := range entries {
+		texts[index] = entry.fact.Kind + " " + entry.fact.Path + " " + entry.fact.Value
+	}
+	bm := newBM25(texts)
+	query := topicWords(plan)
+	ranked := make([]candidate, 0, len(entries))
+	for index, entry := range entries {
+		entry.score += int(bm.score(query, index) * 10)
+		if entry.score > 0 {
+			ranked = append(ranked, entry)
+		}
+	}
+	sort.SliceStable(ranked, func(i, j int) bool { return ranked[i].score > ranked[j].score })
 	facts := []domain.Fact{}
-	for _, entry := range candidates {
+	for _, entry := range ranked {
 		facts = append(facts, entry.fact)
 		if len(facts) == 4 {
 			break
 		}
 	}
 	// General project descriptions belong in overview/purpose sections only.
-	if len(facts) == 0 && (strings.Contains(strings.ToLower(plan.Topic), "overview") || strings.Contains(strings.ToLower(plan.Topic), "purpose") || strings.Contains(strings.ToLower(plan.Topic), "application")) {
+	if len(facts) == 0 && (strings.Contains(topic, "overview") || strings.Contains(topic, "purpose") || strings.Contains(topic, "application")) {
 		for _, fact := range evidence.Facts {
 			if strings.Contains(fact.Kind, "readme") || fact.Kind == "project_context" {
 				fact.Value = clipText(fact.Value, 350)
@@ -133,6 +128,26 @@ func CompactFacts(evidence domain.Evidence, plan SectionPlan) []domain.Fact {
 		}
 	}
 	return facts
+}
+
+// specificationExcerpt selects the most relevant sentence instead of repeating
+// the entire technical specification in every section.
+func specificationExcerpt(value string, plan SectionPlan) string {
+	best := ""
+	bestScore := 0
+	for _, line := range strings.FieldsFunc(value, func(r rune) bool { return r == '\n' || r == '.' || r == ';' }) {
+		score := 0
+		for _, word := range topicWords(plan) {
+			if strings.Contains(strings.ToLower(line), word) {
+				score++
+			}
+		}
+		if score > bestScore {
+			bestScore = score
+			best = line
+		}
+	}
+	return strings.TrimSpace(best)
 }
 
 func BaselineSection(plan SectionPlan, facts []domain.Fact) domain.Section {

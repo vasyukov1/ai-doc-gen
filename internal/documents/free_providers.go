@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -21,12 +22,32 @@ func ProviderEndpoint(provider string) string {
 		return "https://api.groq.com/openai/v1/chat/completions"
 	case "openrouter":
 		return "https://openrouter.ai/api/v1/chat/completions"
+	case "local":
+		if endpoint := strings.TrimSpace(os.Getenv("LOCAL_LLM_ENDPOINT")); endpoint != "" {
+			return endpoint
+		}
+		return "http://127.0.0.1:11434/v1/chat/completions"
 	}
 	return ""
 }
 
 func ValidateConnection(c domain.Connection) error {
-	if ProviderEndpoint(c.Provider) == "" || len(c.Key) < 8 || len(c.Key) > 1000 || len(c.Model) == 0 || len(c.Model) > 150 || strings.ContainsAny(c.Model, "\r\n\t ") {
+	if ProviderEndpoint(c.Provider) == "" {
+		return errors.New("choose a supported provider")
+	}
+	if len(c.Model) == 0 || len(c.Model) > 150 || strings.ContainsAny(c.Model, "\r\n\t ") {
+		if c.Provider == "local" {
+			return errors.New("enter the local model ID")
+		}
+		return errors.New("enter a provider model ID and API key")
+	}
+	if c.Provider == "local" {
+		if c.RPM < 1 || c.RPM > 60 || c.TPM < 1000 || c.TPM > 100000 {
+			return errors.New("use RPM 1-60 and TPM 1000-100000 for the local model")
+		}
+		return nil
+	}
+	if len(c.Key) < 8 || len(c.Key) > 1000 {
 		return errors.New("enter a provider model ID and API key")
 	}
 	if c.RPM < 1 || c.RPM > 60 || c.TPM < 4000 || c.TPM > 100000 {
@@ -51,13 +72,21 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return &ProviderError{Code: "provider_unavailable", Message: "Could not verify model availability."}
+		message := "Could not verify model availability."
+		if p.Keyless {
+			message = "The local model endpoint did not answer. Start Ollama and pull the model."
+		}
+		return &ProviderError{Code: "provider_unavailable", Message: message}
 	}
 	defer resp.Body.Close()
 	p.Cooldown = responseCooldown(resp.Header)
 	p.Diagnostics = CallDiagnostics{Stage: "catalog", HTTPStatus: resp.StatusCode, RequestID: clipText(resp.Header.Get("X-Request-ID"), 200), RetryAfter: clipText(resp.Header.Get("Retry-After"), 100)}
 	if resp.StatusCode != 200 {
-		return &ProviderError{Code: "provider_catalog", Message: "Model list unavailable. Check the provider key and free account."}
+		message := "Model list unavailable. Check the provider key and free account."
+		if p.Keyless {
+			message = "The local model endpoint rejected the model list request. Check LOCAL_LLM_ENDPOINT."
+		}
+		return &ProviderError{Code: "provider_catalog", Message: message}
 	}
 	raw, err := io.ReadAll(io.LimitReader(resp.Body, 4<<20))
 	if err != nil {
@@ -73,8 +102,10 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 	if json.Unmarshal(raw, &catalog) != nil {
 		return invalidOutput()
 	}
+	available := make([]string, 0, len(catalog.Data))
 	for _, model := range catalog.Data {
-		if model.ID != p.Model {
+		available = append(available, model.ID)
+		if !sameModelID(model.ID, p.Model) {
 			continue
 		}
 		if p.FreeOnly {
@@ -108,7 +139,24 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 		}
 		return nil
 	}
+	if p.Keyless {
+		if len(available) == 0 {
+			return &ProviderError{Code: "provider_model_missing", Message: "Ollama is reachable but has no models installed. Run \"ollama pull " + p.Model + "\" (or make models with Docker Compose), then retry."}
+		}
+		return &ProviderError{Code: "provider_model_missing", Message: "The local model is not installed. Available models: " + clipText(strings.Join(available, ", "), 300) + "."}
+	}
 	return &ProviderError{Code: "provider_model_missing", Message: "Selected model is not available in the provider model list."}
+}
+
+// sameModelID treats "model:latest" and "model" as the same local tag.
+func sameModelID(available, requested string) bool {
+	normalize := func(value string) string {
+		value = strings.ToLower(strings.TrimSpace(value))
+		// Gemini's OpenAI catalog prefixes IDs with "models/"; chat requests do not.
+		value = strings.TrimPrefix(value, "models/")
+		return strings.TrimSuffix(value, ":latest")
+	}
+	return normalize(available) == normalize(requested)
 }
 
 func responseCooldown(header http.Header) time.Duration {

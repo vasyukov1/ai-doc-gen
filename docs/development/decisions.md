@@ -122,6 +122,26 @@ Data still enters through literal JSON/text, never executable model or uploaded 
 
 The editor can clear a section's missing-information warnings only through an explicit checked “missing information is filled in” action on save. Ordinary saves retain warnings; other sections and stored artifacts are unchanged until an explicit rebuild. Signature/date TODOs are deliberate paper-signing placeholders. Blank archival/change-registration cells remain form cells rather than invented change records. Previously downloaded bundles retain their own layout and remain reproducible.
 
+## 2026-11-05 — Live provider measurements and request economy
+
+Measured with the owner's keys: Gemini `gemini-2.5-flash` answers a JSON request in about 1.7 s; Groq `openai/gpt-oss-120b` in about 0.3 s but publishes a hard `x-ratelimit-limit-tokens: 8000` per minute; OpenRouter free models are unstable (Gemma returned an upstream 429), while `nvidia/nemotron-3.5-lightning:free` answered in about 2 s. The create form now prefills these IDs and the matching per-minute values (Gemini 10 RPM, Groq 5 RPM / 8000 TPM, OpenRouter 20 RPM).
+
+Model identity is compared after lowercasing, dropping a leading `models/` prefix (Gemini's OpenAI catalog uses it while chat does not) and a trailing `:latest`. Published per-minute limits from `x-ratelimit-limit-tokens` override a larger form value for later calls, so the worker fits the next chapter instead of repeating 429s. A context-window rejection no longer disables the provider: it stays temporary and the next attempt halves the evidence pack. The key field accepts several keys separated by commas or new lines; each key is a separate connection with its own rate window and quota, which rotates load without extra services.
+
+Ensemble generation and parallel chapter calls are deliberately not implemented: free tiers are the constraint, and merging two weak drafts costs twice the quota without a measured quality gain.
+
+## 2026-11-05 — Local model provider
+
+A `local` provider joins the free cloud providers. It uses an OpenAI-compatible endpoint from `LOCAL_LLM_ENDPOINT` (default `http://127.0.0.1:11434/v1/chat/completions`), needs no API key, and omits the `Authorization` header. Free-tier confirmation and price checks do not apply; RPM stays bounded to 1–60 and TPM to 1,000–100,000, and a request gets 180 seconds instead of 45 because CPU-only generation is slow. The create form exposes an explicit opt-in with `qwen2.5:7b-instruct` as the default model, and Docker Compose runs Ollama with a persisted model volume; `make models` pulls the model.
+
+The worker still verifies the model list at the endpoint before the first call, with local-specific messages when Ollama is not running. Expectations remain honest: the local path is slower and produces weaker prose than hosted free tiers, and its throughput and JSON-validity were not measured because Docker is unavailable in the development sandbox.
+
+## 2026-11-05 — Multi-language extraction and BM25 ranking
+
+Source extraction now covers more than Go without adding a runtime dependency. TypeScript/JavaScript files provide imports, functions, classes, arrow functions, route registrations and outgoing HTTP calls; Python files provide imports, functions, classes and route decorators; YAML OpenAPI files provide operations and component schema names through an indentation-based reader. Each declaration is one fact bounded by brace or indentation depth (at most 200 lines) and clipped to 6,000 runes, so a long body keeps its signature. The analysis version moves to `source-context-4`, which invalidates section caches built from older evidence.
+
+Section and chapter packs rank facts with BM25 over kind, path and value, fused with the existing kind bonuses; substring counting is gone. Identical fact values are removed before ranking, and chapter packs keep the service round-robin so one service cannot consume the budget. This is a deterministic relevance score, not a semantic model: it cannot infer meaning that the source does not state, and runtime behavior remains unverified.
+
 ## 2026-11-05 — Markdown contract for model output
 
 The generation prompt now names the supported Markdown subset — paragraphs separated by blank lines, `**bold**`, `*emphasis*`, lists with `-` or `1.` indented by two spaces, `>` quotes, inline code, `[text](https://…)` links and GFM pipe tables — and forbids Typst commands, math and raw HTML. The chapter prompt version moves to `chapters-4`, so previously cached model sections are not reused with the old contract.

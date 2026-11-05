@@ -1,6 +1,6 @@
 # Usability and generation improvements
 
-Status: approved on 2026-11-05 after the user answered the open questions. Phases A, B and E are implemented on 2026-11-05; Phases C and D remain. Work proceeds in phases; each phase ends with `go build ./...`, the template check and a manual smoke note in `verification.md`. Automated tests stay deferred to the final milestone.
+Status: approved on 2026-11-05 after the user answered the open questions. Phases A, B, C, D and E are implemented on 2026-11-05. Requirement ids and checks live in `requirements_index.md`. The local-model spike remains unverified until the stack runs with Docker. Work proceeds in phases; each phase ends with `go build ./...`, the template check and a manual smoke note in `verification.md`. Automated tests stay deferred to the final milestone.
 
 ## User decisions
 
