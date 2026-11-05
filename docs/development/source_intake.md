@@ -2,7 +2,7 @@
 
 The worker resolves a public GitHub repository to its default branch commit SHA, downloads the ZIP for that commit, or uses the uploaded ZIP. The source is unpacked into a private work directory. Uploaded code is never run.
 
-Limits for this stage are 20 MiB compressed, 100 MiB declared expanded size, 2,000 archive entries, 2 MiB per extracted text file, 512 bytes per path, and 20 path segments. The extractor rejects absolute or parent paths, backslashes, duplicate paths, symlinks, special files, and unreadable ZIP entries. Nested archives are listed with `nested_archive` and never unpacked.
+Limits for this stage are 100 MiB compressed, 500 MiB declared expanded size, 20,000 archive entries, 2 MiB per extracted text file, 512 bytes per path, and 20 path segments. The extractor rejects absolute or parent paths, backslashes, duplicate paths, symlinks, special files, and unreadable ZIP entries. Nested archives are listed with `nested_archive` and never unpacked.
 
 Each file has an explainable reason code. Dependencies, build output, generated files, binary files, likely secrets, nested archives, and oversized files are excluded. Lock files and repository metadata are reported as `tooling_metadata` and excluded. Build and deployment files are eligible as `build_config` but are not selected by default. Test files remain eligible. They are selected by default for `technical-overview` and left unselected for `academic`. Manifests such as `go.mod` and `package.json` stay selected because evidence extraction derives structured facts from them. At most 500 files are selected by default.
 

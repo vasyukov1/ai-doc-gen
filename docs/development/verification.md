@@ -11,6 +11,8 @@ Checked locally on 2026-11-03. No automated test files were added.
 - Unsafe ZIP paths, symlinks, conflicting paths, more than 2,000 entries, and more than 100 MiB declared expanded size failed with clear error codes. Known credential files, dependencies, binaries, and nested archives were excluded. A source with only excluded files kept its inventory visible and asked for another project.
 - A queued ZIP job completed after a worker restart. The inventory API did not expose the private workspace path.
 
+Later on 2026-11-05 the intake limits were raised to 100 MiB compressed, 500 MiB declared expanded size and 20,000 entries after oversized projects were rejected too often. `go build ./...` passed after the change. The rejection paths are unchanged but were not re-run with the new thresholds; manual re-checks are pending.
+
 Section generation and document rendering remain in later milestones.
 
 ## Milestone 2.5 — Jet and local commands

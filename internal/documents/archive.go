@@ -18,10 +18,10 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 )
 
-const MaxArchiveBytes = 20 << 20
-const maxExpandedBytes = 100 << 20
+const MaxArchiveBytes = 100 << 20
+const maxExpandedBytes = 500 << 20
 const maxTextFileBytes = 2 << 20
-const maxArchiveEntries = 2000
+const maxArchiveEntries = 20000
 const maxPathBytes = 512
 const maxPathDepth = 20
 
