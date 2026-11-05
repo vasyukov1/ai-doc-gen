@@ -1,0 +1,3 @@
+# Employee rewalk prompt
+
+Read-only simulated rewalk under requesting-code-review: fictional Lena company architect laptop then phone. Repo /Users/alevasyukovv/Desktop/iFolder/HSE/ai-doc-gen. Inspect current templates/usage.ts and docs/development/harness-wave-2/screens/after-phone.png, employee-status.png plus checks/walk.log. Steps: privacy at upload, arc42, 100% quality misconception, tokens/cost, intermediate text and rebuild. No APIs/keys/edits except save original prompt/review in docs/development/harness-wave-2/prompts/employee-after.md and responses/employee-after.md. Improvements and remaining hypotheses distinguish observed from inferred. Invariant no quality certification. Concise.

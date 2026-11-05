@@ -17,7 +17,9 @@
         <h1>Sections</h1>
         <span data-document-edit-status class="pill {{with statusClass .Job.Status}}pill--{{.}}{{end}}">{{statusLabel .Job.Status}}</span>
       </div>
-      <p class="lead" data-section-summary>{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections ready. Edit anything here, then review and compile on the input page.</p>
+      <p class="lead" data-section-summary>{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections available. {{if .Refresh}}Read-only while processing; editing becomes available after processing stops.{{else}}Review the saved text, edit where enabled, then rebuild the PDF.{{end}}</p>
+      <p><a class="button button--quiet" href="/jobs/{{.Job.ID}}/document">Review and rebuild PDF / Проверить и пересобрать PDF</a></p>
+      <p class="form-note">Saving text does not update an already compiled PDF. Rebuild after reviewing your edits.</p>
       {{if .Job.LatestMessage}}<p class="form-note" data-section-message>{{.Job.LatestMessage}}</p>{{end}}
     </header>
 

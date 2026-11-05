@@ -145,3 +145,7 @@ Normalize Markdown section bodies into trusted Typst structures without executin
 ### Milestone 9 corrective acceptance — harness wave 1
 
 See [the wave index](harness-wave-1/plan.md) and [triage](harness-wave-1/triage.md). Five accepted changes cover correctable submission, preserved edits/tables, honest compilation/content status, visible connection failures, and profile/privacy guidance. Keep simulated reviews separate from measured checks; full localization and regeneration history remain deferred. This does not start milestone 8.
+
+### Milestone 9 corrective acceptance — harness wave 2
+
+See [wave 2](harness-wave-2/README.md) and its [requirement/action/check index](harness-wave-2/plan.md). Five changes improve purpose-based setup, provider onboarding, explicit nonsecret form reuse, recorded token visibility and section-to-PDF navigation. Validate three synthetic persona flows with phone/laptop screenshots, manual no-provider generation and edit/rebuild, storage and report failures, and Go/frontend builds. No final testing milestone, new languages or live-model quality benchmark is claimed.

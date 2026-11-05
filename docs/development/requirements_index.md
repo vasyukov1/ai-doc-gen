@@ -20,3 +20,7 @@ Each requirement has a stable id, the user action it serves and the check that s
 | C5 | Long declarations keep their signatures | Analyze a file with a long function body | The fact starts with the declaration signature and is bounded |
 | D1 | Generation works without a provider key | Enable the local model on the create form and run a document | The worker calls the local OpenAI-compatible endpoint with no key and the PDF is produced |
 | F1 | Free-tier limits shape the draft | Connect one or several keys per provider and run a long profile | Published per-minute limits override larger form values, a context rejection retries with half the pack, and each key has its own rate window |
+
+## Harness wave 2
+
+[W2-R1–W2-R5: situations, implementation and manual acceptance](harness-wave-2/plan.md) · [evidence, decisions and deferred findings](harness-wave-2/README.md).

@@ -1,0 +1,23 @@
+C1-C3 PASS: purpose, RU guidance, custom model restore, secret exclusion, forget
+C5 student PASS completed {
+  baseline: 17,
+  outcome: 'outline',
+  available: 17,
+  model: 0,
+  unresolved: 17
+}
+C5 freelancer PASS completed {
+  baseline: 4,
+  outcome: 'outline',
+  available: 4,
+  model: 0,
+  unresolved: 4
+}
+C5 employee PASS completed {
+  baseline: 12,
+  outcome: 'outline',
+  available: 12,
+  model: 0,
+  unresolved: 12
+}
+Browser errors: none

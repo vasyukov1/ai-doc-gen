@@ -23,10 +23,14 @@ Use writing-plans and executing-plans guidance; root instructions replace automa
 ## Execution
 
 - [x] Inspect current implementation and capture before phone/laptop screenshots.
-- [ ] Preserve independent persona source reviews and browser observations; triage maximum five accepted changes.
-- [ ] Implement R1–R3 in templates plus focused browser module.
-- [ ] Implement R4–R5 without changing generation policy.
-- [ ] Build Go/frontend, run isolated manual scenarios, inspect screenshots and PDF, obtain fresh code review.
-- [ ] Record limitations, deferred work, decisions and resume point.
+- [x] Preserve independent persona source reviews and browser observations; triage maximum five accepted changes.
+- [x] Implement R1–R3 in templates plus focused browser module.
+- [x] Implement R4–R5 without changing generation policy.
+- [x] Build Go/frontend, run isolated manual scenarios, inspect screenshots and PDF, obtain fresh code review.
+- [x] Record limitations, deferred work, decisions and resume point.
 
 Review focus: browser storage unavailable or corrupt; keys accidentally persisted; stale asynchronous usage response; custom model value; browser refresh during editing. No live-model quality or competitive superiority claim without an actual measured comparison.
+
+## Resume
+
+2026-11-05: five changes implemented and manual checks complete. Three no-provider generation paths and edit/rebuild passed; live prose quality, Catalan, project/credential reuse and cross-device recovery remain deferred. Fresh review found no important issues; wording about retained language/profile preferences was corrected. No tests were added. Next exact command: `go build ./...`. Preview uses isolated port 8083; shared Compose was not restarted.

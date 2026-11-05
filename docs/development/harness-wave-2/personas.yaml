@@ -1,0 +1,25 @@
+personas:
+  - id: student
+    name: Mira
+    fictional: true
+    device: phone
+    language: Russian
+    goal: Submit an FKN explanatory note for a Go CLI project tonight.
+    knowledge: Can describe the program, unfamiliar with provider APIs.
+    mistakes: [uploads PDF requirements, expects prose without a model, leaves incomplete form]
+  - id: freelancer
+    name: Nil
+    fictional: true
+    device: laptop
+    language: Catalan
+    goal: Hand over a small booking API to a client.
+    knowledge: Developer familiar with code, unfamiliar with academic profiles.
+    mistakes: [accepts first profile, expects model and source reuse, asks for Catalan in description]
+  - id: employee
+    name: Lena
+    fictional: true
+    device: laptop then phone
+    language: English
+    goal: Review an arc42 draft for an order service using sanitized code only.
+    knowledge: Architect responsible for accuracy and processing boundaries.
+    mistakes: [reads 100 percent as quality, confuses limits with usage, opens job on another device]

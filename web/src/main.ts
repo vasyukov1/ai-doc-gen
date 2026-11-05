@@ -12,3 +12,8 @@ initTextareas();
 initAssembly();
 initJobPolling();
 initPdfViewer();
+
+import { initSetup } from "./setup";
+import { initUsage } from "./usage";
+initSetup();
+initUsage();

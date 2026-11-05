@@ -1,0 +1,257 @@
+{
+  "student": {
+    "raw_findings_per_run": [
+      4,
+      4
+    ],
+    "normalized_pairs": [
+      [
+        [
+          "creation",
+          "error recovery"
+        ],
+        [
+          "creation",
+          "consistency"
+        ],
+        [
+          "creation",
+          "error prevention"
+        ],
+        [
+          "sections",
+          "recognition"
+        ]
+      ],
+      [
+        [
+          "creation",
+          "error recovery"
+        ],
+        [
+          "creation",
+          "consistency"
+        ],
+        [
+          "creation",
+          "error prevention"
+        ],
+        [
+          "sections",
+          "recognition"
+        ]
+      ]
+    ],
+    "intersection": [
+      [
+        "creation",
+        "consistency"
+      ],
+      [
+        "creation",
+        "error prevention"
+      ],
+      [
+        "creation",
+        "error recovery"
+      ],
+      [
+        "sections",
+        "recognition"
+      ]
+    ],
+    "union": [
+      [
+        "creation",
+        "consistency"
+      ],
+      [
+        "creation",
+        "error prevention"
+      ],
+      [
+        "creation",
+        "error recovery"
+      ],
+      [
+        "sections",
+        "recognition"
+      ]
+    ],
+    "agreement": 1.0
+  },
+  "freelancer": {
+    "raw_findings_per_run": [
+      4,
+      4
+    ],
+    "normalized_pairs": [
+      [
+        [
+          "creation",
+          "real-world match"
+        ],
+        [
+          "creation",
+          "consistency"
+        ],
+        [
+          "creation",
+          "help"
+        ],
+        [
+          "sections",
+          "recognition"
+        ]
+      ],
+      [
+        [
+          "creation",
+          "real-world match"
+        ],
+        [
+          "creation",
+          "consistency"
+        ],
+        [
+          "creation",
+          "help"
+        ],
+        [
+          "sections",
+          "recognition"
+        ]
+      ]
+    ],
+    "intersection": [
+      [
+        "creation",
+        "consistency"
+      ],
+      [
+        "creation",
+        "help"
+      ],
+      [
+        "creation",
+        "real-world match"
+      ],
+      [
+        "sections",
+        "recognition"
+      ]
+    ],
+    "union": [
+      [
+        "creation",
+        "consistency"
+      ],
+      [
+        "creation",
+        "help"
+      ],
+      [
+        "creation",
+        "real-world match"
+      ],
+      [
+        "sections",
+        "recognition"
+      ]
+    ],
+    "agreement": 1.0
+  },
+  "employee": {
+    "raw_findings_per_run": [
+      5,
+      5
+    ],
+    "normalized_pairs": [
+      [
+        [
+          "creation",
+          "error prevention"
+        ],
+        [
+          "status",
+          "visibility"
+        ],
+        [
+          "sections",
+          "consistency"
+        ],
+        [
+          "sections",
+          "visibility"
+        ],
+        [
+          "sections",
+          "recognition"
+        ]
+      ],
+      [
+        [
+          "creation",
+          "error prevention"
+        ],
+        [
+          "status",
+          "visibility"
+        ],
+        [
+          "sections",
+          "consistency"
+        ],
+        [
+          "sections",
+          "consistency"
+        ],
+        [
+          "status",
+          "error recovery"
+        ]
+      ]
+    ],
+    "intersection": [
+      [
+        "creation",
+        "error prevention"
+      ],
+      [
+        "sections",
+        "consistency"
+      ],
+      [
+        "status",
+        "visibility"
+      ]
+    ],
+    "union": [
+      [
+        "creation",
+        "error prevention"
+      ],
+      [
+        "sections",
+        "consistency"
+      ],
+      [
+        "sections",
+        "recognition"
+      ],
+      [
+        "sections",
+        "visibility"
+      ],
+      [
+        "status",
+        "error recovery"
+      ],
+      [
+        "status",
+        "visibility"
+      ]
+    ],
+    "agreement": 0.5
+  }
+}

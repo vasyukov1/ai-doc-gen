@@ -1,0 +1,5 @@
+C4 controlled fixture PASS: 1250 input/650 output, labeled recorded calls; not actual model measurement
+C4 failure and retry PASS
+C5 edit -> direct rebuild -> PDF completed; saved text preserved PASS
+C3 blocked storage PASS: visible error, form still usable
+C3 corrupted draft PASS: recoverable, forget works

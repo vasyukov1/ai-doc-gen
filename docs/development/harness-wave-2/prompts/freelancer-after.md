@@ -1,0 +1,3 @@
+# Original rewalk prompt
+
+Read-only simulated rewalk under requesting-code-review: fictional Nil Catalan freelancer laptop. Repo /Users/alevasyukovv/Desktop/iFolder/HSE/ai-doc-gen. Inspect current templates/setup.ts and docs/development/harness-wave-2/screens/after-laptop.png, freelancer-status.png plus checks/walk.log. Steps: handover vs FKN, Catalan selection, repeat source/model/key, saved sections/rebuild. No APIs/keys/edits except save original prompt and review in docs/development/harness-wave-2/prompts/freelancer-after.md and responses/freelancer-after.md. Improvements and remaining hypotheses; screenshots vs code/manual evidence. Invariant no silent model use. Concise.

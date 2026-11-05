@@ -28,9 +28,21 @@
             <p>Submit once, then review and edit the draft. Without a model key, you receive an outline with source facts and TODOs, not finished prose.</p>
           </div>
 
+          <div class="callout">
+            <strong>Returning to a document?</strong> <a href="/jobs">Open saved documents</a> to continue, edit or rebuild without uploading again.
+          </div>
           <form action="/jobs" method="post" enctype="multipart/form-data" data-busy data-create-document>
+            <div class="field" data-purpose-shortcuts hidden>
+              <span>What are you preparing? / Какой документ нужен?</span>
+              <div class="link-row">
+                <button type="button" class="button button--quiet" data-profile-choice="pz">FKN coursework / ПЗ</button>
+                <button type="button" class="button button--quiet" data-profile-choice="technical-overview">Project handover</button>
+                <button type="button" class="button button--quiet" data-profile-choice="arc42">Architecture</button>
+              </div>
+            </div>
             <div class="field">
-              <label for="repo">GitHub repository</label>
+              <label for="repo">Public GitHub repository</label>
+              <p class="form-note">Source files are processed on this server. Connected cloud models receive selected source context. Use a sanitized project if your organization does not permit this.</p>
               <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
             </div>
 
@@ -46,6 +58,7 @@
               <div class="field">
                 <label for="profile">Document type</label>
                 <select id="profile" name="profile_id">
+                  <option value="technical-overview">Technical overview — project handover</option>
                   <option value="tz">FKN — Technical specification / ТЗ</option>
                   <option value="pz">FKN — Explanatory note / ПЗ</option>
                   <option value="ro">FKN — Operator’s manual / РО</option>
@@ -53,7 +66,6 @@
                   <option value="pmi-team">Test plan and methodology (team)</option>
                   <option value="srs">SRS — software requirements</option>
                   <option value="arc42">arc42 — architecture documentation</option>
-                  <option value="technical-overview">Technical project overview</option>
                 </select>
               </div>
               <div class="field">
@@ -65,7 +77,8 @@
               </div>
             </div>
 
-            <p class="callout" data-profile-guide aria-live="polite">FKN technical specification: state what the software must do. Supply the source requirements below.</p>
+            <p class="form-note">Document languages: English and Russian. Catalan and other languages are not supported yet.</p>
+            <p class="callout" data-profile-guide aria-live="polite">Technical overview: a compact explanation of the implementation for a project handover.</p>
 
             <div class="field">
               <label for="project">Project title <span class="required">Required</span></label>
@@ -107,7 +120,7 @@
             <details class="group">
               <summary>Technical specification <span class="required" data-spec-required>Required for academic documents</span></summary>
               <div class="details-body">
-                <p class="form-note">Required for academic documents; optional for SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file.</p>
+                <p class="form-note">Required for academic documents; optional for SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file. PDF and Typst imports are not supported: copy their readable text into the field below. / Из PDF или Typst скопируйте текст ТЗ в поле ниже.</p>
                 <div class="field">
                   <label for="specification">Specification text</label>
                   <textarea id="specification" name="specification" rows="6" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>
@@ -123,14 +136,15 @@
             <details class="group">
               <summary>Model keys <span class="optional">Optional</span></summary>
               <div class="details-body">
-                <p class="form-note">A source-linked draft is generated without keys. Connect free-tier models to improve it. Separate several keys with commas or new lines: each key gets its own free-tier window. Keys are encrypted on this server.</p>
+                <p class="form-note">Without a connected model you get an outline, source facts and TODOs, not finished prose. / Без модели — структура, факты из кода и TODO, а не готовый текст. Connect one provider to generate prose. Separate several keys with commas or new lines: each key gets its own free-tier window. Keys are encrypted on this server.</p>
                 <input type="hidden" name="generation_mode" value="free">
 
                 <div class="providers">
                   <fieldset class="provider">
                     <legend>Gemini</legend>
                     <div class="field"><label for="gemini_key">API key or keys</label><input id="gemini_key" name="gemini_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" value="gemini-2.5-flash" maxlength="150"></div>
+                    <div class="field" data-model-picker><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" value="gemini-2.5-flash" maxlength="150" data-model-label="Gemini 2.5 Flash"></div>
+                    <p class="form-note"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Get an API key</a> · <a href="https://ai.google.dev/gemini-api/docs/api-key" target="_blank" rel="noopener noreferrer">Provider instructions</a>. Sign in, create a key, paste it above, then confirm your free account below. Availability and limits depend on your account; the worker checks the model before generation.</p>
                     <label class="checkbox"><input type="checkbox" name="gemini_free" value="yes"> This project has no billing enabled.</label>
                     <details>
                       <summary>Account rate limits</summary>
@@ -144,7 +158,8 @@
                   <fieldset class="provider">
                     <legend>Groq</legend>
                     <div class="field"><label for="groq_key">API key or keys</label><input id="groq_key" name="groq_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="groq_model">Model ID</label><input id="groq_model" name="groq_model" value="openai/gpt-oss-120b" maxlength="150"></div>
+                    <div class="field" data-model-picker><label for="groq_model">Model ID</label><input id="groq_model" name="groq_model" value="openai/gpt-oss-120b" maxlength="150" data-model-label="GPT OSS 120B"></div>
+                    <p class="form-note"><a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">Get an API key</a> · <a href="https://console.groq.com/docs/quickstart" target="_blank" rel="noopener noreferrer">Provider instructions</a>. Sign in, create a key, paste it above, then confirm your free account below. Availability and limits depend on your account; the worker checks the model before generation.</p>
                     <label class="checkbox"><input type="checkbox" name="groq_free" value="yes"> My Groq account uses the free plan.</label>
                     <details>
                       <summary>Account rate limits</summary>
@@ -158,7 +173,8 @@
                   <fieldset class="provider">
                     <legend>OpenRouter</legend>
                     <div class="field"><label for="openrouter_key">API key or keys</label><input id="openrouter_key" name="openrouter_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field"><label for="openrouter_model">Model ID</label><input id="openrouter_model" name="openrouter_model" value="nvidia/nemotron-3.5-lightning:free" maxlength="150"></div>
+                    <div class="field" data-model-picker><label for="openrouter_model">Model ID</label><input id="openrouter_model" name="openrouter_model" value="nvidia/nemotron-3.5-lightning:free" maxlength="150" data-model-label="Nemotron 3.5 Lightning (free)"></div>
+                    <p class="form-note"><a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">Get an API key</a> · <a href="https://openrouter.ai/docs/quickstart" target="_blank" rel="noopener noreferrer">Provider instructions</a>. Sign in, create a key, paste it above, then confirm your free account below. Availability and limits depend on your account; the worker checks the model before generation.</p>
                     <label class="checkbox"><input type="checkbox" name="openrouter_free" value="yes"> Only use models with zero pricing.</label>
                     <details>
                       <summary>Account rate limits</summary>
@@ -186,6 +202,12 @@
               </div>
             </details>
 
+            <div class="callout" data-draft-settings hidden>
+              <label class="checkbox"><input type="checkbox" data-remember-draft> Remember this form on this device / Запомнить форму</label>
+              <p class="form-note">Saves text, repository address and model IDs in this browser. Never saves API keys or attached files. Use only on your own device; reselect files after returning. New documents still need a key; existing documents retain their server-side connection until expiry.</p>
+              <button type="button" class="button button--quiet" data-forget-draft>Forget saved form</button>
+              <p class="form-note" data-draft-feedback role="status"></p>
+            </div>
             <button class="button button--wide" type="submit" data-busy-label="Creating…">Create document</button>
             <p class="form-note">Files are uploaded to and processed on this server. With a model key, selected source context is also sent to that provider. Access is tied to this browser; clearing its cookies loses access. The expiry date is shown on each document.</p>
           </form>
