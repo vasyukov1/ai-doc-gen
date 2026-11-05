@@ -33,6 +33,17 @@ func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob, master st
 	}
 	defer tx.Rollback()
 
+	if err := createJobTx(ctx, tx, job, master); err != nil {
+		return err
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit job: %w", err)
+	}
+
+	return nil
+}
+
+func createJobTx(ctx context.Context, tx *sql.Tx, job domain.NewJob, master string) error {
 	jobs := table.Jobs
 	stmt := jobs.INSERT(jobs.ID, jobs.Status, jobs.ProfileID, jobs.Language, jobs.Description, jobs.OwnerHash, jobs.ExpiresAt).
 		VALUES(job.ID, domain.StatusQueued, job.ProfileID, job.Language, job.Description, job.OwnerHash, job.ExpiresAt)
@@ -73,10 +84,6 @@ func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob, master st
 
 	if err := addStatus(ctx, tx, job.ID, "", domain.StatusQueued, "", "queued", "Job queued."); err != nil {
 		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return fmt.Errorf("commit job: %w", err)
 	}
 
 	return nil

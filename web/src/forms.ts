@@ -68,7 +68,7 @@ function initFileInputs(): void {
 }
 
 // Fewer decisions on first visit: reuse the previous profile and language,
-// follow the browser language, and derive the project title from the source.
+// and derive the project title from the source.
 function initCreateDefaults(): void {
   const form = document.querySelector<HTMLFormElement>("form[data-create-document]");
   if (!form) {
@@ -94,7 +94,7 @@ function initCreateDefaults(): void {
   if (language) {
     // The user chooses the language; only their own earlier choice is restored.
     const saved = stored(LANGUAGE_KEY);
-    if (saved === "en" || saved === "ru") {
+    if (saved === "en" || saved === "ru" || saved === "ca") {
       language.value = saved;
       language.dispatchEvent(new Event("change", {bubbles: true}));
     }

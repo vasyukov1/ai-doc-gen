@@ -45,15 +45,25 @@ func bibliography(evidence []domain.Evidence, language string) string {
 	if language == "ru" {
 		intro = "Справочная документация технологий, обнаруженных в выбранных исходниках. Проверьте применимые версии и добавьте действительно использованные статьи."
 	}
+	if language == "ca" {
+		intro = "Documentació de referència suggerida per a les tecnologies identificades als fitxers font seleccionats. Confirmeu les versions aplicables i afegiu els articles realment consultats."
+	}
 	if len(names) == 0 {
 		if language == "ru" {
 			return "TODO: указать внешнюю документацию и использованную литературу; исходные файлы проекта не являются библиографией."
+		}
+		if language == "ca" {
+			return "TODO: indicar la documentació externa i la bibliografia consultada; els fitxers font del projecte no són una bibliografia."
 		}
 		return "TODO: provide external documentation and consulted literature; project source files are not a bibliography."
 	}
 	lines := []string{intro, ""}
 	for _, name := range names {
-		lines = append(lines, "- "+name+": "+refs[name])
+		label := name
+		if language == "ca" {
+			label = map[string]string{"Go documentation": "Documentació de Go", "TypeScript documentation": "Documentació de TypeScript", "JavaScript documentation (MDN)": "Documentació de JavaScript (MDN)", "Python documentation": "Documentació de Python", "Typst documentation": "Documentació de Typst", "PostgreSQL documentation": "Documentació de PostgreSQL"}[name]
+		}
+		lines = append(lines, "- "+label+": "+refs[name])
 	}
 	return strings.Join(lines, "\n")
 }

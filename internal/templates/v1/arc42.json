@@ -6,8 +6,8 @@
   "en": "Architecture documentation — arc42",
   "code": "arc42",
   "guidance": "Follow the twelve arc42 views. Keep requirements, observed structure, inferred runtime scenarios and proposed design decisions distinct. This is an arc42 document, not a claim of ISO/IEC/IEEE 42010 conformance.",
-  "notice_ru": "Структура arc42: Gernot Starke и Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Адаптация: русский перевод, задания для генерации и вёрстка PDF. Содержание проекта не является частью лицензии шаблона. Соответствие ISO/IEC/IEEE 42010 не заявляется.",
-  "notice_en": "arc42 structure by Gernot Starke and Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Adapted with Russian labels, generation guidance and PDF layout. Project content is separate from the template license. ISO/IEC/IEEE 42010 conformance is not asserted.",
+  "notice_ru": "Структура arc42: Gernot Starke и Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Адаптация: русский и каталонский перевод, задания для генерации и вёрстка PDF. Содержание проекта не является частью лицензии шаблона. Соответствие ISO/IEC/IEEE 42010 не заявляется.",
+  "notice_en": "arc42 structure by Gernot Starke and Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Adapted with Russian and Catalan labels, generation guidance and PDF layout. Project content is separate from the template license. ISO/IEC/IEEE 42010 conformance is not asserted.",
   "headings": [
     {
       "id": "arc42-01",
@@ -16,7 +16,8 @@
       "en": "Introduction and Goals",
       "draft": true,
       "chapter": "Context and drivers",
-      "guidance": "Explain the business task, stakeholders and their concerns, and the top quality goals; distinguish requirements from observed implementation."
+      "guidance": "Explain the business task, stakeholders and their concerns, and the top quality goals; distinguish requirements from observed implementation.",
+      "ca": "Introducció i objectius"
     },
     {
       "id": "arc42-02",
@@ -25,7 +26,8 @@
       "en": "Architecture Constraints",
       "draft": true,
       "chapter": "Context and drivers",
-      "guidance": "List technical, organizational and external constraints. Separate mandatory constraints from selected technologies and unresolved assumptions."
+      "guidance": "List technical, organizational and external constraints. Separate mandatory constraints from selected technologies and unresolved assumptions.",
+      "ca": "Restriccions de l’arquitectura"
     },
     {
       "id": "arc42-03",
@@ -34,7 +36,8 @@
       "en": "Context and Scope",
       "draft": true,
       "chapter": "Context and drivers",
-      "guidance": "Describe the system boundary, actors, external systems, business interactions and technical interfaces with their data and protocols."
+      "guidance": "Describe the system boundary, actors, external systems, business interactions and technical interfaces with their data and protocols.",
+      "ca": "Context i abast"
     },
     {
       "id": "arc42-04",
@@ -43,7 +46,8 @@
       "en": "Solution Strategy",
       "draft": true,
       "chapter": "Structure and strategy",
-      "guidance": "Explain the main architecture approach and how it addresses the stated goals. Do not invent the historical rationale for observed technology choices."
+      "guidance": "Explain the main architecture approach and how it addresses the stated goals. Do not invent the historical rationale for observed technology choices.",
+      "ca": "Estratègia de la solució"
     },
     {
       "id": "arc42-05",
@@ -52,7 +56,8 @@
       "en": "Building Block View",
       "draft": true,
       "chapter": "Structure and strategy",
-      "guidance": "Describe top-level components, their responsibilities, interfaces, dependencies and important internal modules; map each to source paths."
+      "guidance": "Describe top-level components, their responsibilities, interfaces, dependencies and important internal modules; map each to source paths.",
+      "ca": "Vista dels blocs de construcció"
     },
     {
       "id": "arc42-06",
@@ -61,7 +66,8 @@
       "en": "Runtime View",
       "draft": true,
       "chapter": "Runtime and deployment",
-      "guidance": "Explain source-supported end-to-end scenarios step by step, including data flow and failure handling. Static scenarios are inferred from source, not proof of execution."
+      "guidance": "Explain source-supported end-to-end scenarios step by step, including data flow and failure handling. Static scenarios are inferred from source, not proof of execution.",
+      "ca": "Vista d’execució"
     },
     {
       "id": "arc42-07",
@@ -70,7 +76,8 @@
       "en": "Deployment View",
       "draft": true,
       "chapter": "Runtime and deployment",
-      "guidance": "Map software components to declared infrastructure, environments, configuration and deployment artifacts. Mark absent production topology and sizing as TODO."
+      "guidance": "Map software components to declared infrastructure, environments, configuration and deployment artifacts. Mark absent production topology and sizing as TODO.",
+      "ca": "Vista de desplegament"
     },
     {
       "id": "arc42-08",
@@ -79,7 +86,8 @@
       "en": "Crosscutting Concepts",
       "draft": true,
       "chapter": "Concepts and decisions",
-      "guidance": "Explain shared concepts for persistence, validation, authentication, errors, messaging, logging and configuration only where supported by source."
+      "guidance": "Explain shared concepts for persistence, validation, authentication, errors, messaging, logging and configuration only where supported by source.",
+      "ca": "Conceptes transversals"
     },
     {
       "id": "arc42-09",
@@ -88,7 +96,8 @@
       "en": "Architecture Decisions",
       "draft": true,
       "chapter": "Concepts and decisions",
-      "guidance": "Record documented decisions, context, alternatives and consequences. Separate observed implementation from proposed decisions; unknown historical rationale is TODO."
+      "guidance": "Record documented decisions, context, alternatives and consequences. Separate observed implementation from proposed decisions; unknown historical rationale is TODO.",
+      "ca": "Decisions d’arquitectura"
     },
     {
       "id": "arc42-10",
@@ -97,7 +106,8 @@
       "en": "Quality Requirements",
       "draft": true,
       "chapter": "Quality and risks",
-      "guidance": "Describe quality goals and scenarios: stimulus, environment, affected component, response and measurable acceptance. Unknown numerical targets are TODO."
+      "guidance": "Describe quality goals and scenarios: stimulus, environment, affected component, response and measurable acceptance. Unknown numerical targets are TODO.",
+      "ca": "Requisits de qualitat"
     },
     {
       "id": "arc42-11",
@@ -106,7 +116,8 @@
       "en": "Risks and Technical Debt",
       "draft": true,
       "chapter": "Quality and risks",
-      "guidance": "Describe evidence-backed risks, impact and possible mitigations. Label inferred risks and proposed actions; do not equate absent evidence with a proven vulnerability."
+      "guidance": "Describe evidence-backed risks, impact and possible mitigations. Label inferred risks and proposed actions; do not equate absent evidence with a proven vulnerability.",
+      "ca": "Riscos i deute tècnic"
     },
     {
       "id": "arc42-12",
@@ -115,7 +126,10 @@
       "en": "Glossary",
       "draft": true,
       "chapter": "Terminology",
-      "guidance": "Define domain and architecture terms used in the project. Keep names consistent with sources and avoid a generic programming dictionary."
+      "guidance": "Define domain and architecture terms used in the project. Keep names consistent with sources and avoid a generic programming dictionary.",
+      "ca": "Glossari"
     }
-  ]
+  ],
+  "ca": "Documentació de l’arquitectura — arc42",
+  "notice_ca": "Estructura arc42 de Gernot Starke i Peter Hruschka, https://arc42.org/overview/ — CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Adaptació: etiquetes en rus i català, instruccions de generació i maquetació PDF. El contingut del projecte és independent de la llicència de la plantilla. No s’afirma el compliment d’ISO/IEC/IEEE 42010."
 }

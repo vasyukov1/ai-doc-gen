@@ -25,7 +25,8 @@
       "level": 2,
       "ru": "Документ(ы), на основании которого(ых) ведется разработка",
       "en": "Documents authorizing development",
-      "draft": true
+      "draft": true,
+      "guidance": "Identify supplied formal authorization or approved specifications only. If none is supplied, say so briefly and distinguish source material used for this explanatory note from documents authorizing development."
     },
     {
       "id": "pz-04",
@@ -81,21 +82,24 @@
       "level": 3,
       "ru": "Состав технических и программных средств",
       "en": "Hardware and software components",
-      "draft": true
+      "draft": true,
+      "guidance": "List actual implementation technologies, external tools and provider/network needs. Separate build-time tools from runtime dependencies. Do not invent numeric hardware requirements; explain what resource validation would be needed without pretending it was performed."
     },
     {
       "id": "pz-12",
       "level": 3,
       "ru": "Обоснование выбора технических и программных средств",
       "en": "Rationale for hardware and software selection",
-      "draft": true
+      "draft": true,
+      "guidance": "State observed technology choices. If historical design rationale is not supplied, label technical considerations as inferred or proposed rather than attributing them to the authors. Do not claim measured speed or cost advantages."
     },
     {
       "id": "pz-13",
       "level": 2,
       "ru": "Описание и обоснование архитектуры программы",
       "en": "Description and rationale of program architecture",
-      "draft": true
+      "draft": true,
+      "guidance": "Trace the actual command/API entry points, business functions, external provider calls and output writing. Do not call an implemented capability future work because it is absent from one excerpt. Explain a concrete source-supported flow."
     },
     {
       "id": "pz-14",
@@ -109,14 +113,16 @@
       "level": 3,
       "ru": "Основной сценарий работы",
       "en": "Main usage scenario",
-      "draft": true
+      "draft": true,
+      "guidance": "Give the primary end-to-end user workflow using the actual commands, flags and output paths. Distinguish optional helper commands from the main generation and compilation path."
     },
     {
       "id": "pz-16",
       "level": 2,
       "ru": "Обоснование выбора метода организации входных и выходных данных",
       "en": "Rationale for input and output organization",
-      "draft": true
+      "draft": true,
+      "guidance": "Explain actual input/configuration loading and output writing/compilation paths. Distinguish generated section files, optional bundled files and final artifacts. Do not infer filename suffixes or assume the application never invokes its external compiler."
     },
     {
       "id": "pz-17",
@@ -130,21 +136,24 @@
       "level": 2,
       "ru": "Ориентировочная экономическая эффективность",
       "en": "Estimated economic efficiency",
-      "draft": true
+      "draft": true,
+      "guidance": "Provide a qualitative evaluation method and explicit unknown measurement inputs. Do not manufacture hours saved, cost totals, percentages or financial return."
     },
     {
       "id": "pz-19",
       "level": 2,
       "ru": "Предполагаемая потребность",
       "en": "Expected demand",
-      "draft": true
+      "draft": true,
+      "guidance": "Describe intended users and possible demand as hypotheses; no invented interviews, adoption counts or market measurements."
     },
     {
       "id": "pz-20",
       "level": 2,
       "ru": "Экономические преимущества разработки по сравнению с отечественными и зарубежными аналогами",
       "en": "Economic advantages over domestic and foreign alternatives",
-      "draft": true
+      "draft": true,
+      "guidance": "Provide comparison criteria supported by implementation and identify evidence needed for a fair comparison. Do not assert unmeasured superiority or invent competitor capabilities."
     },
     {
       "id": "pz-21",
@@ -167,5 +176,6 @@
       "en": "Appendix 3. Terminology",
       "draft": true
     }
-  ]
+  ],
+  "guidance": "Describe the supplied existing implementation, not a hypothetical system from embedded examples. Keep technical workflows consistent across sections. Separate verified source behavior, intended benefits, proposed rationale and genuinely unknown formal decisions. Never convert a repository README into an approved development authorization. Do not invent hardware minima, measured productivity savings, market demand or comparative performance."
 }

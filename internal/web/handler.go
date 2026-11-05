@@ -22,6 +22,7 @@ type Handler struct {
 	evidencePage  *template.Template
 	documentPage  *template.Template
 	sectionsPage  *template.Template
+	reusePage     *template.Template
 	encryptionKey string
 	retention     time.Duration
 }
@@ -32,8 +33,8 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 		return nil, fmt.Errorf("load static assets: %w", err)
 	}
 
-	pages := make(map[string]*template.Template, 7)
-	for _, name := range []string{"index.html", "job.html", "jobs.html", "files.html", "evidence.html", "document.html", "sections.html"} {
+	pages := make(map[string]*template.Template, 8)
+	for _, name := range []string{"index.html", "job.html", "jobs.html", "files.html", "evidence.html", "document.html", "sections.html", "reuse.html"} {
 		page, err := webassets.Page(name)
 		if err != nil {
 			return nil, fmt.Errorf("load %s: %w", name, err)
@@ -51,6 +52,7 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 		evidencePage:  pages["evidence.html"],
 		documentPage:  pages["document.html"],
 		sectionsPage:  pages["sections.html"],
+		reusePage:     pages["reuse.html"],
 		encryptionKey: encryptionKey,
 		retention:     retention,
 	}
@@ -64,6 +66,8 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 	mux.HandleFunc("POST /jobs/{id}/lifecycle", handler.lifecycle)
 	mux.HandleFunc("GET /jobs", handler.listJobs)
 	mux.HandleFunc("GET /jobs/{id}", handler.jobPageView)
+	mux.HandleFunc("GET /jobs/{id}/reuse", handler.reuseView)
+	mux.HandleFunc("POST /jobs/{id}/reuse", handler.createReusedJob)
 	mux.HandleFunc("GET /jobs/{id}/files", handler.filePageView)
 	mux.HandleFunc("POST /jobs/{id}/files", handler.saveFileSelection)
 	mux.HandleFunc("GET /jobs/{id}/evidence", handler.evidenceView)

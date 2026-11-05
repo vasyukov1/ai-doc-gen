@@ -14,7 +14,7 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 )
 
-const AnalysisVersion = "source-context-4"
+const AnalysisVersion = "source-context-6"
 
 // sourceFacts keeps whole declarations and paragraphs within explicit bounds.
 func sourceFacts(path string, data []byte) []domain.Fact {
@@ -23,7 +23,11 @@ func sourceFacts(path string, data []byte) []domain.Fact {
 		if len(facts) >= 80 {
 			return
 		}
-		facts = append(facts, domain.Fact{Kind: kind, Value: clipText(value, 6000), Path: path, StartLine: start, EndLine: end, Provenance: "source"})
+		bounded := clipText(value, 6000)
+		if kind == "code_function" || kind == "code_type" {
+			bounded = clipSource(value, 6000)
+		}
+		facts = append(facts, domain.Fact{Kind: kind, Value: bounded, Path: path, StartLine: start, EndLine: end, Provenance: "source"})
 	}
 	lower := strings.ToLower(path)
 	if strings.HasSuffix(lower, ".json") && (strings.Contains(lower, "swagger") || strings.Contains(lower, "openapi")) {
@@ -82,6 +86,9 @@ func sourceFacts(path string, data []byte) []domain.Fact {
 				add("import", imp.Path.Value, fs.Position(imp.Pos()).Line, fs.Position(imp.End()).Line)
 			}
 			for _, decl := range f.Decls {
+				if declaration, ok := decl.(*ast.GenDecl); ok && declaration.Tok == token.IMPORT {
+					continue
+				}
 				a, b := fs.Position(decl.Pos()), fs.Position(decl.End())
 				kind := "code_type"
 				caller := "declaration"
@@ -177,6 +184,7 @@ func sortedKeys[V any](m map[string]V) []string {
 func projectBrief(evidence domain.Evidence) domain.ProjectBrief {
 	b := domain.ProjectBrief{Version: AnalysisVersion, Context: []domain.Fact{}, Services: []string{}, Unknowns: []string{"Static source analysis does not establish successful execution or test results."}}
 	seen := map[string]bool{}
+	contextBudget := 3200
 	ordered := append([]domain.Fact{}, evidence.Facts...)
 	sort.SliceStable(ordered, func(i, j int) bool { return ordered[i].Provenance == "user" && ordered[j].Provenance != "user" })
 	for _, f := range ordered {
@@ -193,10 +201,11 @@ func projectBrief(evidence domain.Evidence) domain.ProjectBrief {
 		if f.Kind == "go_module" {
 			b.Services = append(b.Services, f.Value)
 		}
-		if f.Provenance == "user" || strings.Contains(f.Kind, "readme") {
+		if f.Kind != "specification" && (f.Provenance == "user" || strings.Contains(f.Kind, "readme")) {
 			// Preserve the short project description regardless of chapter keywords.
-			if !seen[f.Value] && len(b.Context) < 8 {
-				f.Value = clipText(f.Value, 2200)
+			if !seen[f.Value] && len(b.Context) < 4 && contextBudget > 100 {
+				f.Value = clipText(f.Value, min(1200, contextBudget))
+				contextBudget -= len([]rune(f.Value))
 				b.Context = append(b.Context, f)
 				seen[f.Value] = true
 			}
@@ -223,4 +232,18 @@ func buildProjectModel(evidence domain.Evidence) domain.ProjectModel {
 
 func sourceLabel(f domain.Fact) string {
 	return fmt.Sprintf("%s:%d-%d", f.Path, f.StartLine, f.EndLine)
+}
+
+// Keep late error/return branches visible when a declaration exceeds its budget.
+func clipSource(value string, limit int) string {
+	value = clipText(value, len([]rune(value)))
+	runes := []rune(value)
+	if len(runes) <= limit || limit < 100 {
+		return clipText(value, limit)
+	}
+	marker := "\n[... middle source lines omitted ...]\n"
+	available := limit - len([]rune(marker))
+	head := available * 2 / 3
+	tail := available - head
+	return string(runes[:head]) + marker + string(runes[len(runes)-tail:])
 }

@@ -24,3 +24,7 @@ Each requirement has a stable id, the user action it serves and the check that s
 ## Harness wave 2
 
 [W2-R1–W2-R5: situations, implementation and manual acceptance](harness-wave-2/plan.md) · [evidence, decisions and deferred findings](harness-wave-2/README.md).
+
+## Live quality follow-up
+
+[Q1–Q5: real-model quality, retained-project reuse, Catalan, client handover and stable reading](live-quality/plan.md) · [observations and limitations](live-quality/README.md).

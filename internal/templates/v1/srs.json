@@ -14,7 +14,8 @@
       "level": 1,
       "ru": "Введение",
       "en": "Introduction",
-      "draft": false
+      "draft": false,
+      "ca": "Introducció"
     },
     {
       "id": "srs-02",
@@ -23,7 +24,8 @@
       "en": "Purpose and scope",
       "draft": true,
       "chapter": "Introduction",
-      "guidance": "State the software purpose, system boundary, intended readers and included/excluded capabilities."
+      "guidance": "State the software purpose, system boundary, intended readers and included/excluded capabilities.",
+      "ca": "Propòsit i abast"
     },
     {
       "id": "srs-03",
@@ -32,7 +34,8 @@
       "en": "Stakeholders and objectives",
       "draft": true,
       "chapter": "Introduction",
-      "guidance": "Identify supplied stakeholder roles, business goals and intended benefits; unknown contacts and approvals are TODO."
+      "guidance": "Identify supplied stakeholder roles, business goals and intended benefits; unknown contacts and approvals are TODO.",
+      "ca": "Parts interessades i objectius"
     },
     {
       "id": "srs-04",
@@ -41,14 +44,16 @@
       "en": "Definitions and references",
       "draft": true,
       "chapter": "Introduction",
-      "guidance": "Define project terms and cite only supplied sources. Do not fabricate standards clauses or document versions."
+      "guidance": "Define project terms and cite only supplied sources. Do not fabricate standards clauses or document versions.",
+      "ca": "Definicions i referències"
     },
     {
       "id": "srs-05",
       "level": 1,
       "ru": "Общее описание",
       "en": "Overall description",
-      "draft": false
+      "draft": false,
+      "ca": "Descripció general"
     },
     {
       "id": "srs-06",
@@ -57,7 +62,8 @@
       "en": "Product perspective and functions",
       "draft": true,
       "chapter": "Overall description",
-      "guidance": "Describe how the product fits its environment and summarize capabilities without duplicating the detailed requirements."
+      "guidance": "Describe how the product fits its environment and summarize capabilities without duplicating the detailed requirements.",
+      "ca": "Context i funcions del producte"
     },
     {
       "id": "srs-07",
@@ -66,7 +72,8 @@
       "en": "User classes and characteristics",
       "draft": true,
       "chapter": "Overall description",
-      "guidance": "Describe user roles, skills, access needs and accessibility considerations supported by requirements."
+      "guidance": "Describe user roles, skills, access needs and accessibility considerations supported by requirements.",
+      "ca": "Classes i característiques dels usuaris"
     },
     {
       "id": "srs-08",
@@ -75,7 +82,8 @@
       "en": "Operating environment",
       "draft": true,
       "chapter": "Overall description",
-      "guidance": "Distinguish declared software/platform dependencies from required deployment environment; unknown platform versions and sizing are TODO."
+      "guidance": "Distinguish declared software/platform dependencies from required deployment environment; unknown platform versions and sizing are TODO.",
+      "ca": "Entorn operatiu"
     },
     {
       "id": "srs-09",
@@ -84,14 +92,16 @@
       "en": "Constraints, assumptions and dependencies",
       "draft": true,
       "chapter": "Overall description",
-      "guidance": "Separate mandated constraints, assumptions requiring confirmation and external dependencies; mark conflicting requirements and code explicitly."
+      "guidance": "Separate mandated constraints, assumptions requiring confirmation and external dependencies; mark conflicting requirements and code explicitly.",
+      "ca": "Restriccions, supòsits i dependències"
     },
     {
       "id": "srs-10",
       "level": 1,
       "ru": "Требования к внешним интерфейсам",
       "en": "External interface requirements",
-      "draft": false
+      "draft": false,
+      "ca": "Requisits de les interfícies externes"
     },
     {
       "id": "srs-11",
@@ -100,7 +110,8 @@
       "en": "User interfaces",
       "draft": true,
       "chapter": "External interface requirements",
-      "guidance": "Describe required user interactions, inputs, outputs, navigation and error feedback; do not infer a graphical UI from an API."
+      "guidance": "Describe required user interactions, inputs, outputs, navigation and error feedback; do not infer a graphical UI from an API.",
+      "ca": "Interfícies d’usuari"
     },
     {
       "id": "srs-12",
@@ -109,7 +120,8 @@
       "en": "Software and hardware interfaces",
       "draft": true,
       "chapter": "External interface requirements",
-      "guidance": "Specify supported system integrations, data contracts and hardware interfaces; mark hardware interfaces not applicable only when justified."
+      "guidance": "Specify supported system integrations, data contracts and hardware interfaces; mark hardware interfaces not applicable only when justified.",
+      "ca": "Interfícies de programari i maquinari"
     },
     {
       "id": "srs-13",
@@ -118,14 +130,16 @@
       "en": "Communication interfaces",
       "draft": true,
       "chapter": "External interface requirements",
-      "guidance": "Describe protocols, message/API formats, authentication requirements and failure behavior from evidence."
+      "guidance": "Describe protocols, message/API formats, authentication requirements and failure behavior from evidence.",
+      "ca": "Interfícies de comunicació"
     },
     {
       "id": "srs-14",
       "level": 1,
       "ru": "Функциональные требования и данные",
       "en": "Functional and data requirements",
-      "draft": false
+      "draft": false,
+      "ca": "Requisits funcionals i de dades"
     },
     {
       "id": "srs-15",
@@ -134,7 +148,8 @@
       "en": "Functional requirements",
       "draft": true,
       "chapter": "Functional and data requirements",
-      "guidance": "Write atomic, verifiable requirements with distinct IDs prefixed FR-, actor, trigger, expected behavior, source and priority if supplied. Preserve existing user requirement IDs. Code-derived requirements are proposals requiring confirmation."
+      "guidance": "Write atomic, verifiable requirements with distinct IDs prefixed FR-, actor, trigger, expected behavior, source and priority if supplied. Preserve existing user requirement IDs. Code-derived requirements are proposals requiring confirmation.",
+      "ca": "Requisits funcionals"
     },
     {
       "id": "srs-16",
@@ -143,7 +158,8 @@
       "en": "Use cases and error handling",
       "draft": true,
       "chapter": "Functional and data requirements",
-      "guidance": "Describe preconditions, normal flow, alternative/error paths and postconditions. Never claim scenarios were executed."
+      "guidance": "Describe preconditions, normal flow, alternative/error paths and postconditions. Never claim scenarios were executed.",
+      "ca": "Casos d’ús i gestió d’errors"
     },
     {
       "id": "srs-17",
@@ -152,14 +168,16 @@
       "en": "Data requirements",
       "draft": true,
       "chapter": "Functional and data requirements",
-      "guidance": "Describe entities, constraints, validation, persistence and lifecycle requirements; retention periods and privacy rules need supplied authority or TODO."
+      "guidance": "Describe entities, constraints, validation, persistence and lifecycle requirements; retention periods and privacy rules need supplied authority or TODO.",
+      "ca": "Requisits de dades"
     },
     {
       "id": "srs-18",
       "level": 1,
       "ru": "Требования к качеству",
       "en": "Quality requirements",
-      "draft": false
+      "draft": false,
+      "ca": "Requisits de qualitat"
     },
     {
       "id": "srs-19",
@@ -168,7 +186,8 @@
       "en": "Performance and capacity",
       "draft": true,
       "chapter": "Quality requirements",
-      "guidance": "Describe response-time, throughput, capacity and resource criteria with sources. Do not invent numerical targets or measured performance."
+      "guidance": "Describe response-time, throughput, capacity and resource criteria with sources. Do not invent numerical targets or measured performance.",
+      "ca": "Rendiment i capacitat"
     },
     {
       "id": "srs-20",
@@ -177,7 +196,8 @@
       "en": "Reliability and availability",
       "draft": true,
       "chapter": "Quality requirements",
-      "guidance": "Describe fault tolerance, recovery, data integrity and availability criteria. Missing SLO, RTO and RPO values are TODO."
+      "guidance": "Describe fault tolerance, recovery, data integrity and availability criteria. Missing SLO, RTO and RPO values are TODO.",
+      "ca": "Fiabilitat i disponibilitat"
     },
     {
       "id": "srs-21",
@@ -186,7 +206,8 @@
       "en": "Security and privacy",
       "draft": true,
       "chapter": "Quality requirements",
-      "guidance": "Describe authentication, authorization, data protection and auditing requirements. Distinguish implemented controls from requirements; do not assert compliance."
+      "guidance": "Describe authentication, authorization, data protection and auditing requirements. Distinguish implemented controls from requirements; do not assert compliance.",
+      "ca": "Seguretat i privacitat"
     },
     {
       "id": "srs-22",
@@ -195,7 +216,8 @@
       "en": "Usability and accessibility",
       "draft": true,
       "chapter": "Quality requirements",
-      "guidance": "Describe usability and accessibility criteria for supported user roles and interfaces; unknown acceptance thresholds are TODO."
+      "guidance": "Describe usability and accessibility criteria for supported user roles and interfaces; unknown acceptance thresholds are TODO.",
+      "ca": "Usabilitat i accessibilitat"
     },
     {
       "id": "srs-23",
@@ -204,14 +226,16 @@
       "en": "Maintainability, portability and compatibility",
       "draft": true,
       "chapter": "Quality requirements",
-      "guidance": "Describe supported platforms, compatibility, configuration, diagnostics, maintenance and migration requirements; do not invent support commitments."
+      "guidance": "Describe supported platforms, compatibility, configuration, diagnostics, maintenance and migration requirements; do not invent support commitments.",
+      "ca": "Mantenibilitat, portabilitat i compatibilitat"
     },
     {
       "id": "srs-24",
       "level": 1,
       "ru": "Проверка и прослеживаемость",
       "en": "Verification and traceability",
-      "draft": false
+      "draft": false,
+      "ca": "Verificació i traçabilitat"
     },
     {
       "id": "srs-25",
@@ -220,7 +244,8 @@
       "en": "Verification methods and acceptance criteria",
       "draft": true,
       "chapter": "Verification and traceability",
-      "guidance": "Propose inspection, analysis, demonstration or test for requirements with measurable expected results. Missing acceptance authority and thresholds are TODO; no test results may be fabricated."
+      "guidance": "Propose inspection, analysis, demonstration or test for requirements with measurable expected results. Missing acceptance authority and thresholds are TODO; no test results may be fabricated.",
+      "ca": "Mètodes de verificació i criteris d’acceptació"
     },
     {
       "id": "srs-26",
@@ -229,7 +254,8 @@
       "en": "Requirements traceability",
       "draft": true,
       "chapter": "Verification and traceability",
-      "guidance": "Map only requirement IDs actually present in supplied evidence to source, component and proposed verification. If generated requirements from other chapters are unavailable, use their stable section IDs and mark requirement-level links TODO; never invent cross-chapter IDs."
+      "guidance": "Map only requirement IDs actually present in supplied evidence to source, component and proposed verification. If generated requirements from other chapters are unavailable, use their stable section IDs and mark requirement-level links TODO; never invent cross-chapter IDs.",
+      "ca": "Traçabilitat dels requisits"
     },
     {
       "id": "srs-27",
@@ -238,14 +264,16 @@
       "en": "Open issues and approval",
       "draft": true,
       "chapter": "Verification and traceability",
-      "guidance": "List unresolved decisions and conflicts requiring stakeholder confirmation; owners, approval dates and signatures are TODO if not supplied."
+      "guidance": "List unresolved decisions and conflicts requiring stakeholder confirmation; owners, approval dates and signatures are TODO if not supplied.",
+      "ca": "Qüestions obertes i aprovació"
     },
     {
       "id": "srs-28",
       "level": 1,
       "ru": "Дополнительные сведения",
       "en": "Supporting information",
-      "draft": false
+      "draft": false,
+      "ca": "Informació complementària"
     },
     {
       "id": "srs-29",
@@ -254,7 +282,10 @@
       "en": "Priorities, delivery increments and changes",
       "draft": true,
       "chapter": "Supporting information",
-      "guidance": "Document supplied priorities and allocation to delivery increments, change/version information and approval process. Unspecified schedules are TODO, not inferred from code dates."
+      "guidance": "Document supplied priorities and allocation to delivery increments, change/version information and approval process. Unspecified schedules are TODO, not inferred from code dates.",
+      "ca": "Prioritats, lliuraments incrementals i canvis"
     }
-  ]
+  ],
+  "ca": "Especificació de requisits de programari — SRS",
+  "notice_ca": "Estructura SRS elaborada de manera independent, basada en ISO/IEC/IEEE 29148:2018: https://www.iso.org/standard/72089.html. No es reprodueix el text complet de la norma; el document generat no acredita el compliment de tots els seus requisits."
 }

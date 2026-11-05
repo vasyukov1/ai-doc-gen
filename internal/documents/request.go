@@ -31,11 +31,12 @@ func ValidateRequest(request Request) (Request, error) {
 	if request.GitHubURL != "" && request.HasArchive {
 		return Request{}, errors.New("provide one GitHub URL or ZIP archive")
 	}
-	if _, err := templates.Load(request.ProfileID); err != nil {
+	profile, err := templates.Load(request.ProfileID)
+	if err != nil {
 		return Request{}, errors.New("choose a document profile")
 	}
-	if request.Language != "en" && request.Language != "ru" {
-		return Request{}, errors.New("choose English or Russian")
+	if !profile.SupportsLanguage(request.Language) {
+		return Request{}, errors.New("choose English or Russian; Catalan is available for neutral technical profiles only")
 	}
 	if len(request.Description) > 2000 {
 		return Request{}, errors.New("description is too long")

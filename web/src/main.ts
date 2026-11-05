@@ -17,3 +17,6 @@ import { initSetup } from "./setup";
 import { initUsage } from "./usage";
 initSetup();
 initUsage();
+
+import { initSectionsReading } from "./sections";
+initSectionsReading();

@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
   <title>Sections — Doc Gen</title>
-  {{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}
   {{template "head" .}}
 </head>
 <body>
   {{template "header" .}}
 
-  <main class="shell">
+  <main class="shell" data-sections-reading>
     <a class="back" href="/jobs/{{.Job.ID}}">← Document status</a>
 
     <header class="page-head">
@@ -19,7 +18,13 @@
       </div>
       <p class="lead" data-section-summary>{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections available. {{if .Refresh}}Read-only while processing; editing becomes available after processing stops.{{else}}Review the saved text, edit where enabled, then rebuild the PDF.{{end}}</p>
       <p><a class="button button--quiet" href="/jobs/{{.Job.ID}}/document">Review and rebuild PDF / Проверить и пересобрать PDF</a></p>
-      <p class="form-note">Saving text does not update an already compiled PDF. Rebuild after reviewing your edits.</p>
+      <p class="form-note">Available means saved text exists; it may still be an outline or contain gaps. Review the prose and TODOs before relying on it.</p>
+      <p class="form-note">This page shows saved prose, not the compiled PDF. Saving text does not update an existing PDF. Review and rebuild after editing.</p>
+      <div class="reading-refresh">
+        <a class="button button--quiet" href="/jobs/{{.Job.ID}}/sections" data-sections-refresh aria-describedby="reading-refresh-help">Load latest saved sections</a>
+        <p class="form-note" id="reading-refresh-help">No automatic reloads. {{if .Refresh}}Processing continues; load the latest sections when you are ready.{{else}}Save all edits before loading the latest saved version.{{end}}</p>
+        <p class="form-note" data-reading-status role="status" aria-live="polite"></p>
+      </div>
       {{if .Job.LatestMessage}}<p class="form-note" data-section-message>{{.Job.LatestMessage}}</p>{{end}}
     </header>
 
@@ -56,12 +61,21 @@
     </details>
     {{end}}
 
+    {{if .Sections}}
+    <nav class="section-navigation" id="section-navigation" aria-labelledby="section-navigation-title">
+      <h2 id="section-navigation-title" tabindex="-1">Jump to a section</h2>
+      <ol>
+        {{range .Sections}}<li><a href="#section-{{.ID}}">{{.Heading}}</a></li>{{end}}
+      </ol>
+    </nav>
+    {{end}}
+
     <div class="sections">
       {{range .Sections}}
-      <article class="card section-card">
+      <article class="card section-card" data-reading-section>
         <div class="card__body">
           <div class="section-card__head">
-            <h2>{{.Heading}}</h2>
+            <h2 id="section-{{.ID}}" tabindex="-1">{{.Heading}}</h2>
             {{if .Edited}}<span class="pill">Edited</span>{{end}}
           </div>
 
@@ -75,7 +89,7 @@
 
           <form method="post" action="/jobs/{{$.Job.ID}}/sections/{{.ID}}" data-busy data-edit-form>
             <p class="form-note" data-save-status role="status" aria-live="polite"></p>
-            <textarea name="body" rows="14" data-autogrow aria-label="Section text" {{if not $.Editable}}readonly{{end}}>{{.Body}}</textarea>
+            <textarea name="body" rows="14" data-autogrow aria-labelledby="section-{{.ID}}" {{if not $.Editable}}readonly{{end}}>{{.Body}}</textarea>
             {{if .Tables}}<p class="form-note">Saving updates prose and preserves generated tables.</p>
             <details class="group"><summary>Preserved tables (read-only)</summary>
               <div class="details-body">{{range .Tables}}
@@ -93,6 +107,10 @@
               <button class="button button--quiet" type="submit" name="action" value="regenerate" data-confirm="Regeneration replaces this saved section and may return an outline if the provider fails. Continue?" {{if not $.Editable}}disabled{{end}}>Regenerate</button>
             </div>
           </form>
+          <div class="section-card__reading-actions">
+            <a href="#section-navigation-title">Back to section list</a>
+            <a href="/jobs/{{$.Job.ID}}/sections?refresh=1#section-{{.ID}}" data-sections-refresh aria-describedby="reading-refresh-help">Load latest here</a>
+          </div>
         </div>
       </article>
       {{else}}

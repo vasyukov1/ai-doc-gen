@@ -36,7 +36,7 @@
               <span>What are you preparing? / Какой документ нужен?</span>
               <div class="link-row">
                 <button type="button" class="button button--quiet" data-profile-choice="pz">FKN coursework / ПЗ</button>
-                <button type="button" class="button button--quiet" data-profile-choice="technical-overview">Project handover</button>
+                <button type="button" class="button button--quiet" data-profile-choice="client-handover">Project handover</button>
                 <button type="button" class="button button--quiet" data-profile-choice="arc42">Architecture</button>
               </div>
             </div>
@@ -58,6 +58,7 @@
               <div class="field">
                 <label for="profile">Document type</label>
                 <select id="profile" name="profile_id">
+                  <option value="client-handover">Client handover — installation, operation and maintenance</option>
                   <option value="technical-overview">Technical overview — project handover</option>
                   <option value="tz">FKN — Technical specification / ТЗ</option>
                   <option value="pz">FKN — Explanatory note / ПЗ</option>
@@ -73,11 +74,12 @@
                 <select id="language" name="language">
                   <option value="en">English</option>
                   <option value="ru">Русский</option>
+                  <option value="ca">Català — neutral technical profiles</option>
                 </select>
               </div>
             </div>
 
-            <p class="form-note">Document languages: English and Russian. Catalan and other languages are not supported yet.</p>
+            <p class="form-note">Document output: English and Russian for every profile; Catalan for technical overview, client handover, SRS and arc42. The interface remains English/Russian.</p>
             <p class="callout" data-profile-guide aria-live="polite">Technical overview: a compact explanation of the implementation for a project handover.</p>
 
             <div class="field">
@@ -120,7 +122,7 @@
             <details class="group">
               <summary>Technical specification <span class="required" data-spec-required>Required for academic documents</span></summary>
               <div class="details-body">
-                <p class="form-note">Required for academic documents; optional for SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file. PDF and Typst imports are not supported: copy their readable text into the field below. / Из PDF или Typst скопируйте текст ТЗ в поле ниже.</p>
+                <p class="form-note">Required for academic documents; optional for client handover, SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file. PDF and Typst imports are not supported: copy their readable text into the field below. / Из PDF или Typst скопируйте текст ТЗ в поле ниже.</p>
                 <div class="field">
                   <label for="specification">Specification text</label>
                   <textarea id="specification" name="specification" rows="6" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>

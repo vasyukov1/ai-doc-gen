@@ -88,7 +88,7 @@ func classifyFile(name, profile string, size uint64) (string, bool, bool) {
 	// the default evidence selection.
 	if strings.HasPrefix(base, "dockerfile") || strings.HasPrefix(base, "docker-compose.") ||
 		base == "compose.yml" || base == "compose.yaml" || base == "makefile" {
-		return "build_config", true, profile == "arc42" || profile == "srs"
+		return "build_config", true, profile == "arc42" || profile == "srs" || profile == "client-handover"
 	}
 
 	if strings.HasSuffix(base, "_test.go") || strings.HasPrefix(base, "test_") ||
@@ -98,7 +98,7 @@ func classifyFile(name, profile string, size uint64) (string, bool, bool) {
 		strings.Contains("/"+strings.ToLower(name)+"/", "/tests/") ||
 		strings.Contains("/"+strings.ToLower(name)+"/", "/test/") ||
 		strings.Contains("/"+strings.ToLower(name)+"/", "/__tests__/") {
-		return "test_file", true, profile == "technical-overview" || profile == "srs" || profile == "arc42"
+		return "test_file", true, profile == "technical-overview" || profile == "srs" || profile == "arc42" || profile == "client-handover"
 	}
 
 	return "source_file", true, true

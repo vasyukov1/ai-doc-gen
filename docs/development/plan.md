@@ -149,3 +149,7 @@ See [the wave index](harness-wave-1/plan.md) and [triage](harness-wave-1/triage.
 ### Milestone 9 corrective acceptance — harness wave 2
 
 See [wave 2](harness-wave-2/README.md) and its [requirement/action/check index](harness-wave-2/plan.md). Five changes improve purpose-based setup, provider onboarding, explicit nonsecret form reuse, recorded token visibility and section-to-PDF navigation. Validate three synthetic persona flows with phone/laptop screenshots, manual no-provider generation and edit/rebuild, storage and report failures, and Go/frontend builds. No final testing milestone, new languages or live-model quality benchmark is claimed.
+
+### Milestone 9 corrective acceptance — live model quality and reusable delivery
+
+The user's follow-up authorizes actual provider generation on the supplied source, plus the five bounded changes in [live-quality/plan.md](live-quality/plan.md). Inspect generated prose against source and render full PDFs; do not treat `completed` or model-origin counts as factual-quality guarantees. Preserve honest missing approvals/measurements. Add owned retained-input reuse, neutral Catalan profiles, client handover and stable section reading. Keep automated suites deferred to milestone 8 and shared services unchanged. See [evidence and limits](live-quality/README.md).

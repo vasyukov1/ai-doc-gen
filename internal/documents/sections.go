@@ -152,6 +152,9 @@ func ValidateSection(raw string, plan SectionPlan, facts []domain.Fact) (domain.
 			if plan.Language == "ru" {
 				warning = "Абзац без ссылки требует проверки: "
 			}
+			if plan.Language == "ca" {
+				warning = "Cal revisar el paràgraf sense referència: "
+			}
 			section.Missing = append(section.Missing, warning+paragraph)
 		}
 	}

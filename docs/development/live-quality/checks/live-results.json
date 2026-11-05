@@ -1,0 +1,63 @@
+[
+  {
+    "run": "control-overview",
+    "model": "gemini-2.5-flash",
+    "calls_including_discovery": 5,
+    "recorded_input_tokens": 23062,
+    "recorded_output_tokens": 394,
+    "model_sections": 0,
+    "total_sections": 4,
+    "body_words_whitespace": 59,
+    "missing_entries": 4,
+    "baseline_sections": 4
+  },
+  {
+    "run": "final-overview",
+    "model": "gemini-2.5-flash",
+    "calls_including_discovery": 5,
+    "recorded_input_tokens": 28060,
+    "recorded_output_tokens": 4756,
+    "model_sections": 4,
+    "total_sections": 4,
+    "body_words_whitespace": 1666,
+    "missing_entries": 0,
+    "baseline_sections": 0,
+    "review_outcome": "rejected_factual_errors_and_unreported_visible_TODO"
+  },
+  {
+    "run": "current-overview",
+    "model": "gemini-3.5-flash-lite",
+    "calls_including_discovery": 8,
+    "recorded_input_tokens": 41572,
+    "recorded_output_tokens": 5317,
+    "model_sections": 4,
+    "total_sections": 4,
+    "body_words_whitespace": 1185,
+    "missing_entries": 2,
+    "baseline_sections": 0
+  },
+  {
+    "run": "current-pz",
+    "model": "gemini-3.5-flash-lite",
+    "calls_including_discovery": 10,
+    "recorded_input_tokens": 36922,
+    "recorded_output_tokens": 8698,
+    "model_sections": 17,
+    "total_sections": 17,
+    "body_words_whitespace": 2732,
+    "missing_entries": 7,
+    "baseline_sections": 0
+  },
+  {
+    "run": "current-handover",
+    "model": "gemini-3.5-flash-lite",
+    "calls_including_discovery": 5,
+    "recorded_input_tokens": 20309,
+    "recorded_output_tokens": 3916,
+    "model_sections": 6,
+    "total_sections": 6,
+    "body_words_whitespace": 1372,
+    "missing_entries": 1,
+    "baseline_sections": 0
+  }
+]

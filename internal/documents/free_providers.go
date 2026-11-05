@@ -94,13 +94,13 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 	}
 	var catalog struct {
 		Data []struct {
-			ID         string            `json:"id"`
-			Pricing    map[string]string `json:"pricing"`
-			Parameters []string          `json:"supported_parameters"`
+			ID         string                     `json:"id"`
+			Pricing    map[string]json.RawMessage `json:"pricing"`
+			Parameters []string                   `json:"supported_parameters"`
 		} `json:"data"`
 	}
 	if json.Unmarshal(raw, &catalog) != nil {
-		return invalidOutput()
+		return &ProviderError{Code: "provider_catalog", Message: "The provider model catalog could not be parsed. Retry later or choose another provider."}
 	}
 	available := make([]string, 0, len(catalog.Data))
 	for _, model := range catalog.Data {
@@ -110,7 +110,7 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 		}
 		if p.FreeOnly {
 			for _, field := range []string{"prompt", "completion"} {
-				value, err := strconv.ParseFloat(model.Pricing[field], 64)
+				value, err := catalogPrice(model.Pricing[field])
 				if err != nil || value != 0 {
 					return &ProviderError{Code: "provider_not_free", Message: "Selected OpenRouter model is not verified as free."}
 				}
@@ -119,7 +119,7 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 				if field == "discount" {
 					continue
 				}
-				price, err := strconv.ParseFloat(value, 64)
+				price, err := catalogPrice(value)
 				if err != nil || price != 0 {
 					return &ProviderError{Code: "provider_not_free", Message: "Selected model has nonzero or unknown charges."}
 				}
@@ -136,6 +136,10 @@ func (p *ChatProvider) Verify(ctx context.Context) error {
 			if !supported {
 				return &ProviderError{Code: "provider_format", Message: "Selected model does not advertise structured JSON output."}
 			}
+		}
+		// These Gemini text models support the existing chapter JSON schema.
+		if p.Endpoint == ProviderEndpoint("gemini") && (sameModelID(p.Model, "gemini-2.5-flash") || sameModelID(p.Model, "gemini-3.5-flash-lite") || sameModelID(p.Model, "gemini-3.8-flash")) {
+			p.Schema = true
 		}
 		return nil
 	}
@@ -186,4 +190,17 @@ func responseCooldown(header http.Header) time.Duration {
 		}
 	}
 	return delay
+}
+
+// Decode only scalar prices; unrelated catalog pricing metadata may be structured.
+func catalogPrice(raw json.RawMessage) (float64, error) {
+	var text string
+	if json.Unmarshal(raw, &text) == nil {
+		return strconv.ParseFloat(text, 64)
+	}
+	var number json.Number
+	if json.Unmarshal(raw, &number) == nil && len(raw) > 0 && string(raw) != "null" {
+		return number.Float64()
+	}
+	return 0, errors.New("unknown model price")
 }

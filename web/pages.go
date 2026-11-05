@@ -48,6 +48,7 @@ func percent(done, total int) int {
 }
 
 var profileNames = map[string]string{
+	"client-handover":    "Client project handover",
 	"arc42":              "Architecture documentation — arc42",
 	"pmi":                "Test plan and methodology",
 	"pmi-team":           "Test plan and methodology (team)",

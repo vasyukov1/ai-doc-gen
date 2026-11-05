@@ -258,7 +258,7 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 							if cap := inputCaps[limitKey]; cap > 0 && cap < tpm {
 								tpm = cap
 							}
-							outputTokens := min(6000, max(1800, len(group.Plans)*650))
+							outputTokens := min(6000, max(3000, len(group.Plans)*1800))
 							outputTokens = min(outputTokens, tpm/2)
 							if cap := outputCaps[limitKey]; cap > 0 {
 								outputTokens = min(outputTokens, cap)

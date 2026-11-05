@@ -136,7 +136,7 @@ func (h *Handler) documentInputFromRequest(r *http.Request, language string) (do
 	}
 	input.Specification = strings.TrimSpace(r.FormValue("specification"))
 
-	structured := []struct{ key, en, ru string }{{"purpose", "Purpose", "Назначение"}, {"functions", "Required functions", "Требуемые функции"}, {"constraints", "Constraints", "Ограничения"}, {"acceptance", "Acceptance criteria", "Критерии приемки"}}
+	structured := []struct{ key, en, ru, ca string }{{"purpose", "Purpose", "Назначение", "Propòsit"}, {"functions", "Required functions", "Требуемые функции", "Funcions requerides"}, {"constraints", "Constraints", "Ограничения", "Restriccions"}, {"acceptance", "Acceptance criteria", "Критерии приемки", "Criteris d’acceptació"}}
 	parts := []string{}
 	for _, field := range structured {
 		value := strings.TrimSpace(r.FormValue("spec." + field.key))
@@ -144,6 +144,9 @@ func (h *Handler) documentInputFromRequest(r *http.Request, language string) (do
 			label := field.en
 			if language == "ru" {
 				label = field.ru
+			}
+			if language == "ca" {
+				label = field.ca
 			}
 			parts = append(parts, label+":\n"+value)
 		}

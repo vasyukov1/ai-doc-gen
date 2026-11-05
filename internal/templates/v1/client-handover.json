@@ -1,0 +1,18 @@
+{
+  "id": "client-handover",
+  "version": "handover-1",
+  "academic": false,
+  "ru": "Передача проекта заказчику",
+  "en": "Client project handover",
+  "ca": "Lliurament del projecte al client",
+  "code": "",
+  "guidance": "Write a practical handover for the person who must install, operate and maintain this specific project. Identify whether it is a CLI, library or service before describing deployment. Explain concrete source-supported commands, configuration, inputs, outputs, dependencies and failures. Distinguish documented instructions from verified runtime results. Describe proposed acceptance checks as procedures, not passed tests. Do not invent production URLs, passwords, SLAs, support contacts or deployment infrastructure. If a topic does not apply, explain why briefly rather than requesting unrelated missing information. Repository examples are illustrative, not actual client data.",
+  "headings": [
+    {"id":"handover-scope","level":1,"ru":"Назначение и границы поставки","en":"Purpose and delivery scope","ca":"Finalitat i abast del lliurament","draft":true,"chapter":"Scope and components","guidance":"Explain the actual product, intended users, delivered components and exclusions. Separate sample business data from this software's purpose."},
+    {"id":"handover-components","level":1,"ru":"Компоненты и поток данных","en":"Components and data flow","ca":"Components i flux de dades","draft":true,"chapter":"Scope and components","guidance":"Describe module responsibilities and at least two supported end-to-end workflows with their inputs, transformations and outputs."},
+    {"id":"handover-install","level":1,"ru":"Установка и настройка","en":"Installation and configuration","ca":"Instal·lació i configuració","draft":true,"chapter":"Installation and operation","guidance":"Give supported prerequisites, installation steps and configuration names. Document secret handling without example secret values. Avoid inventing container or cloud deployment."},
+    {"id":"handover-operation","level":1,"ru":"Повседневная работа","en":"Everyday operation","ca":"Funcionament quotidià","draft":true,"chapter":"Installation and operation","guidance":"Describe operator tasks with exact supported commands or interfaces, inputs, expected artifacts and recovery from common errors. Identify destructive or overwrite flags when source establishes them."},
+    {"id":"handover-acceptance","level":1,"ru":"Проверка при передаче","en":"Handover acceptance checks","ca":"Comprovacions d’acceptació","draft":true,"chapter":"Acceptance and maintenance","guidance":"Propose concrete smoke checks with prerequisites, action and expected result, grounded in actual commands. Existing test code is evidence of intended checks, not proof that they pass."},
+    {"id":"handover-maintenance","level":1,"ru":"Сопровождение и ограничения","en":"Maintenance and limitations","ca":"Manteniment i limitacions","draft":true,"chapter":"Acceptance and maintenance","guidance":"Explain source-supported update, backup, dependency and troubleshooting considerations. Distinguish actual implementation limits from decisions the recipient must make; do not invent support arrangements."}
+  ]
+}

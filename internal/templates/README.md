@@ -24,3 +24,11 @@ Academic profiles use the embedded `fkn.typ` adaptation of the user-supplied MIT
 `srs.json` defines an independently authored SRS with 22 editable leaves and seven request groups, informed by the public scope of ISO/IEC/IEEE 29148:2018. It is not a reproduction of the licensed standard or a certification of conformity. `arc42.json` preserves the twelve arc42 sections in six generation groups; see `ARC42-NOTICE.md` for author credit, CC BY-SA 4.0 and adaptation details. arc42 is distinct from ISO/IEC/IEEE 42010:2022.
 
 Optional profile/section guidance and explicit chapter labels travel into prompts and cache identities. Both new profiles use neutral front matter and ordinary PDF headings, not FKN frames or institution defaults. The same literal JSON/table renderer, red TODO styling and private source export apply. Profile attribution appears in the annotation and notices are included in exported source bundles.
+
+## Catalan neutral profiles
+
+Technical overview, SRS, arc42 and client handover include Catalan (`ca`) titles, all headings, notices, baseline gaps and neutral PDF labels. Russian and English remain available for every profile. Academic FKN profiles do not support Catalan; request and document-input validation reject that pairing. Profile language support is explicit: `SupportsLanguage("ca")` requires a nonacademic profile, a Catalan title, every Catalan heading and a Catalan notice whenever another locale has one. Uploaded prose, source excerpts and user metadata retain their supplied language.
+
+## Client handover
+
+`client-handover.json` is a neutral six-section profile for delivered scope, components, installation, operation, acceptance and maintenance. It supports RU/EN/CA and three logical generation groups. Guidance follows actual CLI/library/service behavior and distinguishes proposed acceptance checks from performed tests. Unknown production endpoints, support agreements and measured service levels are not invented.

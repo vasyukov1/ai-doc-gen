@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head><title>Create another document — Doc Gen</title>{{template "head" .}}</head>
+<body>
+  {{template "header" .}}
+  <main class="shell">
+    <a class="back" href="/jobs/{{.Job.ID}}">← Original document</a>
+    <header class="page-head">
+      <p class="eyebrow">Saved project</p>
+      <h1>Create another document</h1>
+      <p class="lead">Review the copied project details, choose a document, and start a separate draft.</p>
+    </header>
+    <section class="card"><div class="card__body stack">
+      <h2>Retained source</h2>
+      {{if .Source.RepositoryURL}}<p>{{.Source.RepositoryURL}}{{if .Source.CommitSHA}} · pinned commit <code>{{.Source.CommitSHA}}</code>{{end}}</p>{{end}}
+      <p>{{.RetainedFiles}} retained text files. The new document gets its own source copy and retention period, so deleting the original document will not remove it. Excluded files and binaries are not recovered. The current profile will select its default files again.</p>
+      <p class="form-note">Saved prose, manual section edits, evidence corrections and artifacts are not copied. New evidence and sections are generated for the chosen document.</p>
+    </div></section>
+    {{if .Error}}<div class="form-feedback" role="alert">{{.Error}}{{if .UncertainID}} <a href="/jobs/{{.UncertainID}}">Check possible new document</a> · <a href="/jobs">Your documents</a>{{end}}</div>{{end}}
+    <form class="spec-form card" method="post" action="/jobs/{{.Job.ID}}/reuse" data-busy>
+      <div class="card__body stack">
+        <fieldset {{if not .Available}}disabled{{end}}>
+          <h2>Document</h2>
+          <div class="metadata-grid">
+            <div class="field"><label for="profile">Document profile</label><select id="profile" name="profile_id" required>{{range .Profiles}}<option value="{{.ID}}" {{if eq .ID $.ProfileID}}selected{{end}}>{{.Title}}</option>{{end}}</select></div>
+            <div class="field"><label for="language">Document language</label><select id="language" name="language" required><option value="en" {{if eq .Language "en"}}selected{{end}}>English</option><option value="ru" {{if eq .Language "ru"}}selected{{end}}>Русский</option><option value="ca" {{if eq .Language "ca"}}selected{{end}}>Català — neutral technical profiles</option>{{if and (ne .Language "en") (ne .Language "ru") (ne .Language "ca")}}<option value="{{.Language}}" selected>Unavailable language: {{.Language}}</option>{{end}}</select></div>
+          </div>
+          <p class="form-note" data-profile-guide>Academic profiles require a technical specification. Neutral technical profiles accept optional project context. Catalan is available for neutral technical profiles only.</p>
+          <div class="field"><label for="description">Project description</label><textarea id="description" name="description" rows="4" maxlength="2000" data-autogrow>{{.Description}}</textarea></div>
+          <h2>Copied title-page details</h2>
+          <p class="form-note">Update details for this document. Empty optional metadata will appear as visible TODOs.</p>
+          <div class="metadata-grid">
+            {{range .Fields}}<div class="field"><label for="meta-{{.Key}}">{{.Label}}</label><textarea id="meta-{{.Key}}" name="metadata.{{.Key}}" rows="2" maxlength="600" data-autogrow {{if eq .Key "project"}}required{{end}}>{{.Value}}</textarea></div>{{end}}
+          </div>
+          <div class="field"><label for="specification">Copied specification / requirements <span data-spec-required></span></label><textarea id="specification" name="specification" rows="10" maxlength="64000" data-autogrow>{{.Specification}}</textarea><p class="form-note">Review or replace the retained text. Academic profiles require a specification; keep the text below 64,000 UTF-8 bytes.</p></div>
+          <h2>Model connections</h2>
+          {{if .ConnectionError}}<p class="callout callout--warn">{{.ConnectionError}}</p>{{end}}
+          {{if .Connections}}
+          <ul>{{range .Connections}}<li>{{.Provider}}{{if .Model}} · {{.Model}}{{end}} · {{.RPM}} RPM / {{.TPM}} TPM</li>{{end}}</ul>
+          <label class="checkbox"><input type="checkbox" name="reuse_connections" value="yes" {{if .ReuseConnections}}checked{{end}}> Reuse these saved connections for this new document. I confirm the same free-account conditions still apply.</label>
+          <p class="form-note">Keys stay encrypted on the server and are never placed in this form. With this option selected, source context is sent to these providers during generation. The connection copy expires with the new document.</p>
+          {{else}}<p>No reusable free-draft connections are saved with this document.</p>{{end}}
+          <p class="form-note">Without connection reuse, the new document starts as a source-based outline with visible missing-information markers.</p>
+          <label class="checkbox"><input type="checkbox" name="reviewed_input" value="yes" required {{if .ReviewedInput}}checked{{end}}> I reviewed the copied input. Missing optional details may remain as TODOs.</label>
+          <button class="button" type="submit" data-busy-label="Creating…">Create new document</button>
+        </fieldset>
+      </div>
+    </form>
+  </main>
+  {{template "footer" .}}{{template "scripts" .}}
+</body>
+</html>

@@ -20,12 +20,12 @@ Deferred to a later wave: cross-device identity, arbitrary languages, version-hi
 
 ## Execution ledger
 
-- [ ] Real-provider baseline and source inspection.
-- [ ] Q1 evidenced fixes and live rerun.
-- [ ] Q2 reusable source/connection flow.
-- [ ] Q3 Catalan neutral profiles.
-- [ ] Q4 client handover profile.
-- [ ] Q5 reading/review flow.
-- [ ] Manual integration, independent code/quality reviews, documentation and build.
+- [x] Real-provider baseline and source inspection.
+- [x] Q1 evidenced fixes and live rerun; raw versus source-reviewed results are separated in README.md.
+- [x] Q2 reusable source/connection flow.
+- [x] Q3 Catalan neutral profiles.
+- [x] Q4 client handover profile; real Catalan delivery and source review completed.
+- [x] Q5 reading/review flow.
+- [x] Manual integration, independent code/quality reviews, documentation and build. See README.md and checks/.
 
 Use subagent-driven-development for isolated Q2/Q3/Q5 tasks; primary owns Q1 and integration. No shared-file changes without coordination: localization owns index.html and job.html; preview owns sections.html; reuse adds reuse.html and supplies insertion instructions to primary. Primary integrates main.ts imports and builds static assets. No worker/service restarts by subagents. Dedicated database/port for live checks. Current feature branch provides task isolation; no move of user files.

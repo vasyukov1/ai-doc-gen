@@ -1,0 +1,3 @@
+PASS two dirty edits block refresh and preserve text; no server mutation
+PASS in-flight guard (DOM state injection; no save request sent)
+PASS native no-JS footer refresh performs document navigation

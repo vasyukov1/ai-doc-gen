@@ -1,0 +1,4 @@
+overview: 17 facts, 12 production functions, 0 test/CI facts, 0 version/dependency facts
+architecture: 21 facts, 11 production functions, 2 test/CI facts, 0 version/dependency facts
+interfaces: 15 facts, 9 production functions, 0 test/CI facts, 2 version/dependency facts
+verification: 16 facts, 3 production functions, 10 test/CI facts, 0 version/dependency facts

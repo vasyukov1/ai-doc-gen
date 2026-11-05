@@ -83,6 +83,7 @@
         <section class="card">
           <div class="card__body stack">
             <h2>Document pages</h2>
+            <p><a class="button button--quiet" href="/jobs/{{.Job.ID}}/reuse">Create another document from this project / Другой документ из проекта</a></p>
             <div class="link-row">
               <a href="/jobs/{{.Job.ID}}/document">Input and rendering</a>
               <a href="/jobs/{{.Job.ID}}/sections">Sections</a>
@@ -133,7 +134,7 @@
           <div class="card__body">
             <dl class="meta-list">
               <div><dt>Document</dt><dd>{{profileName .Job.ProfileID}}</dd></div>
-              <div><dt>Language</dt><dd>{{if eq .Job.Language "ru"}}Russian{{else}}English{{end}}</dd></div>
+              <div><dt>Language</dt><dd>{{if eq .Job.Language "ru"}}Russian{{else if eq .Job.Language "ca"}}Catalan{{else}}English{{end}}</dd></div>
               <div><dt>Updated</dt><dd>{{.Job.UpdatedAt.Format "02 Jan 2006 15:04"}}</dd></div>
               {{with .Job.ExpiresAt}}<div><dt>Expires</dt><dd>{{.Format "02 Jan 2006"}}</dd></div>{{end}}
             </dl>

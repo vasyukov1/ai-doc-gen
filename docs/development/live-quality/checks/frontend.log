@@ -1,0 +1,16 @@
+
+> typecheck
+> tsc --noEmit
+
+
+> build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 12 modules transformed.
+rendering chunks...
+computing gzip size...
+static/app.css  22.40 kB │ gzip:  5.30 kB
+static/app.js   32.03 kB │ gzip: 12.12 kB
+✓ built in 158ms

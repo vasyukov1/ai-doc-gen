@@ -30,6 +30,9 @@ func ValidateDocumentInput(input domain.DocumentInput, profile, language string)
 	if err != nil {
 		return input, err
 	}
+	if !p.SupportsLanguage(language) {
+		return input, errors.New("choose English or Russian; Catalan is available for neutral technical profiles only")
+	}
 	if input.Metadata == nil {
 		input.Metadata = map[string]string{}
 	}
@@ -99,6 +102,12 @@ type renderData struct {
 }
 
 func renderLabels(language string) map[string]any {
+	if language == "ca" {
+		return map[string]any{
+			"contributors": "Autoria:", "annotation": "RESUM", "contents": "ÍNDEX", "specification": "Especificació tècnica original (aportada per l’usuari)", "missing": "Informació que falta:", "review_warning": "Esborrany a partir de les seccions revisades per l’usuari. Les mancances de les fonts s’indiquen explícitament. Cal revisar el compliment de les normes i l’exactitud dels fets.",
+		}
+	}
+
 	if language == "ru" {
 		return map[string]any{
 			"agreed": "СОГЛАСОВАНО", "approved": "УТВЕРЖДЕНО", "approved_document": "УТВЕРЖДЕН", "approval_sheet": "ЛИСТ УТВЕРЖДЕНИЯ", "contributors": "Исполнители:", "group": "Группа:", "signature": "____________ / подпись /     Дата: ____________", "sheets": "Листов:", "annotation": "АННОТАЦИЯ", "contents": "СОДЕРЖАНИЕ", "changes": "ЛИСТ РЕГИСТРАЦИИ ИЗМЕНЕНИЙ", "specification": "Исходное техническое задание (данные пользователя)", "missing": "Недостающие сведения:", "review_warning": "Проект документа по проверенным пользователем разделам. Пробелы в исходных данных отмечены явно. Соответствие стандартам и фактическая корректность требуют проверки.", "inventory": []string{"Инв. № подл.", "Подп. и дата", "Взам. инв. №", "Инв. № дубл.", "Подп. и дата"}, "change_columns": []string{"Изм.", "Измененные листы", "Замененные листы", "Новые листы", "Аннулированные листы", "№ документа", "Подпись / дата"}}
@@ -134,6 +143,10 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 			labels := map[string]string{"project": "название проекта", "organization": "организация", "faculty": "факультет", "program": "образовательная программа", "author": "автор или участники команды", "group": "учебная группа", "supervisor": "руководитель", "supervisor_position": "должность руководителя", "approver": "утверждающее лицо", "approver_position": "должность утверждающего лица", "year": "год", "code": "код проекта", "technical specification": "техническое задание"}
 			return "[TODO: " + labels[key] + "]"
 		}
+		if job.Language == "ca" {
+			labels := map[string]string{"project": "títol del projecte", "organization": "organització", "faculty": "facultat", "program": "programa d’estudis", "author": "autor o membres de l’equip", "group": "grup", "supervisor": "supervisor", "supervisor_position": "càrrec del supervisor", "approver": "persona que aprova", "approver_position": "càrrec de la persona que aprova", "year": "any", "code": "codi del projecte", "technical specification": "especificació tècnica"}
+			return "[TODO: " + labels[key] + "]"
+		}
 		return "[TODO: " + key + "]"
 	}
 	meta := map[string]string{}
@@ -155,10 +168,16 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		if job.Language == "ru" {
 			data.Labels["specification"] = "Исходные требования и контекст"
 		}
+		if job.Language == "ca" {
+			data.Labels["specification"] = "Requisits d’origen i context"
+		}
 		if input.Specification == "" {
 			data.Specification = "TODO: supply source requirements and stakeholder context."
 			if job.Language == "ru" {
 				data.Specification = "TODO: предоставить исходные требования и сведения от заинтересованных сторон."
+			}
+			if job.Language == "ca" {
+				data.Specification = "TODO: aportar els requisits d’origen i el context de les parts interessades."
 			}
 		}
 	}
@@ -169,8 +188,10 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 			data.DocumentCode = p.Code + " / " + p.Version
 		}
 	}
-	for key, value := range fknLabels(job.Language) {
-		data.Labels[key] = value
+	if p.Academic {
+		for key, value := range fknLabels(job.Language) {
+			data.Labels[key] = value
+		}
 	}
 	data.ApprovalCode = data.DocumentCode + "-ЛУ"
 	if job.Language == "en" {
@@ -179,6 +200,10 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 	data.Annotation = "This document describes the project using the section order of the selected profile. Source-linked drafts and user-supplied requirements are retained separately. No test execution or standards certification is implied."
 	if job.Language == "ru" {
 		data.Annotation = "Документ описывает проект в порядке разделов выбранного профиля. Черновики со ссылками на источники и требования пользователя сохранены раздельно. Выполнение испытаний и сертификация соответствия стандартам не подразумеваются."
+	}
+
+	if job.Language == "ca" {
+		data.Annotation = "Aquest document descriu el projecte seguint l’ordre de les seccions del perfil seleccionat. Els esborranys vinculats a les fonts i els requisits aportats per l’usuari es conserven per separat. No s’implica l’execució de proves ni cap certificació de conformitat amb les normes."
 	}
 
 	if p.Academic || p.ID == "srs" || p.ID == "arc42" {
@@ -191,6 +216,9 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		data.Annotation = p.Title(job.Language) + " — " + meta["project"] + ".\n\nDocument sections: " + strings.Join(chapters, "; ") + "."
 		if job.Language == "ru" {
 			data.Annotation = p.Title(job.Language) + " к проекту «" + meta["project"] + "».\n\nДокумент содержит разделы: " + strings.Join(chapters, "; ") + "."
+		}
+		if job.Language == "ca" {
+			data.Annotation = p.Title(job.Language) + " — " + meta["project"] + ".\n\nSeccions del document: " + strings.Join(chapters, "; ") + "."
 		}
 	}
 	if notice := p.Notice(job.Language); notice != "" {
@@ -212,10 +240,16 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		if job.Language == "ru" {
 			note = fmt.Sprintf("Набросок документа: базовых разделов — %d, улучшенных моделью — %d, отредактированных пользователем — %d. Выдержки из исходников не подтверждают поведение программы при выполнении. Причина неполного улучшения: %s", baseline, model, edited, draftReasonRU(job.GenerationReason))
 		}
+		if job.Language == "ca" {
+			note = fmt.Sprintf("Esborrany: %d seccions de base, %d seccions millorades pel model i %d seccions editades per l’usuari. Els fragments de les fonts no demostren el comportament en execució. %s", baseline, model, edited, draftReasonCA(job.GenerationReason))
+		}
 		report := domain.ContentReport(sections, len(Plan(job.ProfileID, job.Language)))
 		label := "Content outcome: " + report.Outcome + ". "
 		if job.Language == "ru" {
 			label = map[string]string{"outline": "Каркас документа: содержательная генерация не выполнена. ", "partial": "Частичный черновик: есть незаполненные разделы или нерешённые вопросы. ", "draft_ready": "Черновик подготовлен; требуется проверка содержания. "}[report.Outcome]
+		}
+		if job.Language == "ca" {
+			label = map[string]string{"outline": "Esquema del document: no s’ha generat contingut complet. ", "partial": "Esborrany parcial: hi ha seccions pendents o qüestions sense resoldre. ", "draft_ready": "Esborrany preparat; cal revisar-ne el contingut. "}[report.Outcome]
 		}
 		data.Labels["review_warning"] = label + note
 
@@ -295,6 +329,9 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		title := "Technology documentation"
 		if job.Language == "ru" {
 			title = "Документация используемых технологий"
+		}
+		if job.Language == "ca" {
+			title = "Documentació de les tecnologies utilitzades"
 		}
 		data.Sections = append(data.Sections, renderSection{Level: 1, Heading: title, Body: refs, Blocks: markdownBlocks(refs), Missing: []string{}, Unnumbered: true})
 	}
@@ -437,5 +474,22 @@ func draftReasonRU(reason string) string {
 		return "Часть разделов не удалось улучшить; сохранён базовый текст с отмеченными пробелами."
 	default:
 		return "Не все ответы внешних моделей были доступны или пригодны для использования. Подробности доступны на странице задания."
+	}
+}
+
+func draftReasonCA(reason string) string {
+	switch {
+	case strings.HasPrefix(reason, "No providers"):
+		return "No hi ha proveïdors connectats; s’ha utilitzat la informació de les fonts."
+	case strings.HasPrefix(reason, "All sections"):
+		return "Totes les seccions han estat processades pel model o contenen canvis desats de l’usuari."
+	case strings.HasPrefix(reason, "Model time"):
+		return "S’ha esgotat el temps del model; els resultats desats s’inclouen al PDF."
+	case strings.HasPrefix(reason, "Generation budget"):
+		return "S’ha arribat al límit de peticions o de volum de context."
+	case strings.HasPrefix(reason, "Some sections"):
+		return "No s’han pogut millorar algunes seccions; es conserva el text de base amb les mancances indicades."
+	default:
+		return "Algunes respostes dels models externs no estaven disponibles o no eren utilitzables. Consulteu els detalls a la pàgina de la tasca."
 	}
 }

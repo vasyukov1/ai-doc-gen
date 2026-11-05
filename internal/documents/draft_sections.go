@@ -3,6 +3,7 @@ package documents
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 	"unicode"
@@ -20,9 +21,12 @@ type sectionOutput struct {
 	Missing   []string               `json:"missing_information"`
 }
 
-const DraftVersion = "chapters-4"
+const DraftVersion = "chapters-8"
 
 func clipText(value string, limit int) string {
+	if limit <= 0 {
+		return ""
+	}
 	value = strings.Map(func(r rune) rune {
 		if unicode.IsControl(r) && r != '\n' && r != '\t' && r != '\r' {
 			return -1
@@ -37,7 +41,7 @@ func clipText(value string, limit int) string {
 }
 
 func topicWords(plan SectionPlan) []string {
-	words := strings.FieldsFunc(strings.ToLower(plan.Topic+" "+plan.Heading), func(r rune) bool { return !unicode.IsLetter(r) })
+	words := strings.FieldsFunc(strings.ToLower(plan.Topic+" "+plan.Heading+" "+plan.Guidance), func(r rune) bool { return !unicode.IsLetter(r) })
 	result := []string{}
 	for _, w := range words {
 		if len([]rune(w)) >= 4 {
@@ -169,6 +173,12 @@ func BaselineSection(plan SectionPlan, facts []domain.Fact) domain.Section {
 			gap = "Для раздела «" + plan.Heading + "» не найдены конкретные сведения. Добавьте требования или ссылки на исходные материалы."
 		}
 	}
+	if plan.Language == "ca" {
+		gap = "Cal revisar la secció «" + plan.Heading + "»: els fragments no estableixen requisits complets ni un comportament verificat en execució."
+		if len(facts) == 0 {
+			gap = "No s’han trobat proves específiques per a «" + plan.Heading + "». Aporteu els requisits o les referències a les fonts pertinents."
+		}
+	}
 	section.Missing = append(section.Missing, gap)
 	if len(paragraphs) == 0 {
 		paragraphs = append(paragraphs, gap)
@@ -272,6 +282,65 @@ func validateChapterSection(raw string, plan SectionPlan, facts []domain.Fact) (
 			return section, fmt.Errorf("citation %q is not in the supplied source pack", clipText(c, 80))
 		}
 	}
+	section.Body, section.Citations = normalizeEvidenceMarkers(section.Body, section.Citations, facts)
+	section.Body = strings.TrimSpace(section.Body)
+	if section.Body == "" {
+		return section, fmt.Errorf("body is empty after citation normalization")
+	}
+	marker := regexp.MustCompile(`\[\^?fact-[^\]]+\]`)
+	clean := func(value string) (string, bool) {
+		value, section.Citations = normalizeEvidenceMarkers(value, section.Citations, facts)
+		return value, !marker.MatchString(value)
+	}
+	if marker.MatchString(section.Body) {
+		return section, fmt.Errorf("body contains unsupported evidence markers")
+	}
+	for i := range section.Tables {
+		table := &section.Tables[i]
+		var valid bool
+		table.Caption, valid = clean(table.Caption)
+		if !valid {
+			return section, fmt.Errorf("table contains unsupported evidence markers")
+		}
+		for j := range table.Columns {
+			table.Columns[j], valid = clean(table.Columns[j])
+			if !valid {
+				return section, fmt.Errorf("table contains unsupported evidence markers")
+			}
+		}
+		for j := range table.Rows {
+			for k := range table.Rows[j] {
+				table.Rows[j][k], valid = clean(table.Rows[j][k])
+				if !valid {
+					return section, fmt.Errorf("table contains unsupported evidence markers")
+				}
+			}
+		}
+	}
+	// A visible placeholder is a gap even if the model omitted its metadata.
+	visible := section.Body
+	for _, table := range section.Tables {
+		visible += "\n" + table.Caption + "\n" + strings.Join(table.Columns, "\n")
+		for _, row := range table.Rows {
+			visible += "\n" + strings.Join(row, "\n")
+		}
+	}
+	for _, line := range strings.Split(visible, "\n") {
+		if index := strings.Index(line, "TODO:"); index >= 0 {
+			gap := clipText(strings.TrimSpace(line[index+5:]), 1000)
+			if gap != "" {
+				found := false
+				for _, existing := range section.Missing {
+					if strings.TrimSpace(existing) != "" && (strings.Contains(existing, gap) || strings.Contains(gap, existing)) {
+						found = true
+					}
+				}
+				if !found {
+					section.Missing = append(section.Missing, gap)
+				}
+			}
+		}
+	}
 	for _, gap := range section.Missing {
 		if !safeText(gap) || len(gap) > 4000 {
 			return section, fmt.Errorf("invalid missing_information entry")
@@ -353,4 +422,45 @@ func validateTables(tables []domain.DocumentTable) error {
 		}
 	}
 	return nil
+}
+
+// Move only supplied evidence markers into citation metadata; preserve ordinary brackets.
+func normalizeEvidenceMarkers(body string, citations []string, facts []domain.Fact) (string, []string) {
+	allowed, seen := map[string]bool{}, map[string]bool{}
+	for _, fact := range facts {
+		allowed[fact.ID] = true
+	}
+	for _, id := range citations {
+		seen[id] = true
+	}
+	marker := regexp.MustCompile(`\[\^?([a-zA-Z0-9_,-]+(?:\s+[a-zA-Z0-9_,-]+)*)\]`)
+	var out strings.Builder
+	previous := 0
+	for _, location := range marker.FindAllStringIndex(body, -1) {
+		value := body[location[0]:location[1]]
+		if location[1] < len(body) && body[location[1]] == '(' {
+			continue
+		}
+		inside := strings.TrimPrefix(strings.TrimSuffix(strings.TrimPrefix(value, "["), "]"), "^")
+		ids := strings.FieldsFunc(inside, func(r rune) bool { return r == ',' || unicode.IsSpace(r) })
+		valid := len(ids) > 0
+		for _, id := range ids {
+			if !allowed[id] {
+				valid = false
+			}
+		}
+		if !valid {
+			continue
+		}
+		out.WriteString(body[previous:location[0]])
+		previous = location[1]
+		for _, id := range ids {
+			if !seen[id] {
+				citations = append(citations, id)
+				seen[id] = true
+			}
+		}
+	}
+	out.WriteString(body[previous:])
+	return out.String(), citations
 }
