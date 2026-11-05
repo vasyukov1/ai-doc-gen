@@ -32,5 +32,12 @@ serif headings, thin rules, and one quiet ochre accent. Light and dark themes
 share every token; the system preference is the default and the header menu
 stores an explicit choice in `localStorage`.
 
-Pages work without JavaScript. Scripts only add theme selection, file-name
-previews, auto-growing textareas, and submit feedback.
+Pages work without JavaScript. Scripts add theme selection, file-name previews,
+auto-growing textareas, submit feedback, and live status updates.
+
+While a job runs, the status sidebar draws a small canvas scene: scraps of paper
+and letters circle a sheet and settle into lines as sections complete. It is
+decorative, hidden from assistive technology, static under
+`prefers-reduced-motion`, and never captures pointer input. With JavaScript the
+status page polls `/api/jobs/{id}` and updates in place instead of reloading;
+without it, the page keeps the slower `<noscript>` refresh.

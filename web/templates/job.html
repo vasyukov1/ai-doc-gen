@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
   <title>Document status — Doc Gen</title>
-  {{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}
+  <noscript>{{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}</noscript>
   {{template "head" .}}
 </head>
 <body>
   {{template "header" .}}
 
-  <main class="shell">
+  <main class="shell" {{if .Refresh}}data-job-poll="{{.Job.ID}}"{{end}}>
     <a class="back" href="/jobs">← All documents</a>
 
     <header class="page-head">
       <p class="eyebrow">Document</p>
       <div class="page-head__row">
         <h1>{{profileName .Job.ProfileID}}</h1>
-        <span class="pill {{if .Job.RecoveryPending}}pill--warn{{else}}{{with statusClass .Job.Status}}pill--{{.}}{{end}}{{end}}">
+        <span class="pill {{if .Job.RecoveryPending}}pill--warn{{else}}{{with statusClass .Job.Status}}pill--{{.}}{{end}}{{end}}" data-field="status">
           {{if .Job.RecoveryPending}}Recovering{{else}}{{statusLabel .Job.Status}}{{end}}
         </span>
       </div>
-      {{if .Job.LatestMessage}}<p class="lead">{{.Job.LatestMessage}}</p>{{end}}
+      <p class="lead" data-field="message">{{.Job.LatestMessage}}</p>
     </header>
 
     {{if and .Job.FreeDraft (eq .Job.Status "completed") (ne .Job.Content.Outcome "draft_ready")}}
@@ -39,10 +39,10 @@
         <section class="card">
           <div class="card__body stack">
             <div class="status-line">
-              <span class="status-line__count">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections</span>
-              <span class="status-line__count">{{pct .Job.CompletedSections .Job.TotalSections}}%</span>
+              <span class="status-line__count" data-field="count">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections</span>
+              <span class="status-line__count" data-field="percent">{{pct .Job.CompletedSections .Job.TotalSections}}%</span>
             </div>
-            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct .Job.CompletedSections .Job.TotalSections}}">
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct .Job.CompletedSections .Job.TotalSections}}" data-field="progress">
               <div class="progress__fill" style="--progress: {{pct .Job.CompletedSections .Job.TotalSections}}%"></div>
             </div>
 
@@ -52,11 +52,11 @@
 
             {{$stage := stageIndex .Job.Stage .Job.Status}}
             <div class="steps">
-              <div class="step {{if gt $stage 1}}step--done{{else if eq $stage 1}}step--current{{end}}">Submitted</div>
-              <div class="step {{if gt $stage 2}}step--done{{else if eq $stage 2}}step--current{{end}}">Reading files</div>
-              <div class="step {{if gt $stage 3}}step--done{{else if eq $stage 3}}step--current{{end}}">Drafting</div>
-              <div class="step {{if gt $stage 4}}step--done{{else if eq $stage 4}}step--current{{end}}">Rendering</div>
-              <div class="step {{if ge $stage 5}}step--current{{end}}">Ready</div>
+              <div class="step {{if gt $stage 1}}step--done{{else if eq $stage 1}}step--current{{end}}" data-step="1">Submitted</div>
+              <div class="step {{if gt $stage 2}}step--done{{else if eq $stage 2}}step--current{{end}}" data-step="2">Reading files</div>
+              <div class="step {{if gt $stage 3}}step--done{{else if eq $stage 3}}step--current{{end}}" data-step="3">Drafting</div>
+              <div class="step {{if gt $stage 4}}step--done{{else if eq $stage 4}}step--current{{end}}" data-step="4">Rendering</div>
+              <div class="step {{if ge $stage 5}}step--current{{end}}" data-step="5">Ready</div>
             </div>
           </div>
         </section>
@@ -103,6 +103,16 @@
       </div>
 
       <aside class="stack">
+        {{if or (eq .Job.Status "queued") (eq .Job.Status "running") (eq .Job.Status "retry_wait") (eq .Job.Status "completed")}}
+        <section class="card assembly-card">
+          <div class="card__body">
+            <h2>{{if eq .Job.Status "completed"}}Document ready{{else}}Draft in progress{{end}}</h2>
+            <span class="assembly-palette" aria-hidden="true"></span>
+            <canvas class="assembly-canvas" data-assembly data-status="{{.Job.Status}}" data-stage="{{.Job.Stage}}" data-completed="{{.Job.CompletedSections}}" data-total="{{.Job.TotalSections}}" aria-hidden="true"></canvas>
+            <p class="form-note" data-field="assembly-note">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections</p>
+          </div>
+        </section>
+        {{end}}
         <section class="card">
           <div class="card__body">
             <dl class="meta-list">
