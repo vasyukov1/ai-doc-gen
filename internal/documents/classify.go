@@ -24,6 +24,15 @@ var archiveExtensions = map[string]bool{
 	".tar": true, ".tgz": true, ".zip": true,
 }
 
+// Lock files and repository metadata describe tooling, not the product.
+var noiseNames = map[string]bool{
+	".dockerignore": true, ".editorconfig": true, ".gitattributes": true,
+	".gitignore": true, ".gitmodules": true, "cargo.lock": true,
+	"composer.lock": true, "gemfile.lock": true, "go.sum": true,
+	"gradle.lockfile": true, "package-lock.json": true, "pipfile.lock": true,
+	"pnpm-lock.yaml": true, "poetry.lock": true, "yarn.lock": true,
+}
+
 var sensitiveNames = map[string]bool{
 	".git-credentials": true, ".netrc": true, ".npmrc": true,
 	".pypirc": true, "auth.json": true, "credentials": true,
@@ -56,6 +65,9 @@ func classifyFile(name, profile string, size uint64) (string, bool, bool) {
 		ext == ".keystore" || ext == ".tfstate" || ext == ".tfvars" {
 		return "likely_secret", false, false
 	}
+	if noiseNames[base] {
+		return "tooling_metadata", false, false
+	}
 	if archiveExtensions[ext] {
 		return "nested_archive", false, false
 	}
@@ -68,6 +80,13 @@ func classifyFile(name, profile string, size uint64) (string, bool, bool) {
 	if strings.HasSuffix(base, ".pb.go") || strings.HasSuffix(base, ".min.js") ||
 		strings.HasSuffix(base, ".map") || strings.Contains(base, "generated") {
 		return "generated_output", false, false
+	}
+
+	// Build and deployment files stay available on request but are not part of
+	// the default evidence selection.
+	if strings.HasPrefix(base, "dockerfile") || strings.HasPrefix(base, "docker-compose.") ||
+		base == "compose.yml" || base == "compose.yaml" || base == "makefile" {
+		return "build_config", true, false
 	}
 
 	if strings.HasSuffix(base, "_test.go") || strings.HasPrefix(base, "test_") ||

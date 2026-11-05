@@ -18,10 +18,10 @@
     <div class="file-panel">
       <p class="eyebrow">Source inventory</p>
       <h1>Project files</h1>
-      <p class="job-intro">Choose the text files to use for documentation. Excluded files show why they cannot be selected. Select up to 500 files.</p>
+      <p class="job-intro">Text files are selected automatically from the source. Excluded files stay listed with the reason so you can verify what was used. Up to 500 files are kept.</p>
       {{if .Inventory.Source.RepositoryURL}}<p class="source-meta">Repository: {{.Inventory.Source.RepositoryURL}}</p>{{end}}
       {{if .Inventory.Source.CommitSHA}}<p class="source-meta">Commit: <code>{{.Inventory.Source.CommitSHA}}</code></p>{{end}}
-      {{if .NoEligible}}<p class="job-error">No selectable text files were found. Review the exclusions and submit another project.</p>{{else if not .Editable}}<p class="job-message">The selection is saved. Evidence extraction is the next step.</p>{{end}}
+      {{if .NoEligible}}<p class="job-error">No selectable text files were found. Review the exclusions and submit another project.</p>{{else if not .Editable}}<p class="job-message">The automatic selection is saved. Evidence review is the next step.</p>{{end}}
       <form method="post" action="/jobs/{{.Job.ID}}/files">
         <div class="file-list">
           {{range .Inventory.Files}}

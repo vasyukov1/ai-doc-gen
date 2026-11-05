@@ -1,13 +1,9 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Project evidence</title><link rel="stylesheet" href="/assets/style.css"></head>
 <body><main class="container job-main"><a href="/jobs/{{.Job.ID}}">← Job status</a><div class="job-panel"><h1>Project evidence</h1><p><a href="/jobs/{{.Job.ID}}/document">Document input and PDF / Typst rendering</a></p>
+<p>Evidence is extracted and accepted automatically, so this page is read-only. It exists to show which facts ground the generated text.</p>
 <p>These are literal declarations and excerpts, not verified runtime behavior. Only selected files were inspected. Records contain at most 1000 extracted facts. Go and package.json manifests are parsed into at most 500 facts each. Manifest values over 4000 bytes are omitted. JSON facts cite the complete source file. Other files show at most 20 declarations or nonempty excerpt lines; lines longer than 300 bytes are omitted.</p>
 <p>Extractor version {{.Evidence.Version}} · {{len .Evidence.Selection}} selected files</p>
-{{if .Evidence.Confirmed}}<p>Review confirmed. Open draft sections from the job status page.</p>{{else}}<p>Review obvious gaps. Corrections are attributed to you and preserve the original source facts. Leave a correction blank to keep the original.</p>{{end}}
-<form method="post" action="/jobs/{{.Job.ID}}/evidence"><input type="hidden" name="digest" value="{{.Evidence.Digest}}">
 {{range .Evidence.Facts}}<article id="{{.ID}}" class="job-message"><strong>{{.Kind}}</strong><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{.Value}}</p><small>Attribution: {{.Provenance}}{{if .Path}} · {{.Path}}{{if .StartLine}}:{{.StartLine}}–{{.EndLine}}{{else}} (file inventory){{end}}{{end}}</small>
-{{with index $.Evidence.Corrections .ID}}<p>User correction: {{.}}</p>{{end}}
-{{if $.Editable}}<label>Optional user correction<textarea name="correction.{{.ID}}" maxlength="4000" rows="2"></textarea></label>{{end}}</article>{{end}}
-{{with index .Evidence.Corrections "additional_context"}}<p>User context: {{.}}</p>{{end}}
-{{if .Editable}}<label>Additional user context<textarea name="correction.additional_context" maxlength="4000" rows="3"></textarea></label><label>Model<select name="model"><option value="deepseek/deepseek-chat-v3-0324">DeepSeek Chat V3</option><option value="openai/gpt-4.1-mini">OpenAI GPT-4.1 mini</option><option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash</option></select></label><label>OpenRouter API key<input type="password" name="api_key" autocomplete="off" required minlength="8" maxlength="1000"></label><p>Your key is encrypted on this local server for background generation and later section regeneration. It is sent only to OpenRouter. Remove the job or rotate your key to revoke access.</p><button type="submit">Confirm evidence and start generation</button>{{end}}
-</form></div></main></body></html>
+{{with index $.Evidence.Corrections .ID}}<p>User correction: {{.}}</p>{{end}}</article>{{end}}
+</div></main></body></html>

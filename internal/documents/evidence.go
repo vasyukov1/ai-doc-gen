@@ -16,10 +16,17 @@ import (
 
 // ExtractEvidence reports declarations as text, without inferring runtime behavior.
 func ExtractEvidence(ctx context.Context, inventory domain.Inventory, description string) (domain.Evidence, error) {
-	evidence := domain.Evidence{Version: "1", SourceDigest: inventory.Source.SourceDigest, Selection: []string{}, Facts: []domain.Fact{}, Corrections: map[string]string{}}
+	evidence := domain.Evidence{Version: AnalysisVersion, SourceDigest: inventory.Source.SourceDigest, Selection: []string{}, Facts: []domain.Fact{}, Corrections: map[string]string{}}
 	files := append([]domain.SourceFile(nil), inventory.Files...)
 	sort.Slice(files, func(i, j int) bool { return files[i].Path < files[j].Path })
 
+	canonicalSchemas := map[string]bool{}
+	for _, f := range files {
+		base := strings.ToLower(filepath.Base(f.Path))
+		if f.Selected && (base == "swagger.json" || base == "openapi.json") {
+			canonicalSchemas[filepath.Dir(f.Path)] = true
+		}
+	}
 	truncated := false
 	add := func(kind, value, provenance, path string, line int) {
 		if len(evidence.Facts) >= 1000 && kind != "project_context" && kind != "analysis_limit" && kind != "record_limit" {
@@ -45,41 +52,26 @@ func ExtractEvidence(ctx context.Context, inventory domain.Inventory, descriptio
 			return domain.Evidence{}, fmt.Errorf("source file changed")
 		}
 		add("selected_file", file.Path, "source", file.Path, 0)
-		kind := evidenceKind(file.Path)
 		if facts, parsed := manifestFacts(file.Path, data); parsed {
 			for index, fact := range facts {
-				if index >= 500 {
-					add("extraction_limit", "Manifest facts truncated after 500 entries.", "unknown", file.Path, 0)
+				if index >= 80 {
+					add("extraction_limit", "Further manifest entries omitted.", "unknown", file.Path, 0)
 					break
 				}
-				if len(fact.Value) > 4000 {
-					add("extraction_limit", "Manifest value omitted because it exceeds 4000 bytes.", "unknown", file.Path, fact.Line)
-					continue
-				}
-				add(fact.Kind, fact.Value, "source", file.Path, fact.Line)
+				add(fact.Kind, clipText(fact.Value, 4000), "source", file.Path, fact.Line)
 			}
 			continue
 		}
-		count := 0
-		for index, line := range strings.Split(string(data), "\n") {
-			value := strings.TrimSpace(line)
-			if value == "" || len(value) > 300 {
-				continue
+		name := strings.ToLower(filepath.Base(file.Path))
+		if canonicalSchemas[filepath.Dir(file.Path)] && (name == "swagger.yaml" || name == "swagger.yml" || name == "openapi.yaml" || name == "openapi.yml" || name == "docs.go") {
+			continue
+		}
+		for _, fact := range sourceFacts(file.Path, data) {
+			before := len(evidence.Facts)
+			add(fact.Kind, fact.Value, fact.Provenance, fact.Path, fact.StartLine)
+			if len(evidence.Facts) > before {
+				evidence.Facts[len(evidence.Facts)-1].EndLine = fact.EndLine
 			}
-			declaration := strings.HasPrefix(value, "func ") || strings.HasPrefix(value, "type ") || strings.HasPrefix(value, "class ") || strings.HasPrefix(value, "def ") || strings.HasPrefix(value, "export ")
-			if kind == "code" && !declaration {
-				continue
-			}
-			if count >= 20 {
-				add("extraction_limit", "Further excerpts or declarations omitted after 20 entries.", "unknown", file.Path, 0)
-				break
-			}
-			factKind := kind
-			if kind == "code" {
-				factKind = "code_declaration"
-			}
-			add(factKind, value, "source", file.Path, index+1)
-			count++
 		}
 	}
 	if truncated {
@@ -89,6 +81,7 @@ func ExtractEvidence(ctx context.Context, inventory domain.Inventory, descriptio
 		add("project_context", description, "user", "", 0)
 	}
 	add("analysis_limit", "Runtime behavior and undeclared requirements have not been verified.", "unknown", "", 0)
+	evidence.Model = buildProjectModel(evidence)
 	payload, err := json.Marshal(evidence)
 	if err != nil {
 		return domain.Evidence{}, err

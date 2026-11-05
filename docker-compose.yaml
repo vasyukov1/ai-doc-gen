@@ -41,6 +41,7 @@ services:
     volumes:
       - uploads:/data/uploads
       - sources:/data/sources:ro
+      - state:/data/state
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -61,6 +62,7 @@ services:
     volumes:
       - uploads:/data/uploads
       - sources:/data/sources
+      - state:/data/state
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -70,3 +72,4 @@ volumes:
   postgres_data:
   uploads:
   sources:
+  state:

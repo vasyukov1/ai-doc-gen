@@ -1,11 +1,13 @@
 package web
 
 import (
+	"errors"
 	"html/template"
 	"net/http"
 	"strings"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
+	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 )
 
 func (h *Handler) sectionsView(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +40,7 @@ func (h *Handler) sectionsView(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) changeSection(w http.ResponseWriter, r *http.Request) {
 	if !sameOrigin(r) {
-		http.Error(w, "Cross-origin request rejected.", 403)
+		h.rejectCrossOrigin(w, r)
 		return
 	}
 	job, err := h.findJob(r)
@@ -56,7 +58,7 @@ func (h *Handler) changeSection(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid action.", 400)
 		return
 	}
-	if err := h.jobs.ChangeSection(r.Context(), job.ID, r.PathValue("section"), r.FormValue("body"), action == "regenerate"); err != nil {
+	if err := h.jobs.ChangeSection(r.Context(), job.ID, r.PathValue("section"), r.FormValue("body"), action == "regenerate", r.FormValue("resolve_missing") == "yes"); err != nil {
 		http.Error(w, "Section is unavailable or generation is still running.", 409)
 		return
 	}
@@ -67,14 +69,9 @@ func validModel(model string) bool {
 	return model == "openai/gpt-4.1-mini" || model == "deepseek/deepseek-chat-v3-0324" || model == "google/gemini-2.5-flash"
 }
 
-func sameOrigin(r *http.Request) bool {
-	origin := r.Header.Get("Origin")
-	return r.Header.Get("Sec-Fetch-Site") != "cross-site" && (origin == "" || origin == "http://"+r.Host || origin == "https://"+r.Host)
-}
-
 func (h *Handler) retryGeneration(w http.ResponseWriter, r *http.Request) {
 	if !sameOrigin(r) {
-		http.Error(w, "Cross-origin request rejected.", 403)
+		h.rejectCrossOrigin(w, r)
 		return
 	}
 	job, err := h.findJob(r)
@@ -93,8 +90,43 @@ func (h *Handler) retryGeneration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.jobs.RetryGeneration(r.Context(), job.ID, key, h.encryptionKey); err != nil {
-		http.Error(w, "Generation retry unavailable. Check server encryption configuration.", 409)
+		if errors.Is(err, storage.ErrEncryptionKey) {
+			http.Error(w, "Server encryption key is invalid. Check LLM_ENCRYPTION_KEY or the state directory.", 503)
+			return
+		}
+		http.Error(w, "Generation retry unavailable.", 409)
 		return
 	}
 	http.Redirect(w, r, "/jobs/"+job.ID+"/sections", 303)
+}
+
+func (h *Handler) generationReport(w http.ResponseWriter, r *http.Request) {
+	job, err := h.findJob(r)
+	if err != nil {
+		writeJobError(w, err)
+		return
+	}
+	calls, err := h.jobs.GenerationCalls(r.Context(), job.ID)
+	if err != nil {
+		http.Error(w, "Could not load generation diagnostics.", 503)
+		return
+	}
+	writeJSON(w, 200, map[string]any{"content": job.Content, "calls": calls})
+}
+
+func (h *Handler) continueDraft(w http.ResponseWriter, r *http.Request) {
+	if !sameOrigin(r) {
+		h.rejectCrossOrigin(w, r)
+		return
+	}
+	job, err := h.findJob(r)
+	if err != nil {
+		writeJobError(w, err)
+		return
+	}
+	if !job.FreeDraft || job.Content.Available <= job.Content.Model || h.jobs.ContinueDraft(r.Context(), job.ID) != nil {
+		http.Error(w, "No unfinished sections available to continue.", 409)
+		return
+	}
+	http.Redirect(w, r, "/jobs/"+job.ID, 303)
 }

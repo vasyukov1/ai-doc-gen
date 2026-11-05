@@ -30,6 +30,9 @@ func (w *Worker) render(ctx, parent context.Context, claim *pgqueue.Claim, input
 		w.reportFailure(parent, claim, evidenceErr)
 		return
 	}
+	if job.FreeDraft {
+		evidence = DocumentEvidence(evidence, input)
+	}
 	artifacts, err := Render(ctx, filepath.Join(w.sourceDir, "artifacts", claim.ID), job, input, sections, evidence)
 	if err != nil {
 		log.Printf("render job %s: %v", claim.ID, err)

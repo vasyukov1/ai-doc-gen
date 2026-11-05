@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io"
 
 	"github.com/go-jet/jet/v2/postgres"
@@ -17,10 +18,13 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/storage/generated/ai_doc_gen/public/table"
 )
 
+// ErrEncryptionKey marks a missing or malformed server master key.
+var ErrEncryptionKey = errors.New("server encryption key is not configured")
+
 func credentialCipher(master string) (cipher.AEAD, error) {
 	key, err := base64.StdEncoding.DecodeString(master)
 	if err != nil || len(key) != 32 {
-		return nil, errors.New("LLM_ENCRYPTION_KEY must be a base64 encoded 32 byte key")
+		return nil, fmt.Errorf("%w: LLM_ENCRYPTION_KEY must be a base64 encoded 32 byte key", ErrEncryptionKey)
 	}
 	block, err := aes.NewCipher(key)
 	if err != nil {

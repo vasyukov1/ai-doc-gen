@@ -27,7 +27,7 @@ FROM alpine:3.22
 
 RUN apk add --no-cache ca-certificates \
     && adduser -D -u 10001 app \
-    && mkdir -p /data/uploads /data/sources \
+    && mkdir -p /data/uploads /data/sources /data/state \
     && chown -R app:app /data
 
 COPY --from=build /out/ai-doc-gen /usr/local/bin/ai-doc-gen

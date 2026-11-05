@@ -14,6 +14,15 @@ import (
 )
 
 func (w *Worker) generate(ctx, parent context.Context, claim *pgqueue.Claim, evidence domain.Evidence) {
+	run, err := w.jobs.DraftRun(ctx, claim.ID, w.encryptionKey)
+	if err == nil {
+		w.generateDraft(ctx, parent, claim, evidence, run)
+		return
+	}
+	if !errors.Is(err, sql.ErrNoRows) {
+		w.generationFailure(parent, claim, err)
+		return
+	}
 	if err := w.queue.Stage(ctx, claim.ID, w.owner, "generating", "generating", "Generating grounded draft sections."); err != nil {
 		return
 	}
@@ -81,7 +90,7 @@ func (w *Worker) generate(ctx, parent context.Context, claim *pgqueue.Claim, evi
 			encoded := sectionJSON(raw)
 			section, err = ValidateSection(encoded, item, facts)
 		}
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) || errors.Is(err, storage.ErrInvalidCache) || (err != nil && providerFailure(err).Code == "provider_invalid_output") {
 			output, usage, callErr := adapter.Generate(ctx, SectionPrompt(item, job.Language, facts))
 			code := ""
 			if callErr == nil {
@@ -108,6 +117,16 @@ func (w *Worker) generate(ctx, parent context.Context, claim *pgqueue.Claim, evi
 	}
 	if err := w.queue.DraftReady(ctx, claim.ID, w.owner); err != nil {
 		log.Printf("finish draft %s: %v", claim.ID, err)
+		return
+	}
+
+	// Drafts are rendered without a manual review step so a submitted project
+	// returns a finished document. Editing a completed draft still asks for an
+	// explicit rebuild.
+	renderCtx, cancel := context.WithTimeout(parent, 10*time.Second)
+	defer cancel()
+	if err := w.jobs.QueueRender(renderCtx, claim.ID, ""); err != nil {
+		log.Printf("auto-render %s: %v", claim.ID, err)
 	}
 }
 
@@ -124,4 +143,7 @@ func (w *Worker) generationFailure(ctx context.Context, claim *pgqueue.Claim, er
 	_ = w.queue.Retry(ctx, claim.ID, w.owner, failure.Code, failure.Message, delay)
 }
 
-func sectionJSON(section domain.Section) string { raw, _ := json.Marshal(section); return string(raw) }
+func sectionJSON(section domain.Section) string {
+	raw, _ := json.Marshal(sectionOutput{ID: section.ID, Heading: section.Heading, Body: section.Body, Citations: section.Citations, Missing: section.Missing, Tables: section.Tables})
+	return string(raw)
+}

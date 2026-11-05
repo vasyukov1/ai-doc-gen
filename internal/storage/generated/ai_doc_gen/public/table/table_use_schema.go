@@ -12,6 +12,7 @@ package table
 func UseSchema(schema string) {
 	JobArtifacts = JobArtifacts.FromSchema(schema)
 	JobDocumentInputs = JobDocumentInputs.FromSchema(schema)
+	JobDraftRuns = JobDraftRuns.FromSchema(schema)
 	JobEvidence = JobEvidence.FromSchema(schema)
 	JobFiles = JobFiles.FromSchema(schema)
 	JobGenerationCredentials = JobGenerationCredentials.FromSchema(schema)
@@ -22,5 +23,6 @@ func UseSchema(schema string) {
 	JobStatusHistory = JobStatusHistory.FromSchema(schema)
 	Jobs = Jobs.FromSchema(schema)
 	ProviderCalls = ProviderCalls.FromSchema(schema)
+	ProviderLimits = ProviderLimits.FromSchema(schema)
 	SectionCache = SectionCache.FromSchema(schema)
 }

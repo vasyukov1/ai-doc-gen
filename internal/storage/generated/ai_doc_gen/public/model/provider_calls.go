@@ -13,13 +13,16 @@ import (
 )
 
 type ProviderCalls struct {
-	ID           int64 `sql:"primary_key"`
-	JobID        uuid.UUID
-	SectionID    string
-	Provider     string
-	Model        string
-	ErrorCode    string
-	InputTokens  int32
-	OutputTokens int32
-	CreatedAt    time.Time
+	ID              int64 `sql:"primary_key"`
+	JobID           uuid.UUID
+	SectionID       string
+	Provider        string
+	Model           string
+	ErrorCode       string
+	InputTokens     int32
+	OutputTokens    int32
+	CreatedAt       time.Time
+	DurationMs      int64
+	Diagnostics     string
+	RejectedContent string
 }

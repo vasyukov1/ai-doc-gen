@@ -88,3 +88,91 @@ Still outside this milestone: fetching GitHub contents, inspecting ZIP entries, 
 - Synthetic old upload/workspace/render directories and an expired cache entry were removed. An active job directory and the outside target of an orphan symlink were preserved. Cleanup does not use arbitrary stored filesystem paths for deletion. Per-job advisory guards prevent purge while a worker still uses its directories; lease publication checks remain transactional.
 
 Limits: these are manual smoke checks, not the automated suite reserved for milestone 8. Live LLM output quality, provider-side cancellation billing, production HTTPS/proxy configuration, browser automation and large-dataset cleanup performance remain unverified. Separate submission POSTs create separate jobs; duplicate render/lifecycle mutations are serialized and may return conflict. Lost owner cookies cannot be recovered. Legacy ownerless jobs are deliberately inaccessible and paused pending explicit operator migration. Metadata/specification edits preserve existing prose and require user consistency review before rebuilding. Cache records expire seven days after insertion; job purge also evicts its associated keys. Superseded/orphan files wait at least 24 hours and may need multiple bounded passes.
+
+## Post-milestone fixes — 2026-11-04
+
+- `go build ./...`, `go vet ./...`, and `gofmt` passed. No automated tests were added.
+- The cross-origin guard was reproduced as the cause of a blocked file-selection step: an `Origin` of `http://localhost:8080` reached a server that saw `Host: 127.0.0.1:8080`, and the literal comparison returned 403. The guard now trusts `Sec-Fetch-Site: same-origin` and `none`, rejects `cross-site`, and otherwise compares `Origin` hosts case-insensitively.
+- A disposable PostgreSQL database and local web/worker processes on port 8090 verified the behavior. A submission with a rewritten `Origin` and `Sec-Fetch-Site: same-origin` returned 303; `cross-site` and an unmatched `Origin` without fetch metadata returned 403; an unmatched `Origin` was accepted when its host matched. Rejections logged origin, host, and fetch-site.
+- A GitHub submission over the fixed guard reached `needs_input` / `reviewing_evidence` without any manual file-selection POST. The inventory classified `.gitignore`, `.gitattributes`, and `go.sum` as excluded `tooling_metadata`; `Dockerfile` and `docker-compose.yml` as eligible but unselected `build_config`; and kept `go.mod`, README, and source files selected. Evidence contained module, dependency, README, API-schema, and code-declaration facts; the file page rendered read-only.
+- The disposable database, build output, and local smoke processes were created for this check. The agent sandbox denied process signals, so their termination is left to the operator; the cleanup command is recorded in the session report.
+
+## One-form automatic flow — 2026-11-04
+
+- `go build ./...`, `go vet ./...`, and `gofmt -l` passed. No automated tests were added.
+- A disposable PostgreSQL database and local web/worker processes on port 8090, with a fake OpenAI-compatible provider outside the repository, exercised the complete new path. One `POST /jobs` carried the source, profile, language, title-page metadata, specification, model and per-job key; the job row, document input and encrypted credentials were written in one transaction.
+- No manual file selection or evidence confirmation POST was sent. The worker confirmed the default selection, stored evidence as accepted, drafted four sections and queued rendering automatically. The job reached `completed` / `rendered` with 4/4 sections, and the PDF download returned `application/pdf` (512 bytes) from the real Typst 0.15.1 compiler.
+- The evidence page rendered read-only and the evidence API record still exposed attributed facts.
+- Invalid submissions (missing key, missing model, conflicting specification sources, malformed upload) returned `400` before any job row was created.
+- When `LLM_ENCRYPTION_KEY` was unset, the web process generated `DATA_DIR/state/llm-encryption.key` with `0600` permissions and reused it; the worker decrypted the per-job key with the same file. The explicit environment override still takes precedence.
+- Limits: the provider was a local fake, so real OpenRouter output quality, accounting and latency remain unverified. The shared `state` volume between web and worker in Docker was configured but not exercised under Docker in this check. Mutating an already completed job still follows the explicit review/rebuild path.
+
+## Milestone 9 — free baseline drafts — 2026-11-04
+
+Environment: Apple M1, 8 GB unified memory, native Go worker and Typst 0.15.1; isolated PostgreSQL database on the local Docker server. Source fixture: a small task-board ZIP with README, Go manifest/declarations and an API schema. Uploaded source was never executed. No automated test files or final test suite were added.
+
+Measured manual end-to-end runs (HTTP submission, persisted sections, actual Typst PDF and source ZIP):
+
+| Scenario | Sections / model-improved | Model calls | Observed time |
+| --- | --- | --- | --- |
+| No keys, technical overview EN | 4 / 0 | 0 | 0.9 s |
+| No keys, technical overview RU, ordinary Docker stack | 4 / 0 | 0 | 0.9 s |
+| No keys, TZ RU | 35 / 0 | 0 | 0.8–1.3 s |
+| No keys, TZ EN | 35 / 0 | 0 | 1.3 s |
+| Successful fixture provider, overview RU | 4 / 4 | 1 | 1.3 s |
+| Successful fixture provider, TZ RU / EN | 35 / 35 | 9 | 1.7 s each |
+| All three fixture providers return exhausted daily quota | 4 / 0 | 3 | 1.3 s |
+| First fixture provider exhausted, second succeeds | 4 / 4 | 2 | 1.3 s |
+| Malformed fixture JSON, two providers | 4 / 0 | 2 | 1.3 s |
+| One response member attempts to set server provenance | 4 / 3 | 2 | 1.3 s |
+| Repeated temporary 429 with Retry-After 2 seconds | 4 / 0 | 12 | 23.5 s |
+| Provider hangs on every request | 4 / 0 | 6 | 240.8 s |
+
+**Fixture times are not real LLM latency or prose quality measurements.** The hanging-provider run exercised real request cancellation: five approximately 45-second calls and one deadline-shortened call, followed by a successful baseline PDF. Database timestamps measured 240.32 seconds from acceptance to completion; polling/download observation measured 240.77 seconds.
+
+Additional checks:
+
+- Identical inputs/account reused all four model sections with zero new calls. Replacing one fixture cache record with a JSON scalar caused exactly one new call, repaired the cache and completed in 1.3 seconds. Fixture endpoint identity is isolated from real-provider caches.
+- A provider with a three-second cooldown remained eligible when a later connection could not fit the prompt into its TPM budget: the job waited, then completed with one call in 3.4 seconds.
+- Invalid response members were rejected independently; valid members remained saved. Metadata such as `origin` cannot be supplied by the model. The failed member was tried only once more. Invalid-output fallback used Gemini then Groq in the recorded fixture call history.
+- A mixed-document edit/regeneration check saved a manual architecture edit, then regenerated only overview. Final origins were model/user/baseline/baseline; the manual text and both unrelated baseline records were unchanged.
+- Cancelling an in-flight hanging call produced `cancelled`; the request ended after approximately 965 ms and saved drafts remained. Restarting a worker during a different hanging call retained the original deadline and persisted attempt, then resumed to four model sections with a second call. The restart did not renew the deadline.
+- Provider catalog smoke accepted zero-price JSON-capable metadata, rejected paid pricing, rejected missing JSON capability and rejected a missing model. The public OpenRouter catalog was reachable and listed 11 zero-price models advertising `response_format` at inspection time; no authenticated generation was performed.
+- Migration 9 and Jet generation succeeded against a fresh disposable schema. The ordinary local Docker stack was rebuilt and migrated. Its no-key Russian overview reached `completed/rendered`; foreign artifact access returned 404; section/document pages returned 200; evidence included the attributed project-title reference. Only that synthetic production-stack job was deleted through its owner route; existing user jobs were preserved.
+- Poppler rendered selected annotation/content pages of Russian TZ baseline/model fixtures. Cyrillic text, provenance labels and source references were readable; no clipping was observed on inspected pages. Baseline TZ produced 19 pages. A duplicated provenance paragraph was removed and the final annotation was checked again. English outputs compiled and retained their headings.
+- Smoke checks exposed and corrected a JSONB cache-upsert assignment, new scheduler rows looking spuriously busy due to database/host clock differences, and empty warning slices serializing as null. Reruns produced saved model sections and PDFs. Fresh code review found regeneration scope and fallback-selection problems; their fixes were exercised by the edit/regeneration and fallback checks above.
+
+Validation: `go build ./...`, `go vet ./...`, `git diff --check`, Docker build and migration passed. Automated tests remain deferred to milestone 8.
+
+Remaining limits: no real free account key was provided for a live model run, so model prose quality, actual free quotas, provider-side billing settings and actual token accounting remain unverified. A five-minute full model-written document is not claimed. Large downloads, worker backlog, source failures and database/compiler outages can exceed or prevent the small-project target. Gemini/Groq free account status relies on the explicit form declaration; their billing cannot be inferred from the key. Provider limits are shared per configured key fingerprint, not across unrelated keys on the same external account. A single job submits sequentially; multi-worker admission is coordinated by PostgreSQL, but a broad concurrency/load test suite remains for the final testing milestone.
+
+## 2026-11-04 — Milestone 9 quality recovery checks
+
+Implementation and acceptance are distinct. No automated test suite or local LLM was added. Fresh `go build ./...` and `git diff --check` passed. Migration 10 was applied to an isolated smoke database, Jet provider-call types regenerated, then the additive migration was applied to the local Docker site. The earlier user job and artifacts were preserved. The local site serves the new chapter/outcome controls.
+
+Manual evidence on a copy of the failed three-service source snapshot:
+
+- Extraction now retains 13 API operations, 11 schemas, 104 function bodies, 93 static call-reference records, 6 route declarations and 6 SQL table declarations. It also retains source locations, paragraphs and module records. Generated Swagger representations no longer repeat canonical JSON. These are static declarations, not proof of executed workflows.
+- Controlled PZ RU response: all 17 leaves saved in 3 chapter calls, PDF in 2.11 seconds. This fixture exercises transport and storage, not document quality.
+- Controlled invalid-citation responses: six calls (three chapters plus one targeted repair each), all 17 leaves retained, 1.68 seconds. The diagnostic endpoint records the exact invalid source ID and section; ordinary bracket text and omitted model headings are accepted. All fixture outputs remain `partial` because their explicit quality gaps are retained.
+- Controlled truncated responses: each initial chapter ended with `finish_reason=length`; complete earlier members were recovered. Three repairs saved only missing members. All 17 leaves available, six calls, 1.66 seconds. Earlier runs accidentally used a non-truncating fixture and are not evidence for this check.
+- Repeated identical PZ/account: zero API attempts, all 17 sections restored from validated cache, 1.67 seconds. A direct isolated database smoke also confirmed persisted catalog reuse and schema capability retention.
+- No-provider TZ EN: 35 outline leaves, zero calls, PDF in 1.75 seconds. Explicit continuation after a manual edit preserved the user-origin body exactly, 1.25 seconds.
+- Low TPM=4,000 admitted real fixture requests rather than failing preflight because of the shared brief. A deliberately/interleaved truncated response consumed an extra repair; the run stopped at the persisted model deadline and rendered 3/4 model sections plus one outline section in 240.52 seconds. This verifies the bounded partial path, not full low-TPM completion.
+- Direct HTTP-adapter check: a 429 `rate_limit_exceeded` with a generic billing sentence remains temporary `provider_rate_limit`, honors a two-second Retry-After, and records status 429.
+- Native RU and EN rendering with table data compiled successfully. Visual inspection confirmed Cyrillic, table headings/cells, source notes and literal `#read(...)` content; uploaded/model text was not executed. Separate PZ page inspection checked hierarchy and font readability. This checks layout, not the fixture's intentionally repetitive prose.
+- Deployed Docker no-provider overview: `outline`, four leaves, zero model calls, PDF in 0.84 seconds. The synthetic production job was deleted through its owner route; the original user job remains completed and unchanged.
+
+Two important independent-review findings were fixed: fit the entire serialized prompt including shared brief/repair material; salvage complete members and split unfinished truncated groups. Manual low-TPM and truncation checks above cover those failure modes.
+
+Still unverified: live-provider semantic quality in both languages, five-minute useful-document completion with real quotas, model-specific context limits, and equal-input comparison against the chapter control. Cancellation/restart ownership behavior retains prior milestone coverage; the complete fault matrix was not rerun here. No fixture time is advertised as a real model benchmark. A full resolved cross-service workflow graph is not claimed.
+
+## 2026-11-04 — FKN layout and red TODO acceptance
+
+`go build ./...` and `git diff --check` passed after the final edits. The five academic profiles (TZ, PZ, PMI, team PMI, operator guide) and the generic overview compiled in both RU and EN: twelve manual PDFs. Academic sample lengths were TZ 20, PZ 14, PMI 14, team PMI 14 and operator guide 11 physical pages. The title-sheet count excludes the separate approval sheet, matching the supplied layout's page-counter reset.
+
+Visual contact-sheet review covered RU/EN approval sheets, title sheets, body/outline pages and complete ten-column change registers. Cyrillic, vertical inventory cells, footer inscriptions and red TODOs in metadata/body/table cells were legible without clipping. PDF character inspection found red text in every sample. Literal `#read(...)` remained visible text. Recompiling the exported TZ RU and operator-guide EN roots with the pinned compiler produced identical PDF SHA-256 values.
+
+The independent review found one material issue: HTML text inputs would strip line breaks from the default institution banner. Organization, supervisor/approver positions and author/team fields now use textareas. A deployed owner-session smoke verified that the exact multiline institution default survived a save round trip; checking `resolve_missing` cleared only the edited section's warnings and preserved warnings in all other sections. The synthetic no-provider TZ compiled in 1.26 seconds with all 35 sections and no API calls; this measures layout/infrastructure, not model prose. That synthetic production job was deleted through its owner route.
+
+The updated Docker site is running. Prior user jobs and PDFs were not automatically rewritten. Rebuilding existing reviewed content or creating a new job uses the FKN layout. Font rendering intentionally uses the bundled Liberation Serif rather than an unlicensed/system-dependent Times New Roman copy; full pixel identity and formal institutional approval are not claimed.

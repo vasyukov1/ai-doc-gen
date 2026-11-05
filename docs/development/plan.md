@@ -2,6 +2,8 @@
 
 One numbered item equals one Codex implementation request. A future agent should receive the text of one item, read `../../AGENTS.md` and this directory, implement all its subitems, and report build plus manual smoke results. Do not combine adjacent items. The initial site is local; there is no deployment request.
 
+> Updated 2026-11-04: the website now collects title-page metadata, the specification, the model and the provider key in the initial form. File selection, evidence acceptance, drafting and Typst rendering run automatically; the evidence page is read-only. See [decisions.md](decisions.md).
+
 ## 1. Foundation and minimal website — implemented in this request
 
 1.1. Create a Go module with `../../cmd/ai-doc-gen/main.go`, `internal/config`, a small `net/http` server, graceful shutdown, and a health endpoint.
@@ -45,6 +47,8 @@ One numbered item equals one Codex implementation request. A future agent should
 3.2. Build a file inventory with reason codes for include/exclude. Ignore binaries, dependencies, generated output, and likely secrets. Keep test files available for test-related document sections.
 
 3.3. Show the selected file list and allow the user to adjust it before generation. Use `needs_input` while waiting; persist the final selection with the job.
+
+> Updated 2026-11-04: the worker now confirms the default selection automatically; the list remains readable and manual selection stays available as a fallback. See [decisions.md](decisions.md).
 
 **Acceptance:** a small public repository and ZIP produce a visible inventory; unsafe archives fail safely; included files and exclusions are explainable.
 
@@ -107,3 +111,25 @@ Milestone 7 adds browser ownership, private downloads, completed-document editin
 8.3. Review upload security, privacy and retention behavior, observability, deployment configuration, and documentation. Benchmark latency and cost on a consented evaluation set.
 
 **Acceptance:** the test suite and build pass; critical failure paths have coverage; a reviewer can reproduce the deployment and the end-to-end document flow.
+
+## 9. Free, bounded document drafts — implemented; live provider benchmark pending
+
+9.1. Save source-linked baseline sections before any external API call. Preserve every profile heading and expose baseline/model/user provenance.
+
+9.2. Improve compact groups of at most four sections using optional Gemini, Groq and OpenRouter connections. Keep independent section validation, caching, editing and regeneration. Limit output to 2,400 tokens per group.
+
+9.3. Persist a 240-second model deadline and a maximum of 12 API attempts, including catalog checks. Coordinate concurrency, conservative RPM/TPM reservations and cooldowns through PostgreSQL. Fall back to saved baseline text when providers cannot help.
+
+9.4. Compile the saved draft into PDF and reproducible Typst, marking baseline/mixed content and improvement limitations. Completed means artifacts were compiled, not that claims were verified.
+
+**Acceptance:** a small project yields a useful baseline and PDF within 300 seconds, including when all model providers fail. Record request counts, time, token usage, failure behavior and visual PDF inspection. Live provider quality and speed require a real free account; fixtures do not establish them.
+
+This request explicitly revises milestone 9 without starting milestone 8 or implementing local inference. See [local_model/plan.md](local_model/plan.md) for the current design and [verification.md](verification.md) for measured results.
+
+### Milestone 9 corrective acceptance — generation quality recovery
+
+The previous baseline-PDF target is superseded by [generation_quality_plan.md](generation_quality_plan.md). A successful compiler run is not successful documentation generation. Preserve the bounded deadline and free-only providers, but generate logical chapters from coherent sources, retain actionable diagnostics and distinguish outline/partial/content-ready outcomes. Implementation is available; live-model semantic quality and the five-minute useful-document target remain unverified. Milestone 8 automated tests and local inference remain excluded.
+
+### Academic template correction — FKN layout and visible manual fields
+
+Use the supplied FKN layout for all five academic variants. Keep the technical overview separate, preserve document IDs and user prose, and render manual-completion fields as red TODOs. Add explicit resolution of section-gap warnings in the editor. Acceptance: build, compile the five profiles in RU/EN, visually inspect front matter/body/change register, verify literal TODO/table rendering and reproducible bundles. No new numbered milestone or automated suite is started.

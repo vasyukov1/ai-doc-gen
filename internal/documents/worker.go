@@ -136,6 +136,30 @@ func (w *Worker) process(parent context.Context, claim *pgqueue.Claim) {
 			w.reportFailure(parent, claim, err)
 		}
 		log.Printf("save inventory %s: %v", claim.ID, err)
+		return
+	}
+
+	w.autoSelect(parent, claim.ID, inventory)
+}
+
+// autoSelect confirms the default file selection so intake advances to evidence
+// review without a manual step. The inventory stays readable for transparency.
+// If confirmation fails, the job waits at selecting_files for a manual choice.
+func (w *Worker) autoSelect(ctx context.Context, id string, inventory domain.Inventory) {
+	paths := make([]string, 0, len(inventory.Files))
+	for _, file := range inventory.Files {
+		if file.Selected {
+			paths = append(paths, file.Path)
+		}
+	}
+	if len(paths) == 0 {
+		return
+	}
+
+	confirmCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	if err := w.jobs.ConfirmSelection(confirmCtx, id, paths); err != nil {
+		log.Printf("auto-select files %s: %v", id, err)
 	}
 }
 
@@ -213,7 +237,7 @@ func (w *Worker) analyze(ctx, parent context.Context, claim *pgqueue.Claim, inve
 		w.reportFailure(parent, claim, err)
 		return
 	}
-	if err := w.queue.EvidenceReady(ctx, claim.ID, w.owner, evidence); err != nil {
+	if err := w.queue.EvidenceReadyForGeneration(ctx, claim.ID, w.owner, evidence); err != nil {
 		w.reportFailure(parent, claim, err)
 	}
 }

@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -25,7 +26,7 @@ func (r *Repository) Ping(ctx context.Context) error {
 	return r.db.PingContext(ctx)
 }
 
-func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob) error {
+func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob, master string) error {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("start job: %w", err)
@@ -48,6 +49,26 @@ func (r *Repository) CreateJob(ctx context.Context, job domain.NewJob) error {
 	query, args = stmt.Sql()
 	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
 		return fmt.Errorf("save input: %w", err)
+	}
+
+	raw, err := json.Marshal(job.DocumentInput)
+	if err != nil {
+		return fmt.Errorf("encode document input: %w", err)
+	}
+	documentInputs := table.JobDocumentInputs
+	stmt = documentInputs.INSERT(documentInputs.JobID, documentInputs.Record, documentInputs.Reviewed).
+		VALUES(job.ID, string(raw), false)
+	query, args = stmt.Sql()
+	if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("save document input: %w", err)
+	}
+
+	if job.FreeDraft {
+		if err := saveDraftRunTx(ctx, tx, job.ID, job.Connections, master); err != nil {
+			return err
+		}
+	} else if err := saveCredentialsTx(ctx, tx, job.ID, job.Model, job.APIKey, master); err != nil {
+		return err
 	}
 
 	if err := addStatus(ctx, tx, job.ID, "", domain.StatusQueued, "", "queued", "Job queued."); err != nil {
@@ -79,6 +100,9 @@ func (r *Repository) GetJob(ctx context.Context, id string) (domain.Job, error) 
 		return domain.Job{}, fmt.Errorf("get job: %w", err)
 	}
 
+	if err := r.draftSummary(ctx, &job); err != nil {
+		return domain.Job{}, err
+	}
 	events := table.JobProgressEvents
 	stmt = events.SELECT(events.Message).
 		WHERE(events.JobID.EQ(postgres.CAST(postgres.Text(id)).AS_UUID())).

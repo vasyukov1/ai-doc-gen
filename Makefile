@@ -8,6 +8,7 @@ export PG_PORT HTTP_PORT DATABASE_URL
 .PHONY: run build test down mocks db-generate
 
 run:
+	@docker info >/dev/null 2>&1 || { echo "Docker is not running. Start it first, for example: colima start"; exit 1; }
 	docker compose build migrate
 	docker compose up -d
 	@echo "Open http://localhost:$(HTTP_PORT)"

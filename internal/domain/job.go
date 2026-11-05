@@ -24,23 +24,29 @@ const (
 )
 
 type Job struct {
-	ID                string     `json:"id"`
-	ExpiresAt         *time.Time `json:"expires_at,omitempty"`
-	Status            Status     `json:"status"`
-	Stage             string     `json:"stage"`
-	ProfileID         string     `json:"profile_id"`
-	Language          string     `json:"language"`
-	CreatedAt         time.Time  `json:"created_at"`
-	UpdatedAt         time.Time  `json:"updated_at"`
-	LastHeartbeatAt   *time.Time `json:"last_heartbeat_at,omitempty"`
-	NextRetryAt       *time.Time `json:"next_retry_at,omitempty"`
-	RecoveryPending   bool       `json:"recovery_pending"`
-	ErrorCode         string     `json:"error_code,omitempty"`
-	ErrorMessage      string     `json:"error_message,omitempty"`
-	RequiredAction    string     `json:"required_action,omitempty"`
-	CompletedSections int        `json:"completed_sections"`
-	TotalSections     int        `json:"total_sections"`
-	LatestMessage     string     `json:"latest_message"`
+	Content            GenerationReport `json:"content"`
+	FreeDraft          bool             `json:"free_draft"`
+	ModelSections      int              `json:"model_sections"`
+	GenerationReason   string           `json:"generation_reason,omitempty"`
+	GenerationAttempts int              `json:"generation_attempts"`
+	GenerationDeadline *time.Time       `json:"generation_deadline,omitempty"`
+	ID                 string           `json:"id"`
+	ExpiresAt          *time.Time       `json:"expires_at,omitempty"`
+	Status             Status           `json:"status"`
+	Stage              string           `json:"stage"`
+	ProfileID          string           `json:"profile_id"`
+	Language           string           `json:"language"`
+	CreatedAt          time.Time        `json:"created_at"`
+	UpdatedAt          time.Time        `json:"updated_at"`
+	LastHeartbeatAt    *time.Time       `json:"last_heartbeat_at,omitempty"`
+	NextRetryAt        *time.Time       `json:"next_retry_at,omitempty"`
+	RecoveryPending    bool             `json:"recovery_pending"`
+	ErrorCode          string           `json:"error_code,omitempty"`
+	ErrorMessage       string           `json:"error_message,omitempty"`
+	RequiredAction     string           `json:"required_action,omitempty"`
+	CompletedSections  int              `json:"completed_sections"`
+	TotalSections      int              `json:"total_sections"`
+	LatestMessage      string           `json:"latest_message"`
 }
 
 type Input struct {
@@ -53,13 +59,18 @@ type Input struct {
 }
 
 type NewJob struct {
-	OwnerHash   string
-	ExpiresAt   time.Time
-	ID          string
-	ProfileID   string
-	Language    string
-	Description string
-	Input       Input
+	FreeDraft     bool
+	Connections   []Connection
+	OwnerHash     string
+	ExpiresAt     time.Time
+	ID            string
+	ProfileID     string
+	Language      string
+	Description   string
+	Input         Input
+	DocumentInput DocumentInput
+	Model         string
+	APIKey        string
 }
 
 type Source struct {

@@ -14,12 +14,13 @@ import (
 )
 
 const ProfileVersion = "sections-2"
-const PromptVersion = "grounded-2"
+const PromptVersion = "grounded-3"
 
 type SectionPlan struct {
 	ID       string
 	Heading  string
 	Language string
+	Topic    string
 	Kinds    []string
 }
 
@@ -31,7 +32,7 @@ func Plan(profile, language string) []SectionPlan {
 	plan := []SectionPlan{}
 	for _, h := range profileAsset.Headings {
 		if h.Draft {
-			plan = append(plan, SectionPlan{ID: h.ID, Heading: h.Title(language), Language: language, Kinds: headingKinds(h.EN)})
+			plan = append(plan, SectionPlan{ID: h.ID, Heading: h.Title(language), Language: language, Topic: h.EN, Kinds: headingKinds(h.EN)})
 		}
 	}
 	return plan
@@ -101,15 +102,22 @@ func SectionPrompt(plan SectionPlan, language string, facts []domain.Fact) strin
 }
 
 func ValidateSection(raw string, plan SectionPlan, facts []domain.Fact) (domain.Section, error) {
+	var output sectionOutput
 	var section domain.Section
 	decoder := json.NewDecoder(strings.NewReader(raw))
 	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&section); err != nil {
+	if err := decoder.Decode(&output); err != nil {
 		return section, invalidOutput()
 	}
+	section = domain.Section{ID: output.ID, Heading: output.Heading, Body: output.Body, Citations: output.Citations, Missing: output.Missing}
 	var extra any
-	if decoder.Decode(&extra) != io.EOF || section.ID != plan.ID || section.Heading != plan.Heading || strings.TrimSpace(section.Body) == "" || len(section.Body) > 40000 || section.Edited || section.CacheKey != "" || section.Citations == nil || section.Missing == nil {
+	if decoder.Decode(&extra) != io.EOF || section.ID != plan.ID || section.Heading != plan.Heading || strings.TrimSpace(section.Body) == "" || !safeText(section.Body) || len(section.Body) > 40000 || section.Edited || section.CacheKey != "" || section.Citations == nil || section.Missing == nil {
 		return section, invalidOutput()
+	}
+	for _, gap := range section.Missing {
+		if !safeText(gap) || len(gap) > 4000 {
+			return section, invalidOutput()
+		}
 	}
 	allowed := map[string]bool{}
 	for _, fact := range facts {

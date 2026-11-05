@@ -6,7 +6,9 @@ import (
 	"encoding/hex"
 	"errors"
 	"html/template"
+	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/platform"
@@ -35,10 +37,42 @@ func ownerCookie(w http.ResponseWriter, r *http.Request, create bool) (string, e
 	return hex.EncodeToString(digest[:]), nil
 }
 
+// sameOrigin rejects state-changing requests that a cross-site page could have
+// started. Sec-Fetch-Site is set by the browser and cannot be altered by page
+// scripts, so same-origin and user-initiated values stay authoritative even when
+// a proxy or tunnel rewrites the Host header. Older clients fall back to
+// comparing Origin with the host observed by the server.
+func sameOrigin(r *http.Request) bool {
+	switch r.Header.Get("Sec-Fetch-Site") {
+	case "same-origin", "none":
+		return true
+	case "cross-site":
+		return false
+	}
+
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		return true
+	}
+
+	parsed, err := url.Parse(origin)
+	if err != nil || parsed.Host == "" {
+		return false
+	}
+
+	return strings.EqualFold(parsed.Host, r.Host)
+}
+
+func (h *Handler) rejectCrossOrigin(w http.ResponseWriter, r *http.Request) {
+	log.Printf("cross-origin %s %s rejected: origin=%q host=%q sec_fetch_site=%q",
+		r.Method, r.URL.Path, r.Header.Get("Origin"), r.Host, r.Header.Get("Sec-Fetch-Site"))
+	http.Error(w, "Cross-origin request rejected.", http.StatusForbidden)
+}
+
 func (h *Handler) authorize(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet && r.Method != http.MethodHead && !sameOrigin(r) {
-			http.Error(w, "Cross-origin request rejected.", 403)
+			h.rejectCrossOrigin(w, r)
 			return
 		}
 		path := strings.TrimPrefix(r.URL.Path, "/api")

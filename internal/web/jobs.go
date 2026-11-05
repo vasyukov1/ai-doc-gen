@@ -20,6 +20,7 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/documents"
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 	"github.com/vasyukov1/ai-doc-gen/internal/platform"
+	"github.com/vasyukov1/ai-doc-gen/internal/storage"
 )
 
 const maxArchiveBytes = documents.MaxArchiveBytes
@@ -71,6 +72,28 @@ func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	documentInput, err := h.documentInputFromRequest(r, request.Language)
+	if err != nil {
+		writeFormError(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+	documentInput, err = documents.ValidateDocumentInput(documentInput, request.ProfileID, request.Language)
+	if err != nil {
+		writeFormError(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	connections, err := connectionsFromForm(r)
+	if err != nil {
+		writeFormError(w, r, 400, err.Error())
+		return
+	}
+	// The current form always uses the free draft pipeline. Legacy stored jobs keep their adapter.
+	if r.FormValue("api_key") != "" {
+		writeFormError(w, r, 400, "Use the free provider fields on the current form.")
+		return
+	}
+
 	id, err := platform.NewID()
 	if err != nil {
 		writeFormError(w, r, http.StatusInternalServerError, "Could not create a job.")
@@ -96,10 +119,15 @@ func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
 		OwnerHash: owner, ExpiresAt: time.Now().Add(h.retention),
 		ID: id, ProfileID: request.ProfileID, Language: request.Language,
 		Description: request.Description, Input: input,
+		DocumentInput: documentInput, FreeDraft: true, Connections: connections,
 	}
-	if err := h.jobs.CreateJob(r.Context(), job); err != nil {
+	if err := h.jobs.CreateJob(r.Context(), job, h.encryptionKey); err != nil {
 		if input.UploadPath != "" {
 			_ = os.Remove(input.UploadPath)
+		}
+		if errors.Is(err, storage.ErrEncryptionKey) {
+			writeFormError(w, r, http.StatusServiceUnavailable, "Server encryption key is unavailable. Restart the web and worker processes.")
+			return
 		}
 		log.Printf("save job %s: %v", id, err)
 		writeFormError(w, r, http.StatusServiceUnavailable, "Could not save the job. Try again.")

@@ -53,12 +53,22 @@ func run() error {
 	queue := pgqueue.New(db)
 
 	if len(os.Args) == 1 || os.Args[1] == "serve" {
-		return serve(ctx, cfg, jobs)
+		key, err := cfg.EncryptionKey()
+		if err != nil {
+			return err
+		}
+
+		return serve(ctx, cfg, jobs, key)
 	}
 	if os.Args[1] == "cleanup" {
 		return documents.NewCleaner(jobs, cfg.DataDir, cfg.UploadDir, cfg.SourceDir).Once(ctx)
 	}
 	if os.Args[1] == "worker" {
+		key, err := cfg.EncryptionKey()
+		if err != nil {
+			return err
+		}
+
 		go documents.NewCleaner(jobs, cfg.DataDir, cfg.UploadDir, cfg.SourceDir).Run(ctx)
 		owner, err := platform.NewID()
 		if err != nil {
@@ -71,14 +81,14 @@ func run() error {
 		if os.Getenv("LLM_FIXTURE_MODE") == "1" {
 			fixture = &documents.ChatProvider{Endpoint: os.Getenv("LLM_ENDPOINT"), Model: os.Getenv("LLM_MODEL"), Key: os.Getenv("LLM_API_KEY")}
 		}
-		return documents.NewWorker(queue, jobs, owner, cfg.SourceDir, cfg.GitHubToken, fixture, cfg.LLMEncryptionKey).Run(ctx)
+		return documents.NewWorker(queue, jobs, owner, cfg.SourceDir, cfg.GitHubToken, fixture, key).Run(ctx)
 	}
 
 	return fmt.Errorf("unknown command: %s", os.Args[1])
 }
 
-func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository) error {
-	handler, err := web.NewHandler(jobs, cfg.UploadDir, cfg.LLMEncryptionKey, cfg.Retention)
+func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository, encryptionKey string) error {
+	handler, err := web.NewHandler(jobs, cfg.UploadDir, encryptionKey, cfg.Retention)
 	if err != nil {
 		return err
 	}

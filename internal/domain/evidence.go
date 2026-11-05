@@ -2,6 +2,7 @@ package domain
 
 // Evidence keeps extracted facts separate from later user corrections.
 type Evidence struct {
+	Model        ProjectModel      `json:"project_model"`
 	Version      string            `json:"version"`
 	Digest       string            `json:"digest"`
 	SourceDigest string            `json:"source_digest"`

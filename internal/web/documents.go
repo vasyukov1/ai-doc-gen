@@ -5,6 +5,7 @@ import (
 	"errors"
 	"html/template"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -41,7 +42,11 @@ func (h *Handler) documentView(w http.ResponseWriter, r *http.Request) {
 		labels = russian
 	}
 	for n, key := range documents.MetadataFields {
-		fields = append(fields, metadataField{key, labels[n], input.Metadata[key]})
+		value := input.Metadata[key]
+		if value == "" && profile.Academic {
+			value = documents.FKNMetadataDefaults(job.Language)[key]
+		}
+		fields = append(fields, metadataField{key, labels[n], value})
 	}
 	page, err := template.ParseFS(assets, "static/document.html")
 	if err != nil {
@@ -59,7 +64,7 @@ func (h *Handler) documentView(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
 	if !sameOrigin(r) {
-		http.Error(w, "Cross-origin request rejected.", 403)
+		h.rejectCrossOrigin(w, r)
 		return
 	}
 	job, err := h.findJob(r)
@@ -111,27 +116,51 @@ func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/jobs/"+job.ID+"/document", 303)
 		return
 	}
+	input, err := h.documentInputFromRequest(r, job.Language)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	input, err = documents.ValidateDocumentInput(input, job.ProfileID, job.Language)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err = h.jobs.SaveDocumentInput(r.Context(), job.ID, input); err != nil {
+		http.Error(w, "Document input is editable while source or evidence review is waiting, before drafting begins.", 409)
+		return
+	}
+	http.Redirect(w, r, "/jobs/"+job.ID+"/document", 303)
+}
+
+// documentInputFromRequest reads title-page metadata and one specification
+// source from a parsed multipart form.
+func (h *Handler) documentInputFromRequest(r *http.Request, language string) (domain.DocumentInput, error) {
 	input := domain.DocumentInput{Metadata: map[string]string{}}
 	for _, key := range documents.MetadataFields {
 		input.Metadata[key] = r.FormValue("metadata." + key)
 	}
 	input.Specification = strings.TrimSpace(r.FormValue("specification"))
+
 	structured := []struct{ key, en, ru string }{{"purpose", "Purpose", "Назначение"}, {"functions", "Required functions", "Требуемые функции"}, {"constraints", "Constraints", "Ограничения"}, {"acceptance", "Acceptance criteria", "Критерии приемки"}}
 	parts := []string{}
 	for _, field := range structured {
 		value := strings.TrimSpace(r.FormValue("spec." + field.key))
 		if value != "" {
 			label := field.en
-			if job.Language == "ru" {
+			if language == "ru" {
 				label = field.ru
 			}
 			parts = append(parts, label+":\n"+value)
 		}
 	}
-	uploaded := r.MultipartForm.File["specification_file"]
+
+	uploaded := []*multipart.FileHeader{}
+	if r.MultipartForm != nil {
+		uploaded = r.MultipartForm.File["specification_file"]
+	}
 	if len(uploaded) > 1 {
-		http.Error(w, "Upload one specification.", 400)
-		return
+		return input, errors.New("upload one specification")
 	}
 	sources := 0
 	if input.Specification != "" {
@@ -144,13 +173,11 @@ func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
 		sources++
 	}
 	if sources > 1 {
-		http.Error(w, "Use one specification source: text, structured fields, or upload.", 400)
-		return
+		return input, errors.New("use one specification source: text, structured fields, or upload")
 	}
 	if len(parts) > 0 {
 		if len(parts) != len(structured) {
-			http.Error(w, "Complete all four structured specification fields. Unknown requirements may be stated explicitly.", 400)
-			return
+			return input, errors.New("complete all four structured specification fields; unknown requirements may be stated explicitly")
 		}
 		input.Specification = strings.Join(parts, "\n\n")
 		input.SpecificationName = "structured form"
@@ -159,33 +186,22 @@ func (h *Handler) saveDocument(w http.ResponseWriter, r *http.Request) {
 		file := uploaded[0]
 		extension := strings.ToLower(filepath.Ext(file.Filename))
 		if (extension != ".txt" && extension != ".md") || file.Size > 64000 {
-			http.Error(w, "Upload a UTF-8 .txt or .md specification below 64000 bytes. PDF, DOCX and Typst are not accepted.", 400)
-			return
+			return input, errors.New("upload a UTF-8 .txt or .md specification below 64000 bytes; PDF, DOCX and Typst are not accepted")
 		}
 		opened, err := file.Open()
 		if err != nil {
-			http.Error(w, "Could not read specification.", 400)
-			return
+			return input, errors.New("could not read the specification")
 		}
 		raw, err := io.ReadAll(io.LimitReader(opened, 64001))
 		_ = opened.Close()
 		if err != nil || len(raw) > 64000 || !utf8.Valid(raw) {
-			http.Error(w, "Specification must be UTF-8 text below 64000 bytes.", 400)
-			return
+			return input, errors.New("specification must be UTF-8 text below 64000 bytes")
 		}
 		input.Specification = string(raw)
 		input.SpecificationName = filepath.Base(strings.ReplaceAll(file.Filename, "\\", "/"))
 	}
-	input, err = documents.ValidateDocumentInput(input, job.ProfileID, job.Language)
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-		return
-	}
-	if err = h.jobs.SaveDocumentInput(r.Context(), job.ID, input); err != nil {
-		http.Error(w, "Document input is editable while source or evidence review is waiting, before drafting begins.", 409)
-		return
-	}
-	http.Redirect(w, r, "/jobs/"+job.ID+"/document", 303)
+
+	return input, nil
 }
 
 func (h *Handler) downloadArtifact(w http.ResponseWriter, r *http.Request) {

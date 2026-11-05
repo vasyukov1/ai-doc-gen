@@ -17,15 +17,18 @@ type providerCallsTable struct {
 	postgres.Table
 
 	// Columns
-	ID           postgres.ColumnInteger
-	JobID        postgres.ColumnString
-	SectionID    postgres.ColumnString
-	Provider     postgres.ColumnString
-	Model        postgres.ColumnString
-	ErrorCode    postgres.ColumnString
-	InputTokens  postgres.ColumnInteger
-	OutputTokens postgres.ColumnInteger
-	CreatedAt    postgres.ColumnTimestampz
+	ID              postgres.ColumnInteger
+	JobID           postgres.ColumnString
+	SectionID       postgres.ColumnString
+	Provider        postgres.ColumnString
+	Model           postgres.ColumnString
+	ErrorCode       postgres.ColumnString
+	InputTokens     postgres.ColumnInteger
+	OutputTokens    postgres.ColumnInteger
+	CreatedAt       postgres.ColumnTimestampz
+	DurationMs      postgres.ColumnInteger
+	Diagnostics     postgres.ColumnString
+	RejectedContent postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -67,33 +70,39 @@ func newProviderCallsTable(schemaName, tableName, alias string) *ProviderCallsTa
 
 func newProviderCallsTableImpl(schemaName, tableName, alias string) providerCallsTable {
 	var (
-		IDColumn           = postgres.IntegerColumn("id")
-		JobIDColumn        = postgres.StringColumn("job_id")
-		SectionIDColumn    = postgres.StringColumn("section_id")
-		ProviderColumn     = postgres.StringColumn("provider")
-		ModelColumn        = postgres.StringColumn("model")
-		ErrorCodeColumn    = postgres.StringColumn("error_code")
-		InputTokensColumn  = postgres.IntegerColumn("input_tokens")
-		OutputTokensColumn = postgres.IntegerColumn("output_tokens")
-		CreatedAtColumn    = postgres.TimestampzColumn("created_at")
-		allColumns         = postgres.ColumnList{IDColumn, JobIDColumn, SectionIDColumn, ProviderColumn, ModelColumn, ErrorCodeColumn, InputTokensColumn, OutputTokensColumn, CreatedAtColumn}
-		mutableColumns     = postgres.ColumnList{JobIDColumn, SectionIDColumn, ProviderColumn, ModelColumn, ErrorCodeColumn, InputTokensColumn, OutputTokensColumn, CreatedAtColumn}
-		defaultColumns     = postgres.ColumnList{IDColumn, CreatedAtColumn}
+		IDColumn              = postgres.IntegerColumn("id")
+		JobIDColumn           = postgres.StringColumn("job_id")
+		SectionIDColumn       = postgres.StringColumn("section_id")
+		ProviderColumn        = postgres.StringColumn("provider")
+		ModelColumn           = postgres.StringColumn("model")
+		ErrorCodeColumn       = postgres.StringColumn("error_code")
+		InputTokensColumn     = postgres.IntegerColumn("input_tokens")
+		OutputTokensColumn    = postgres.IntegerColumn("output_tokens")
+		CreatedAtColumn       = postgres.TimestampzColumn("created_at")
+		DurationMsColumn      = postgres.IntegerColumn("duration_ms")
+		DiagnosticsColumn     = postgres.StringColumn("diagnostics")
+		RejectedContentColumn = postgres.StringColumn("rejected_content")
+		allColumns            = postgres.ColumnList{IDColumn, JobIDColumn, SectionIDColumn, ProviderColumn, ModelColumn, ErrorCodeColumn, InputTokensColumn, OutputTokensColumn, CreatedAtColumn, DurationMsColumn, DiagnosticsColumn, RejectedContentColumn}
+		mutableColumns        = postgres.ColumnList{JobIDColumn, SectionIDColumn, ProviderColumn, ModelColumn, ErrorCodeColumn, InputTokensColumn, OutputTokensColumn, CreatedAtColumn, DurationMsColumn, DiagnosticsColumn, RejectedContentColumn}
+		defaultColumns        = postgres.ColumnList{IDColumn, CreatedAtColumn, DurationMsColumn, DiagnosticsColumn, RejectedContentColumn}
 	)
 
 	return providerCallsTable{
 		Table: postgres.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:           IDColumn,
-		JobID:        JobIDColumn,
-		SectionID:    SectionIDColumn,
-		Provider:     ProviderColumn,
-		Model:        ModelColumn,
-		ErrorCode:    ErrorCodeColumn,
-		InputTokens:  InputTokensColumn,
-		OutputTokens: OutputTokensColumn,
-		CreatedAt:    CreatedAtColumn,
+		ID:              IDColumn,
+		JobID:           JobIDColumn,
+		SectionID:       SectionIDColumn,
+		Provider:        ProviderColumn,
+		Model:           ModelColumn,
+		ErrorCode:       ErrorCodeColumn,
+		InputTokens:     InputTokensColumn,
+		OutputTokens:    OutputTokensColumn,
+		CreatedAt:       CreatedAtColumn,
+		DurationMs:      DurationMsColumn,
+		Diagnostics:     DiagnosticsColumn,
+		RejectedContent: RejectedContentColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

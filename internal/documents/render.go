@@ -69,11 +69,12 @@ func safeText(s string) bool {
 }
 
 type renderSection struct {
-	Level      int      `json:"level"`
-	Heading    string   `json:"heading"`
-	Body       string   `json:"body"`
-	Missing    []string `json:"missing"`
-	Unnumbered bool     `json:"unnumbered"`
+	Tables     []domain.DocumentTable `json:"tables"`
+	Level      int                    `json:"level"`
+	Heading    string                 `json:"heading"`
+	Body       string                 `json:"body"`
+	Missing    []string               `json:"missing"`
+	Unnumbered bool                   `json:"unnumbered"`
 }
 
 type renderData struct {
@@ -123,13 +124,16 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 	missing := func(key string) string {
 		if job.Language == "ru" {
 			labels := map[string]string{"project": "название проекта", "organization": "организация", "faculty": "факультет", "program": "образовательная программа", "author": "автор или участники команды", "group": "учебная группа", "supervisor": "руководитель", "supervisor_position": "должность руководителя", "approver": "утверждающее лицо", "approver_position": "должность утверждающего лица", "year": "год", "code": "код проекта", "technical specification": "техническое задание"}
-			return "[Не предоставлено: " + labels[key] + "]"
+			return "[TODO: " + labels[key] + "]"
 		}
-		return "[Not provided: " + key + "]"
+		return "[TODO: " + key + "]"
 	}
 	meta := map[string]string{}
 	for _, key := range MetadataFields {
 		meta[key] = input.Metadata[key]
+		if meta[key] == "" && p.Academic {
+			meta[key] = FKNMetadataDefaults(job.Language)[key]
+		}
 		if meta[key] == "" {
 			meta[key] = missing(key)
 		}
@@ -145,6 +149,9 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 			data.DocumentCode = "Технический обзор / " + p.Version
 		}
 	}
+	for key, value := range fknLabels(job.Language) {
+		data.Labels[key] = value
+	}
 	data.ApprovalCode = data.DocumentCode + "-ЛУ"
 	if job.Language == "en" {
 		data.ApprovalCode = data.DocumentCode + "-AS"
@@ -153,12 +160,53 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 	if job.Language == "ru" {
 		data.Annotation = "Документ описывает проект в порядке разделов выбранного профиля. Черновики со ссылками на источники и требования пользователя сохранены раздельно. Выполнение испытаний и сертификация соответствия стандартам не подразумеваются."
 	}
+
+	if p.Academic {
+		chapters := []string{}
+		for _, h := range p.Headings {
+			if h.Level == 1 {
+				chapters = append(chapters, h.Title(job.Language))
+			}
+		}
+		data.Annotation = p.Title(job.Language) + " — " + meta["project"] + ".\n\nDocument sections: " + strings.Join(chapters, "; ") + "."
+		if job.Language == "ru" {
+			data.Annotation = p.Title(job.Language) + " к проекту «" + meta["project"] + "».\n\nДокумент содержит разделы: " + strings.Join(chapters, "; ") + "."
+		}
+	}
+	if job.FreeDraft {
+		baseline, model, edited := 0, 0, 0
+		for _, section := range sections {
+			switch section.Origin {
+			case "baseline":
+				baseline++
+			case "model":
+				model++
+			case "user":
+				edited++
+			}
+		}
+		note := fmt.Sprintf("Draft: %d baseline sections, %d model-improved sections, %d user-edited sections. Source excerpts are not proof of runtime behavior. %s", baseline, model, edited, job.GenerationReason)
+		if job.Language == "ru" {
+			note = fmt.Sprintf("Набросок документа: базовых разделов — %d, улучшенных моделью — %d, отредактированных пользователем — %d. Выдержки из исходников не подтверждают поведение программы при выполнении. Причина неполного улучшения: %s", baseline, model, edited, draftReasonRU(job.GenerationReason))
+		}
+		report := domain.ContentReport(sections, len(Plan(job.ProfileID, job.Language)))
+		label := "Content outcome: " + report.Outcome + ". "
+		if job.Language == "ru" {
+			label = map[string]string{"outline": "Каркас документа: содержательная генерация не выполнена. ", "partial": "Частичный черновик: есть незаполненные разделы или нерешённые вопросы. ", "draft_ready": "Черновик подготовлен; требуется проверка содержания. "}[report.Outcome]
+		}
+		data.Labels["review_warning"] = label + note
+
+	}
 	indexed := map[string]domain.Section{}
 	for _, s := range sections {
 		indexed[s.ID] = s
 	}
+	unnumberedTail := false
 	for _, h := range p.Headings {
-		item := renderSection{Level: h.Level, Heading: h.Title(job.Language), Missing: []string{}, Unnumbered: strings.Contains(strings.ToLower(h.EN), "appendix") || h.EN == "References"}
+		if job.ProfileID == "ro" && h.ID == "ro-12" {
+			unnumberedTail = true
+		}
+		item := renderSection{Level: h.Level, Heading: h.Title(job.Language), Missing: []string{}, Unnumbered: strings.Contains(strings.ToLower(h.EN), "appendix") || h.EN == "References" || unnumberedTail}
 		if h.Draft {
 			s, ok := indexed[h.ID]
 			if !ok || s.Heading != h.Title(job.Language) {
@@ -167,10 +215,54 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 			if !safeText(s.Body) {
 				return nil, errors.New("section contains invalid text")
 			}
-			item.Body = s.Body
-			item.Missing = s.Missing
+			if err = validateTables(s.Tables); err != nil {
+				return nil, err
+			}
+			item.Tables = s.Tables
+			item.Body = renderTODOs(s.Body)
+			if s.Origin == "baseline" {
+				item.Body = manualTODO(item.Body)
+			}
+			item.Missing = []string{}
+			for _, gap := range s.Missing {
+				item.Missing = append(item.Missing, manualTODO(gap))
+			}
+
 		}
 		data.Sections = append(data.Sections, item)
+	}
+	if len(evidence) > 0 {
+		facts := map[string]domain.Fact{}
+		for _, f := range evidence[0].Facts {
+			facts[f.ID] = f
+		}
+		notes := []string{}
+		seen := map[string]bool{}
+		for _, s := range sections {
+			for _, id := range s.Citations {
+				if seen[id] {
+					continue
+				}
+				seen[id] = true
+				if f, ok := facts[id]; ok {
+					location := sourceLabel(f)
+					if f.Path == "" {
+						location = "User-supplied input"
+						if job.Language == "ru" {
+							location = "Данные пользователя"
+						}
+					}
+					notes = append(notes, id+" — "+location)
+				}
+			}
+		}
+		if len(notes) > 0 {
+			title := "Source references"
+			if job.Language == "ru" {
+				title = "Источники сведений"
+			}
+			data.Sections = append(data.Sections, renderSection{Level: 1, Heading: title, Body: strings.Join(notes, "\n"), Missing: []string{}, Unnumbered: true})
+		}
 	}
 	if err = fs.WalkDir(templates.Assets, "v1", func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -295,4 +387,21 @@ func zipBundle(root, destination string) error {
 		}
 	}
 	return writer.Close()
+}
+
+func draftReasonRU(reason string) string {
+	switch {
+	case strings.HasPrefix(reason, "No providers"):
+		return "Провайдеры не подключены; использованы сведения из исходных материалов."
+	case strings.HasPrefix(reason, "All sections"):
+		return "Все разделы обработаны моделью или содержат сохранённые правки пользователя."
+	case strings.HasPrefix(reason, "Model time"):
+		return "Время ожидания модели истекло; сохранённые результаты включены в PDF."
+	case strings.HasPrefix(reason, "Generation budget"):
+		return "Достигнут лимит запросов или объёма контекста."
+	case strings.HasPrefix(reason, "Some sections"):
+		return "Часть разделов не удалось улучшить; сохранён базовый текст с отмеченными пробелами."
+	default:
+		return "Не все ответы внешних моделей были доступны или пригодны для использования. Подробности доступны на странице задания."
+	}
 }
