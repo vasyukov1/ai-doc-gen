@@ -1,0 +1,7 @@
+C2 table preview visible
+C2 network failure preserved Saved after network recovery.
+C2 retry succeeded
+C2 in-flight revision true Newer unsaved revision.
+C1 metadata focus: metadata.author
+C1 UTF8 limit: Specification exceeds 64,000 UTF-8 bytes. / Сократите текст ТЗ.
+C1/C2 PASS

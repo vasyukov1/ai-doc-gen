@@ -1,0 +1,29 @@
+[
+  {
+    "screen": "index.html — New document",
+    "action": "I would choose Русский and look for the coursework technical specification option.",
+    "observed": "Implementation review only; no browser interaction performed. The language select offers Русский, but the document-type options, specification instructions, title-page field labels, and Create document button are hard-coded in English. forms.ts does not translate them when language changes.",
+    "problem": "With limited English, I cannot confidently distinguish the coursework document types or understand which specification input is required, even after selecting Russian.",
+    "severity": 3,
+    "heuristic": "Match between system and the real world",
+    "suggestion": "Provide Russian labels and instructions for this form, including recognizable coursework names such as Техническое задание and Пояснительная записка, and label the document-language selector explicitly."
+  },
+  {
+    "screen": "index.html and forms.ts — Title page details and missing-field feedback",
+    "action": "I would skip Title page details because it says Optional, then create my coursework document.",
+    "observed": "Implementation review only. Title page details is a collapsed Optional group. On submission, forms.ts warns that missing author, year, group, supervisor, supervisor_position, approver, approver_position, and code will produce red TODOs. The warning lists internal English names and offers Continue with TODOs, without opening or linking the corresponding fields.",
+    "problem": "I learn only at submission that skipping the optional group leaves visible gaps, and names such as supervisor_position do not help me quickly locate and complete the fields on my phone before class.",
+    "severity": 2,
+    "heuristic": "Help users recognize, diagnose, and recover from errors",
+    "suggestion": "Explain beside Title page details that omitted values appear as red TODOs, and make the warning open that group with readable Russian field names and focus the first missing field."
+  },
+  {
+    "screen": "index.html — Model keys; job.html — completed document",
+    "action": "I would leave the optional model keys empty and download the resulting coursework PDF.",
+    "observed": "Implementation review only. The no-key explanation is inside collapsed Model keys and promises a source-linked draft. job.html shows Document ready and a Ready step for completed jobs; its explicit statement that Completed means only PDF compilation and that sections may be placeholders is inside collapsed Generation details. An outline warning and Outline PDF label do exist for the outline outcome.",
+    "problem": "I may interpret the ready messaging as a usable coursework document without opening technical details. Before starting without a key, I do not get a prominent explanation that I may need to write missing section content myself.",
+    "severity": 3,
+    "heuristic": "Visibility of system status",
+    "suggestion": "Show a plain Russian explanation of the no-key result beside Create document, then show the content outcome and unresolved-gap count directly beside the PDF download."
+  }
+]

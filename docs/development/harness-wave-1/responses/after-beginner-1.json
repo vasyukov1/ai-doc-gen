@@ -1,0 +1,57 @@
+{
+  "persona": "beginner",
+  "input_kind": "Independent fictional persona rewalk 1 using updated source, supplied screenshots and synthetic manual logs; predicted user effects are hypotheses, not observed user data.",
+  "checks": [
+    {
+      "step": "Choose coursework specification in Russian on a phone",
+      "result": "Partially addressed: Russian profile explanations and a bilingual language selector help distinguish document types. Actual coursework completion was not exercised in the supplied screenshots.",
+      "evidence": "web/src/profile.ts provides Russian TZ guidance; after-phone.png shows Russian arc42 guidance in a 390px layout; walk.log records width [390,390]."
+    },
+    {
+      "step": "Mistakenly provide both GitHub and ZIP",
+      "result": "Addressed in inspected code: validation requests exactly one source and the selected file can be removed. No supplied log demonstrates this particular dual-source interaction.",
+      "evidence": "web/src/forms.ts sets a bilingual github_url validity error when hasRepo equals hasArchive and creates Remove file / Убрать файл buttons."
+    },
+    {
+      "step": "Attach PDF as the specification",
+      "result": "Addressed in synthetic smoke evidence: PDF is blocked with a bilingual .txt/.md correction; validation also opens collapsed groups containing invalid fields.",
+      "evidence": "walk.log: C1 PDF blocked: Choose .txt or .md / Выберите .txt или .md.; forms.ts fileProblem and reveal handlers."
+    },
+    {
+      "step": "Submit without a model key and mistake baseline for finished prose",
+      "result": "Honesty invariant preserved: no-key output is explicitly an outline and completion means PDF compilation. Reduced misunderstanding is a hypothesis; limited-English comprehension remains uncertain.",
+      "evidence": "after-phone.png says no-key output is an outline; after-status-phone.png shows outline placeholders, 0 model-improved, 4 unresolved gaps, Outline PDF, and a compilation disclaimer. walk.log records baseline 4, outcome outline, model 0."
+    },
+    {
+      "step": "Keep corrections and generated tables",
+      "result": "Preservation invariant supported by code and supplied synthetic smoke logs, not independently exercised by this reviewer.",
+      "evidence": "ChangeSection in internal/storage/sections.go updates Body while retaining Tables; edits.log records stored Order states table, another unsaved section retained, navigation guard and retained text after error."
+    },
+    {
+      "step": "Understand where uploaded files are processed",
+      "result": "Privacy invariant preserved: server processing and cookie-based access are disclosed, with no local-only processing claim.",
+      "evidence": "after-phone.png contains Files are uploaded to and processed on this server and Server-stored documents; index.html also discloses provider context transfer and cookie loss."
+    },
+    {
+      "step": "Recover from interrupted status updates",
+      "result": "Addressed in supplied fixture: stale-state warning and bilingual refresh control are visible; recovery is recorded.",
+      "evidence": "after-poll-phone.png shows last-known-state warning; poll.log records stale notice visible and recovery to 4 of 4 sections available."
+    }
+  ],
+  "remaining": [
+    {
+      "screen": "Creation and document status",
+      "problem": "Critical no-key outline warnings, compilation disclaimer, main controls and processing disclosure remain English even when Russian document language is selected. Hypothesis: Mira may miss the distinction between a compiled outline and coursework ready for submission.",
+      "severity": "medium",
+      "heuristic": "Match between system and user language; error prevention",
+      "suggestion": "Provide Russian equivalents for the outline warning, review action and server-processing disclosure, preserving the distinction between document language and interface language."
+    },
+    {
+      "screen": "Creation: specification upload",
+      "problem": "PDF rejection tells the user to choose .txt or .md but gives no concrete route for an existing PDF requirement sheet. Hypothesis: the deadline-driven beginner may not know how to proceed.",
+      "severity": "low",
+      "heuristic": "Help users recognize, diagnose and recover from errors",
+      "suggestion": "Add concise guidance to copy requirement text from the PDF into the specification text field or save it as UTF-8 .txt."
+    }
+  ]
+}

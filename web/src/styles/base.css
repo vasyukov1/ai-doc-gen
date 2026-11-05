@@ -137,3 +137,15 @@ pre {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Author display rules must not expose hidden controls or notices. */
+[hidden] { display: none !important; }
+
+.form-feedback.form-feedback--success {
+  border-color: var(--ok);
+  background: var(--ok-wash);
+}
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.table-scroll table { width: 100%; border-collapse: collapse; }
+.table-scroll th, .table-scroll td { padding: 0.5rem; border: 1px solid var(--line); text-align: start; overflow-wrap: anywhere; }
+.table-scroll caption { text-align: start; font-weight: 600; margin-block: 0.5rem; }

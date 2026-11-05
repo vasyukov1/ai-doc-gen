@@ -1,0 +1,11 @@
+C2 stored tables: [
+  {
+    caption: 'Order states',
+    columns: [ 'State', 'Meaning' ],
+    rows: [ [Array] ]
+  }
+]
+C2 other edit preserved: Second section remains unsaved. true
+C2 navigation guard: beforeunload
+C2 error retains text: Second section remains unsaved.
+C2 PASS

@@ -13,3 +13,11 @@ Read `docs/development/plan.md`, `structure.md`, `code_style.md`, `job_lifecycle
 - Follow the user's sequence: defer automated test files and test suites to the final testing milestone. At each earlier milestone, run `go build ./...` and perform a small manual smoke check of the behavior delivered. Record any unverified behavior. Use table-driven tests when the final milestone starts.
 - Superpowers skills are installed for Codex. Use relevant planning, debugging, and verification guidance, while preserving the user's milestone sequence and test timing.
 - Avoid changing existing analysis decisions silently. When a choice changes, update `docs/development` and the affected plan section.
+
+## Harness workflow
+
+- Before a product improvement, read `docs/harness/rules/DEVELOPMENT_RULES.md`; for UX review also read `docs/harness/rules/USER_SIMULATION.md`. For claims or derived metrics read `docs/harness/rules/ANALYTICS_RULES.md`.
+- Apply the rules to this application's existing purpose and constraints. The imported directive/personas and `demo_wave` are teaching examples, not product requirements or observed user data.
+- Keep a requirement/action/check index and decisions in `docs/development`. Cap each improvement wave at five accepted changes; record deferred findings and evidence from phone/laptop walkthroughs.
+- Preserve the milestone sequence and manual-check policy above when generic harness rules call for automated suites. Label simulated findings as hypotheses. Do not use application provider keys for UX simulation.
+- Preserve other contributors' dirty work. Stage only task-owned changes; do not include existing uncommitted work merely to obtain a clean status.

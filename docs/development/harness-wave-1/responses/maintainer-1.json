@@ -1,0 +1,29 @@
+[
+  {
+    "screen": "sections.html / forms.ts",
+    "action": "I would edit two architecture sections and save the first, or follow a References link while still editing.",
+    "observed": "Implementation review only; no interactions performed. Each section has its own ordinary POST form, and References and Document status are normal links. Section forms lack data-busy; the supplied forms.ts adds no dirty-state tracking or navigation guard.",
+    "problem": "Only one section is submitted at a time, leaving my other unsaved correction vulnerable to being lost when the page navigates, with no visible indication of which edits remain unsaved.",
+    "severity": 3,
+    "heuristic": "Error prevention",
+    "suggestion": "Track dirty sections and offer Save all or a navigation warning that identifies the unsaved sections."
+  },
+  {
+    "screen": "sections.html / sections.go",
+    "action": "I would correct architecture prose while keeping the generated tables.",
+    "observed": "Implementation review only; no interactions performed. The template warns that saving removes generated tables, and ChangeSection unconditionally sets section.Tables = nil when saving body text.",
+    "problem": "The only Save edit action destroys the tables I need to keep, so I cannot achieve my editing goal through the provided control even though the warning explains the loss.",
+    "severity": 4,
+    "heuristic": "User control and freedom",
+    "suggestion": "Preserve generated tables when saving prose and provide a separate explicit action to remove them."
+  },
+  {
+    "screen": "sections.html / sections.go / forms.ts",
+    "action": "I would use Regenerate to try a better architecture section and compare it with my current draft.",
+    "observed": "Implementation review only; no interactions performed. Regenerate sits beside Save edit without data-confirm. Its storage branch deletes the current section record and queues regeneration; the provided UI exposes no previous-version or undo control.",
+    "problem": "A single click removes my saved draft before replacement text is available, with no visible way to recover it if regeneration is worse or fails.",
+    "severity": 3,
+    "heuristic": "User control and freedom",
+    "suggestion": "Keep the current section as a recoverable version until I accept the regenerated replacement."
+  }
+]

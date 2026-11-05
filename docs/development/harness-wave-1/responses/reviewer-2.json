@@ -1,0 +1,29 @@
+[
+  {
+    "screen": "job.html / document status",
+    "action": "I would check completion and download the PDF to decide whether it is ready for review.",
+    "observed": "Implementation-only inspection: job.ts labels completed as Completed; job.html shows Document ready, Ready, and a section-count percentage. The explanation that completed means compiled rather than verified is inside a closed Generation details disclosure, shown only for FreeDraft. No interactions were performed.",
+    "problem": "I can mistake a finished processing indicator for content verification before opening the draft PDF.",
+    "severity": 3,
+    "heuristic": "Visibility of system status",
+    "suggestion": "Show PDF compiled \u2014 content not verified beside the downloads, with unresolved-gap and model-generated section counts visible without opening details."
+  },
+  {
+    "screen": "index.html / submission; document.html / downloads",
+    "action": "I would read the privacy wording before deciding whether this project can be submitted.",
+    "observed": "Implementation-only inspection: index.html prominently says Everything stays in this browser session, while the form posts multipart data to /jobs and the collapsed Model keys text says keys are encrypted on this server. document.html describes downloads as private to this browser.",
+    "problem": "The browser-session language makes me assume local-only handling, so I cannot confidently judge where the submitted source and artifacts are processed or stored.",
+    "severity": 3,
+    "heuristic": "Match between system and the real world",
+    "suggestion": "Replace the browser-only claim with a visible explanation that processing and storage happen on the server and access is tied to this browser session; state the retention period."
+  },
+  {
+    "screen": "job.html / incomplete completed draft",
+    "action": "I would follow the warning instruction to use Retry saved stage when generated sections are missing.",
+    "observed": "Implementation-only inspection: the completed FreeDraft warning recommends Retry saved stage for non-draft_ready outcomes, but the Retry saved stage button is rendered only for failed, cancelled, or retry_wait status. document.html separately contains Continue unfinished sections when FreeDraft and Editable.",
+    "problem": "The recovery advice directs me to a control that cannot be present in the very completed state displaying that advice, leaving me unsure how to obtain a more reliable draft.",
+    "severity": 3,
+    "heuristic": "Help users recognize, diagnose, and recover from errors",
+    "suggestion": "For completed drafts with gaps, link directly to the available Continue unfinished sections action and explain any requirements; reserve retry advice for statuses that expose retry."
+  }
+]

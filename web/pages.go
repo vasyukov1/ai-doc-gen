@@ -82,7 +82,7 @@ func statusLabel(v any) string {
 	case "ready_for_review":
 		return "Ready for review"
 	case "completed":
-		return "Completed"
+		return "PDF compiled"
 	case "failed":
 		return "Failed"
 	case "cancelled":

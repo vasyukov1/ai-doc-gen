@@ -149,7 +149,6 @@ func (r *Repository) ChangeSection(ctx context.Context, id, sectionID, body stri
 		if resolveMissing {
 			section.Missing = []string{}
 		}
-		section.Tables = nil
 		section.Edited = true
 		section.Origin = "user"
 		if status == domain.StatusCompleted {

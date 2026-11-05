@@ -1,0 +1,29 @@
+[
+  {
+    "screen": "sections.html / sections.go",
+    "action": "I would correct an architecture paragraph and click Save edit while keeping its generated tables.",
+    "observed": "Implementation review only; no interactions performed. sections.html warns that saving removes generated tables, and ChangeSection in sections.go unconditionally sets section.Tables = nil on save. There is no preserve-tables control.",
+    "problem": "I cannot accomplish the combined goal of correcting prose and keeping generated tables through this editor, even when my correction does not concern the tables.",
+    "severity": 4,
+    "heuristic": "User control and freedom",
+    "suggestion": "Keep existing tables when saving prose and offer a separate explicit action to remove them."
+  },
+  {
+    "screen": "sections.html / forms.ts",
+    "action": "I would edit two architecture sections, save the first, then follow a References link to check evidence.",
+    "observed": "Implementation review only; no interactions performed. Every section has a separate native POST form without data-busy; forms.ts intercepts only form[data-busy]. The supplied implementation has no dirty-edit tracking, draft persistence, or navigation warning, while References and Document status are ordinary same-tab links.",
+    "problem": "Only the submitted section's text is included in its form. My other unsaved changes have no protection when the page navigates, making a multi-section correction session easy to lose.",
+    "severity": 3,
+    "heuristic": "Error prevention",
+    "suggestion": "Track unsaved sections and block navigation or another section's native submission until I save all changes or explicitly discard them."
+  },
+  {
+    "screen": "sections.html / sections.go",
+    "action": "I would use Regenerate to see whether a better architecture description is available after making manual corrections.",
+    "observed": "Implementation review only; no interactions performed. Regenerate is adjacent to Save edit with the same button styling and no data-confirm. The regeneration branch in ChangeSection deletes the current section record and queues regeneration; the supplied UI offers no previous-version or undo control.",
+    "problem": "A single click replaces my current saved section without a chance to retain it or compare it against the replacement, so trying regeneration risks losing useful edits.",
+    "severity": 3,
+    "heuristic": "User control and freedom",
+    "suggestion": "Keep the current section as a recoverable version and let me accept or reject the regenerated replacement."
+  }
+]

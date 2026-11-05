@@ -15,10 +15,10 @@
       <p class="eyebrow">Draft</p>
       <div class="page-head__row">
         <h1>Sections</h1>
-        <span class="pill {{with statusClass .Job.Status}}pill--{{.}}{{end}}">{{statusLabel .Job.Status}}</span>
+        <span data-document-edit-status class="pill {{with statusClass .Job.Status}}pill--{{.}}{{end}}">{{statusLabel .Job.Status}}</span>
       </div>
-      <p class="lead">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections ready. Edit anything here, then review and compile on the input page.</p>
-      {{if .Job.LatestMessage}}<p class="form-note">{{.Job.LatestMessage}}</p>{{end}}
+      <p class="lead" data-section-summary>{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections ready. Edit anything here, then review and compile on the input page.</p>
+      {{if .Job.LatestMessage}}<p class="form-note" data-section-message>{{.Job.LatestMessage}}</p>{{end}}
     </header>
 
     {{if and (not .Job.FreeDraft) (eq .Job.Status "failed") (ne .Job.ErrorCode "render_failed")}}
@@ -37,7 +37,7 @@
     {{end}}
 
     {{if and .Job.FreeDraft (eq .Job.Content.Outcome "outline")}}
-    <p class="callout callout--warn">
+    <p class="callout callout--warn" data-outline-notice>
       Generation did not produce section text; every section is an outline placeholder.
       {{with .Job.GenerationReason}}Reason: {{.}}{{end}}
     </p>
@@ -64,16 +64,22 @@
           </div>
 
           <div class="section-card__meta">
-            <span>{{if .Origin}}{{.Origin}}{{else}}legacy draft{{end}}</span>
+            <span data-section-origin>{{if .Origin}}{{.Origin}}{{else}}legacy draft{{end}}</span>
             {{if .Provider}}<span>{{.Provider}} / {{.Model}}</span>{{end}}
             {{if .Citations}}<span class="citations">References: {{range .Citations}}<a href="/jobs/{{$.Job.ID}}/evidence#{{.}}">[{{.}}]</a>{{end}}</span>{{end}}
           </div>
 
           {{range .Missing}}<p class="todo">TODO: {{.}}</p>{{end}}
 
-          <form method="post" action="/jobs/{{$.Job.ID}}/sections/{{.ID}}">
+          <form method="post" action="/jobs/{{$.Job.ID}}/sections/{{.ID}}" data-busy data-edit-form>
+            <p class="form-note" data-save-status role="status" aria-live="polite"></p>
             <textarea name="body" rows="14" data-autogrow aria-label="Section text" {{if not $.Editable}}readonly{{end}}>{{.Body}}</textarea>
-            {{if .Tables}}<p class="form-note">Saving replaces this section as plain text and removes its generated tables.</p>{{end}}
+            {{if .Tables}}<p class="form-note">Saving updates prose and preserves generated tables.</p>
+            <details class="group"><summary>Preserved tables (read-only)</summary>
+              <div class="details-body">{{range .Tables}}
+                <div class="table-scroll"><table><caption>{{.Caption}}</caption><thead><tr>{{range .Columns}}<th scope="col">{{.}}</th>{{end}}</tr></thead><tbody>{{range .Rows}}<tr>{{range .}}<td>{{.}}</td>{{end}}</tr>{{end}}</tbody></table></div>
+              {{end}}</div>
+            </details>{{end}}
             {{if .Missing}}
             <label class="checkbox">
               <input type="checkbox" name="resolve_missing" value="yes" {{if not $.Editable}}disabled{{end}}>
@@ -82,7 +88,7 @@
             {{end}}
             <div class="button-row">
               <button class="button button--quiet" type="submit" name="action" value="save" {{if not $.Editable}}disabled{{end}}>Save edit</button>
-              <button class="button button--quiet" type="submit" name="action" value="regenerate" {{if not $.Editable}}disabled{{end}}>Regenerate</button>
+              <button class="button button--quiet" type="submit" name="action" value="regenerate" data-confirm="Regeneration replaces this saved section and may return an outline if the provider fails. Continue?" {{if not $.Editable}}disabled{{end}}>Regenerate</button>
             </div>
           </form>
         </div>

@@ -34,6 +34,7 @@ type ValidationIssue struct {
 }
 
 type GenerationReport struct {
+	Baseline   int    `json:"baseline"`
 	Outcome    string `json:"outcome"`
 	Available  int    `json:"available"`
 	Model      int    `json:"model"`
@@ -45,6 +46,9 @@ func ContentReport(sections []Section, total int) GenerationReport {
 	r := GenerationReport{Outcome: "outline", Available: len(sections)}
 	substantive := 0
 	for _, s := range sections {
+		if s.Origin == "baseline" {
+			r.Baseline++
+		}
 		if s.Origin == "model" {
 			r.Model++
 		}

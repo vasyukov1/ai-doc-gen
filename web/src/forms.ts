@@ -1,3 +1,5 @@
+import { initProfileGuidance } from "./profile";
+
 function reveal(element: HTMLElement): void {
   let parent = element.parentElement;
   while (parent) {
@@ -11,16 +13,51 @@ function initFileInputs(): void {
     const zone = input.closest<HTMLElement>(".dropzone");
     const title = zone?.querySelector<HTMLElement>("[data-file-name]");
     const empty = title?.textContent ?? "";
+    const clear = document.createElement("button");
+    clear.type = "button"; clear.className = "button button--quiet"; clear.textContent = "Remove file / Убрать файл"; clear.hidden = !input.files?.length;
+    zone?.after(clear);
+    clear.addEventListener("click", () => { input.value = ""; input.dispatchEvent(new Event("change", {bubbles:true})); input.focus(); });
+    zone?.addEventListener("dragover", event => { event.preventDefault(); });
+    zone?.addEventListener("drop", event => {
+      event.preventDefault();
+      if (event.dataTransfer?.files.length === 1) { input.files = event.dataTransfer.files; input.dispatchEvent(new Event("change", {bubbles:true})); }
+    });
     input.addEventListener("change", () => {
+      clear.hidden = !input.files?.length;
       zone?.classList.toggle("is-set", Boolean(input.files?.length));
       if (title) title.textContent = input.files?.[0]?.name ?? empty;
     });
   }
 }
 
+const dirtyForms = new Set<HTMLFormElement>();
+let pageEditRevision = 0;
+
+function fileProblem(input: HTMLInputElement | null, extensions: string[], maxBytes: number): string {
+  const file = input?.files?.[0];
+  if (!file) return "";
+  if (!extensions.some(ext => file.name.toLowerCase().endsWith(ext))) return `Choose ${extensions.join(" or ")} / Выберите ${extensions.join(" или ")}.`;
+  if (!file.size || file.size > maxBytes) return `File must contain 1–${maxBytes.toLocaleString()} bytes. / Проверьте размер файла.`;
+  return "";
+}
+
 function initBusyForms(): void {
+  window.addEventListener("beforeunload", event => {
+    if (dirtyForms.size) { event.preventDefault(); event.returnValue = ""; }
+  });
   for (const form of document.querySelectorAll<HTMLFormElement>("form[data-busy]")) {
     const create = form.hasAttribute("data-create-document");
+    const editable = form.hasAttribute("data-edit-form");
+    let editRevision = 0;
+    const markDirty = () => {
+      if (!editable) return;
+      editRevision++;
+      pageEditRevision++;
+      dirtyForms.add(form);
+      form.dataset.unsaved = "true";
+      const status = form.querySelector<HTMLElement>("[data-save-status]");
+      if (status) status.textContent = "Unsaved changes / Несохранённые изменения";
+    };
     const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
     const box = document.createElement("div");
     box.className = "form-feedback";
@@ -34,9 +71,16 @@ function initBusyForms(): void {
     const update = () => {
       const spec = field("specification");
       const file = field("specification_file") as HTMLInputElement | null;
-      const structured = ["purpose", "functions", "constraints", "acceptance"].every(n => field("spec." + n)?.value.trim());
+      const structuredValues = ["purpose", "functions", "constraints", "acceptance"].map(n => field("spec." + n)?.value.trim() ?? "");
+      const structured = structuredValues.every(Boolean);
+      const hasStructured = structuredValues.some(Boolean);
+      const specSources = Number(Boolean(spec?.value.trim())) + Number(Boolean(file?.files?.length)) + Number(hasStructured);
+      const specError = fileProblem(file, [".txt", ".md"], 64000)
+        || (specSources > 1 ? "Use one specification source: text, file OR structured fields. / Оставьте один источник ТЗ." : "")
+        || (hasStructured && !structured ? "Complete all four structured fields. / Заполните все четыре поля ТЗ." : "")
+        || (spec && new TextEncoder().encode(spec.value).length > 64000 ? "Specification exceeds 64,000 UTF-8 bytes. / Сократите текст ТЗ." : "");
       if (spec) {
-        spec.setCustomValidity(academic() && !spec.value.trim() && !file?.files?.length && !structured ? "Добавьте техническое задание: текст или файл .txt/.md. / Provide specification text or a file." : "");
+        spec.setCustomValidity(specError || (academic() && !spec.value.trim() && !file?.files?.length && !structured ? "Добавьте техническое задание: текст или файл .txt/.md. / Provide specification text or a file." : ""));
         spec.setAttribute("aria-required", String(academic()));
       }
       const badge = form.querySelector<HTMLElement>("[data-spec-required]");
@@ -46,14 +90,16 @@ function initBusyForms(): void {
         const archive = field("archive") as HTMLInputElement;
         const hasRepo = Boolean(repo?.value.trim());
         const hasArchive = Boolean(archive.files?.length);
+        archive.setCustomValidity(fileProblem(archive, [".zip"], 100 * 1024 * 1024));
         repo?.setCustomValidity(hasRepo === hasArchive ? "Выберите один источник: GitHub или ZIP. / Choose either GitHub or ZIP." : "");
       }
     };
-    form.addEventListener("input", () => { approved = false; update(); });
-    form.addEventListener("change", () => { approved = false; update(); });
+    form.addEventListener("input", () => { approved = false; markDirty(); update(); });
+    form.addEventListener("change", () => { approved = false; markDirty(); update(); });
     form.addEventListener("invalid", event => {
       const target = event.target as HTMLElement;
       reveal(target);
+      box.classList.remove("form-feedback--success"); box.setAttribute("role", "alert");
       box.textContent = (target as HTMLInputElement).validationMessage;
       box.hidden = false;
     }, true);
@@ -68,37 +114,81 @@ function initBusyForms(): void {
         if (missing.length) {
           box.replaceChildren();
           const note = document.createElement("p");
-          note.textContent = "Не заполнены / Missing: " + missing.join(", ") + ". В PDF будут красные TODO. / The PDF will contain red TODOs.";
+          note.textContent = "Не заполнены / Missing: " + missing.map(n => { const input = field("metadata." + n); return input?.labels?.[0]?.textContent?.trim() || n; }).join(", ") + ". В PDF будут красные TODO. / The PDF will contain red TODOs.";
           const proceed = document.createElement("button");
           proceed.type = "button"; proceed.className = "button"; proceed.textContent = "Продолжить с TODO / Continue with TODOs";
           proceed.onclick = () => { approved = true; form.requestSubmit(); };
-          box.append(note, proceed); box.hidden = false; box.focus(); return;
+          const fill = document.createElement("button");
+          fill.type = "button"; fill.className = "button button--quiet"; fill.textContent = "Fill missing fields / Заполнить поля";
+          fill.onclick = () => { const target = field("metadata." + missing[0]); if (target) { reveal(target); target.focus(); } };
+          box.append(note, fill, proceed); box.hidden = false; box.focus(); return;
         }
       }
+      const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
+      const inlineSave = editable && submitter?.value !== "regenerate";
+      if (!inlineSave && dirtyForms.size && !window.confirm("Leaving will discard unsaved edits. Continue? / Несохранённые правки будут потеряны. Продолжить?")) return;
       sending = true;
+      box.classList.remove("form-feedback--success"); box.setAttribute("role", "alert");
       box.hidden = true;
       form.setAttribute("aria-busy", "true");
       const buttons = Array.from(form.querySelectorAll<HTMLButtonElement>("button[type='submit']"));
+      const sentRevision = editRevision;
+      const navigationRevision = pageEditRevision;
       const data = new FormData(form);
-      const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
       if (submitter?.name) data.set(submitter.name, submitter.value);
-      buttons.forEach(button => button.disabled = true);
+      const buttonStates = buttons.map(button => ({button, disabled: button.disabled, text: button.textContent}));
+      buttons.forEach(button => { button.disabled = true; if (button.dataset.busyLabel) button.textContent = button.dataset.busyLabel; });
+      const navigate = (url: string) => {
+        if (dirtyForms.size && pageEditRevision !== navigationRevision) {
+          box.textContent = "Action completed, but newer edits are unsaved. Save or copy them before leaving. / Действие выполнено, но новые правки не сохранены.";
+          const link = document.createElement("a"); link.href = url; link.textContent = " Open updated status / Открыть обновлённую страницу";
+          box.append(link); box.hidden = false;
+          return;
+        }
+        dirtyForms.clear(); window.location.assign(url);
+      };
+      const controller = new AbortController();
+      const timeout = inlineSave ? window.setTimeout(() => controller.abort(), 30000) : undefined;
       try {
-        const response = await fetch(form.action, { method: "POST", body: form.enctype === "multipart/form-data" ? data : new URLSearchParams(Array.from(data.entries(), ([key, value]) => [key, String(value)])), headers: { Accept: "application/json" }, credentials: "same-origin" });
-        if (response.ok && response.redirected) { window.location.assign(response.url); return; }
+        const response = await fetch(form.getAttribute("action") || window.location.href, { method: "POST", body: form.enctype === "multipart/form-data" ? data : new URLSearchParams(Array.from(data.entries(), ([key, value]) => [key, String(value)])), headers: { Accept: "application/json" }, credentials: "same-origin", signal: controller.signal });
+        if (response.ok && response.redirected) { navigate(response.url); return; }
         const json = response.headers.get("Content-Type")?.includes("application/json");
         const payload = json ? await response.json() : null;
-        if (response.ok && payload?.url) { window.location.assign(payload.url); return; }
+        if (response.ok && payload?.saved && inlineSave) {
+          if (editRevision === sentRevision) { dirtyForms.delete(form); delete form.dataset.unsaved; }
+          const status = form.querySelector<HTMLElement>("[data-save-status]");
+          if (status) status.textContent = editRevision === sentRevision ? "Saved. Review and rebuild PDF. / Сохранено. Пересоберите PDF." : "Earlier version saved; newer edits are unsaved. / Новые изменения ещё не сохранены.";
+          box.classList.add("form-feedback--success"); box.setAttribute("role", "status");
+          const card = form.closest("article");
+          const origin = card?.querySelector<HTMLElement>("[data-section-origin]");
+          if (origin) origin.textContent = "user";
+          if (data.get("resolve_missing") === "yes") card?.querySelectorAll<HTMLElement>(".todo").forEach(node => node.hidden = true);
+          const pageStatus = document.querySelector<HTMLElement>("[data-document-edit-status]");
+          if (pageStatus) { pageStatus.textContent = "Review and rebuild PDF"; pageStatus.className = "pill pill--warn"; }
+          const summary = document.querySelector<HTMLElement>("[data-section-summary]");
+          if (summary) summary.textContent = "Saved sections have changed. Review all sections and rebuild the PDF on the input page.";
+          document.querySelectorAll<HTMLElement>("[data-outline-notice], [data-section-message]").forEach(node => node.hidden = true);
+          box.textContent = editRevision === sentRevision
+            ? "Saved. Other unsaved edits remain on this page. / Сохранено; остальные правки остались на странице."
+            : "Newer edits are NOT saved. Only the submitted version was saved. / Новые правки НЕ сохранены. Сохранена только отправленная версия.";
+          if (editRevision !== sentRevision) box.classList.remove("form-feedback--success");
+          box.hidden = false;
+          return;
+        }
+        if (response.ok && payload?.url) { navigate(payload.url); return; }
         const message = payload?.error ?? (json ? "" : (await response.text()).slice(0, 1000));
         box.textContent = message || "Не удалось сохранить. Проверьте поля и повторите. / Could not save; check the fields and retry.";
         box.hidden = false; box.focus();
       } catch {
-        box.textContent = "Ошибка сети. Поля и файлы сохранены в форме; повторите отправку. / Network error; your form is preserved.";
+        box.textContent = controller.signal.aborted
+          ? "Save response timed out. Your text is kept here; check the saved version before retrying. / Ответ не получен. Текст остался в форме; проверьте сохранённую версию перед повтором."
+          : "Ошибка сети. Поля и файлы сохранены в форме; повторите отправку. / Network error; your form is preserved.";
         box.hidden = false; box.focus();
       } finally {
+        window.clearTimeout(timeout);
         sending = false;
         form.removeAttribute("aria-busy");
-        buttons.forEach(button => button.disabled = false);
+        buttonStates.forEach(({button, disabled, text}) => { button.disabled = disabled; button.textContent = text; });
       }
     });
   }
@@ -113,6 +203,7 @@ function initConfirmations(): void {
 }
 
 export function initForms(): void {
+  initProfileGuidance();
   initFileInputs();
   initBusyForms();
   initConfirmations();

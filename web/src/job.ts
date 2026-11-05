@@ -6,6 +6,8 @@ type JobSnapshot = {
   stage: string;
   status: string;
   total_sections: number;
+  model_sections: number;
+  recovery_pending: boolean;
 };
 
 const ACTIVE = new Set(["queued", "running", "retry_wait"]);
@@ -26,7 +28,7 @@ function statusLabel(status: string): string {
     case "ready_for_review":
       return "Ready for review";
     case "completed":
-      return "Completed";
+      return "PDF compiled";
     case "failed":
       return "Failed";
     case "cancelled":
@@ -90,12 +92,19 @@ export function initJobPolling(): void {
   }
 
   let timer = 0;
+  let pending = false;
+  const notice = document.createElement("div");
+  notice.className = "callout callout--warn"; notice.hidden = true; notice.setAttribute("role", "status");
+  const message = document.createElement("p");
+  const retry = document.createElement("button");
+  retry.type = "button"; retry.className = "button button--quiet"; retry.textContent = "Refresh status / Обновить статус";
+  notice.append(message, retry); root.prepend(notice);
 
   const apply = (job: JobSnapshot): void => {
     const pill = document.querySelector<HTMLElement>('[data-field="status"]');
     if (pill) {
-      const modifier = statusClass(job.status);
-      pill.textContent = statusLabel(job.status);
+      const modifier = job.recovery_pending ? "warn" : statusClass(job.status);
+      pill.textContent = job.recovery_pending ? "Recovering" : statusLabel(job.status);
       pill.className = modifier ? `pill pill--${modifier}` : "pill";
     }
 
@@ -105,13 +114,14 @@ export function initJobPolling(): void {
     const total = job.total_sections;
     const percent = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
 
-    setText('[data-field="count"]', `${done} of ${total} sections`);
-    setText('[data-field="percent"]', `${percent}%`);
-    setText('[data-field="assembly-note"]', `${done} of ${total} sections`);
+    setText('[data-field="count"]', `${done} of ${total} sections available`);
+    setText('[data-field="percent"]', total > 0 ? `${percent}%` : "Planning sections");
+    setText('[data-field="model-count"]', `${job.model_sections ?? 0} improved by a model.`);
+    setText('[data-field="assembly-note"]', `${done} of ${total} sections available`);
 
     const bar = document.querySelector<HTMLElement>('[data-field="progress"]');
     if (bar) {
-      bar.style.setProperty("--progress", `${percent}%`);
+      bar.querySelector<HTMLElement>(".progress__fill")?.style.setProperty("--progress", `${percent}%`);
       bar.setAttribute("aria-valuenow", String(percent));
     }
 
@@ -126,37 +136,38 @@ export function initJobPolling(): void {
   };
 
   const tick = async (): Promise<void> => {
-    if (!document.hidden) {
-      try {
-        const response = await fetch(`/api/jobs/${encodeURIComponent(id)}`, {
-          credentials: "same-origin",
-          headers: { Accept: "application/json" },
-        });
-        if (!response.ok) {
-          throw new Error("job unavailable");
-        }
-
-        const job = (await response.json()) as JobSnapshot;
-        if (!ACTIVE.has(job.status)) {
-          window.location.reload();
-          return;
-        }
-
-        apply(job);
-      } catch {
-        // Keep the last rendered state and try again on the next tick.
+    window.clearTimeout(timer);
+    if (pending || document.hidden) return;
+    pending = true; retry.disabled = true;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
+    let reschedule = true;
+    try {
+      const response = await fetch(`/api/jobs/${encodeURIComponent(id)}`, {
+        credentials: "same-origin", headers: { Accept: "application/json" }, signal: controller.signal,
+      });
+      if (!response.ok) {
+        reschedule = response.status !== 404;
+        throw new Error(response.status === 404 ? "This document is no longer accessible. It may have expired or this browser session has changed." : "Status update failed. The last known state is shown; processing may still be running.");
       }
+      const job = (await response.json()) as JobSnapshot;
+      notice.hidden = true;
+      if (!ACTIVE.has(job.status)) { reschedule = false; window.location.reload(); return; }
+      apply(job);
+    } catch (error) {
+      message.textContent = error instanceof Error && error.name !== "AbortError" && error.message !== "Failed to fetch"
+        ? error.message : "Connection interrupted. The last known state is shown; processing may still be running. / Связь прервана; показан последний известный статус.";
+      notice.hidden = false;
+    } finally {
+      window.clearTimeout(timeout); pending = false; retry.disabled = false;
+      if (reschedule) timer = window.setTimeout(() => void tick(), 3000);
     }
-
-    timer = window.setTimeout(() => void tick(), 3000);
   };
 
+  retry.addEventListener("click", () => void tick());
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      window.clearTimeout(timer);
-      void tick();
-    }
+    if (!document.hidden) void tick();
+    else window.clearTimeout(timer);
   });
-
   timer = window.setTimeout(() => void tick(), 3000);
 }

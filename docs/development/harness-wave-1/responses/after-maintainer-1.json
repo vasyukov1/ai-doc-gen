@@ -1,0 +1,54 @@
+{
+  "persona": "maintainer",
+  "input_kind": "Independent fictional-persona rewalk (U6, U8, U12); updated code, synthetic laptop screenshots and supplied manual logs. Predicted user effects are hypotheses, not observed user data.",
+  "checks": [
+    {
+      "step": "Edit two sections before saving either, then save the first.",
+      "result": "PASS in supplied synthetic evidence: first section saves inline and the other section remains dirty.",
+      "evidence": "after-edits-laptop.png shows the saved first text and unsaved second text; edits.log reports C2 other edit preserved ... true. forms.ts removes only the saved form from dirtyForms and protects changes made during an in-flight save using editRevision."
+    },
+    {
+      "step": "Follow a link with unsaved architecture text.",
+      "result": "PASS in supplied manual evidence for browser navigation warning; dismissing the warning preserves the page.",
+      "evidence": "edits.log reports C2 navigation guard: beforeunload; forms.ts installs beforeunload when dirtyForms is nonempty. No claim of crash recovery or persistent local drafts."
+    },
+    {
+      "step": "Retry a failed save without retyping architecture text.",
+      "result": "PARTIAL: supplied screenshot/log show preservation after a synthetic server conflict; actual network interruption and successful save retry were not demonstrated by these artifacts. Code supports them.",
+      "evidence": "after-edits-laptop.png shows Synthetic conflict beside the retained second text; edits.log reports C2 error retains text. forms.ts catch retains fields and finally restores submit buttons."
+    },
+    {
+      "step": "Invariant: saving prose preserves generated tables and saved edits.",
+      "result": "PASS in supplied storage smoke evidence and code inspection.",
+      "evidence": "edits.log lists stored Order states table after save. ChangeSection in internal/storage/sections.go updates section.Body and retains section.Tables; SaveSectionTx avoids replacing edited sections with model content."
+    },
+    {
+      "step": "Invariant: no-key outline remains honest and private processing is not described as local.",
+      "result": "PASS in inspected screenshots and template.",
+      "evidence": "after-status-laptop.png explicitly labels outline placeholders, zero model-improved sections and section availability rather than quality. after-edits-laptop.png footer says Server-stored documents and browser-session private access."
+    }
+  ],
+  "remaining": [
+    {
+      "screen": "Sections: successful inline save",
+      "problem": "Observed: the successful Saved message uses the same red-bordered alert styling as the synthetic conflict. Hypothesis: Leon could interpret a successful save as a failure and retry unnecessarily.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use a distinct success presentation and a polite status region for successful saves; reserve alert/error styling for failures."
+    },
+    {
+      "screen": "Sections: after saving a completed document",
+      "problem": "Observed: after-edits-laptop.png still shows PDF compiled and baseline origin while the first section says Saved. Review and rebuild PDF. Code changes the job to ready_for_review and section origin to user but inline save does not refresh those labels. Hypothesis: Leon may assume the existing PDF already contains his correction.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "After inline save, update the affected origin/edited marker and document status or show a prominent stale-PDF notice with a direct review-and-rebuild link."
+    },
+    {
+      "screen": "Sections: preserved tables",
+      "problem": "Observed: the editor says generated tables are preserved but does not display their contents. Hypothesis: Leon cannot verify that architecture prose remains consistent with the retained tables without leaving the editor.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Provide a read-only table preview alongside the prose editor or a clearly labeled preview link that respects unsaved changes."
+    }
+  ]
+}

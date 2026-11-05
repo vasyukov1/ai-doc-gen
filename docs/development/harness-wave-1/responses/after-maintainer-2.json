@@ -1,0 +1,52 @@
+{
+  "persona": "maintainer",
+  "input_kind": "Independent fictional maintainer rewalk 2 on synthetic screenshots, supplied manual logs and current source; 2026-11-05. Observations below describe fixtures/code, not real user measurements. U6/U8/U12 and A6 apply.",
+  "checks": [
+    {
+      "step": "Edit two sections before saving either, then save the first.",
+      "result": "Addressed in the supplied fixture: saving stays on the page and the other section retains unsaved text. Updated page status asks for review and rebuilding; success has a distinct green treatment.",
+      "evidence": "tmp/harness-wave-1/after-edits-laptop.png; edits.log reports other edit preserved; web/src/forms.ts inlineSave branch clears only the saved form's dirty state."
+    },
+    {
+      "step": "Follow a link with unsaved architecture text.",
+      "result": "Addressed for the observed browser navigation case. A beforeunload guard is recorded; no claim is made about every browser shutdown scenario.",
+      "evidence": "tmp/harness-wave-1/edits.log: navigation guard beforeunload; web/src/forms.ts registers beforeunload when dirtyForms is nonempty."
+    },
+    {
+      "step": "Retry after a network failure.",
+      "result": "Addressed for a rejected network request: retained text and a successful retry are recorded. The implementation restores submit buttons in finally.",
+      "evidence": "tmp/harness-wave-1/recovery.log: network failure preserved, retry succeeded; web/src/forms.ts catch/finally."
+    },
+    {
+      "step": "Keep typing while an earlier save is in flight.",
+      "result": "Addressed for preservation: revision comparison leaves newer text dirty and explicitly labels the earlier saved version. Some feedback emphasis remains ambiguous (hypothesis below).",
+      "evidence": "tmp/harness-wave-1/after-recovery-laptop.png shows Earlier version saved; newer edits are unsaved; recovery.log records in-flight revision true; web/src/forms.ts compares editRevision with sentRevision."
+    },
+    {
+      "step": "Invariant: retain saved prose and generated tables.",
+      "result": "Preserved in the observed fixture and storage update path. The recovery screenshot exposes the read-only Order states table, and saving changes Body without replacing Tables.",
+      "evidence": "tmp/harness-wave-1/after-recovery-laptop.png; edits.log stored tables; internal/storage/sections.go ChangeSection updates the existing section object."
+    },
+    {
+      "step": "Invariant: no-key outline remains honest and private processing is not described as local.",
+      "result": "Pass for inspected evidence: the status screenshot prominently identifies outline placeholders and separates compilation from quality; the template explains server processing and provider sharing. The section footer states server-stored documents.",
+      "evidence": "tmp/harness-wave-1/after-status-laptop.png; web/templates/index.html source/processing notices; after-recovery-laptop.png footer."
+    }
+  ],
+  "remaining": [
+    {
+      "screen": "Sections — save feedback",
+      "problem": "Simulated hypothesis: after typing during a save, the large green banner still says Saved while the smaller line says newer edits are unsaved. A maintainer scanning the dominant banner could overestimate what persisted. Observed in after-recovery-laptop.png and forms.ts; medium confidence, disproved if a user walkthrough reliably identifies the unsaved newer revision.",
+      "severity": 1,
+      "heuristic": "Visibility of system status",
+      "suggestion": "When editRevision differs from sentRevision, make the main banner say Earlier version saved; save newer edits and use warning emphasis."
+    },
+    {
+      "screen": "Sections — pending save",
+      "problem": "Simulated hypothesis: a request that remains pending without rejecting leaves this form's submit controls disabled indefinitely. forms.ts has no request timeout or cancellation, unlike job.ts polling. This was not exercised by recovery.log, which covers a rejected request; high confidence in the code path, user impact unmeasured.",
+      "severity": 2,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Add bounded waiting and an actionable uncertain-save message retaining the text; explain that the server may have saved the request before allowing a safe retry."
+    }
+  ]
+}

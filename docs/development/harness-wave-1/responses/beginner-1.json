@@ -1,0 +1,29 @@
+[
+  {
+    "screen": "baseline/index.html",
+    "action": "I would select Русский and look for the coursework technical specification option.",
+    "observed": "Implementation review only; no UI interactions performed. The page declares lang=en, document types and field labels are English, and the Русский option is only in the submitted language selector. forms.ts contains no interface-language switching behavior.",
+    "problem": "With limited English I can choose Russian output but still struggle to identify my document type and required inputs before class.",
+    "severity": 3,
+    "heuristic": "Match between system and the real world",
+    "suggestion": "Provide Russian interface labels, including Техническое задание for the coursework document type, when Russian is selected."
+  },
+  {
+    "screen": "baseline/index.html and baseline/forms.ts",
+    "action": "I would paste my GitHub link, then select a ZIP because I think it helps include all my files.",
+    "observed": "Implementation review only. Both source inputs remain enabled. forms.ts rejects equal source-presence values with Choose either GitHub or ZIP, but the template supplies no clear-file control or explicit source selector.",
+    "problem": "I discover the mutually exclusive choice only through validation and have no obvious way to remove the ZIP while keeping my GitHub link on a phone.",
+    "severity": 2,
+    "heuristic": "Error prevention",
+    "suggestion": "Use a GitHub/ZIP source selector that shows only the active source and excludes the inactive input from submission."
+  },
+  {
+    "screen": "baseline/index.html and baseline/job.html",
+    "action": "I would create the document without model keys and download it when it says Document ready.",
+    "observed": "Implementation review only. The no-key source-linked draft explanation is inside collapsed Model keys. The completed job shows Document ready and Ready; the explanation that completion means PDF compilation rather than verified content is inside collapsed Generation details. Outline and incomplete outcomes do have visible warnings and download labels say Draft PDF or Outline PDF.",
+    "problem": "I can still mistake a successful no-key baseline for coursework prose ready to hand in, particularly when I miss the English draft terminology and collapsed explanation.",
+    "severity": 3,
+    "heuristic": "Visibility of system status",
+    "suggestion": "Show a prominent Russian/English no-model draft notice beside the download, stating that sections need review and completion before coursework submission."
+  }
+]

@@ -56,6 +56,10 @@ func (h *Handler) changeSection(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Section is unavailable or generation is still running.", 409)
 		return
 	}
+	if action == "save" && strings.Contains(r.Header.Get("Accept"), "application/json") {
+		writeJSON(w, http.StatusOK, map[string]any{"saved": true, "url": "/jobs/" + job.ID + "/sections"})
+		return
+	}
 	http.Redirect(w, r, "/jobs/"+job.ID+"/sections", http.StatusSeeOther)
 }
 

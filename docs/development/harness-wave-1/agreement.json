@@ -1,0 +1,90 @@
+{
+  "kind": "simulated review agreement, not real-user frequency",
+  "personas": {
+    "beginner": {
+      "shared_pairs": [
+        [
+          "creation",
+          "Match between system and the real world"
+        ],
+        [
+          "creation",
+          "Visibility of system status"
+        ]
+      ],
+      "union_pairs": [
+        [
+          "creation",
+          "Error prevention"
+        ],
+        [
+          "creation",
+          "Help users recognize, diagnose, and recover from errors"
+        ],
+        [
+          "creation",
+          "Match between system and the real world"
+        ],
+        [
+          "creation",
+          "Visibility of system status"
+        ]
+      ],
+      "jaccard": 0.5
+    },
+    "maintainer": {
+      "shared_pairs": [
+        [
+          "sections",
+          "Error prevention"
+        ],
+        [
+          "sections",
+          "User control and freedom"
+        ]
+      ],
+      "union_pairs": [
+        [
+          "sections",
+          "Error prevention"
+        ],
+        [
+          "sections",
+          "User control and freedom"
+        ]
+      ],
+      "jaccard": 1.0
+    },
+    "reviewer": {
+      "shared_pairs": [
+        [
+          "creation",
+          "Match between system and the real world"
+        ],
+        [
+          "status",
+          "Help users recognize, diagnose, and recover from errors"
+        ],
+        [
+          "status",
+          "Visibility of system status"
+        ]
+      ],
+      "union_pairs": [
+        [
+          "creation",
+          "Match between system and the real world"
+        ],
+        [
+          "status",
+          "Help users recognize, diagnose, and recover from errors"
+        ],
+        [
+          "status",
+          "Visibility of system status"
+        ]
+      ],
+      "jaccard": 1.0
+    }
+  }
+}

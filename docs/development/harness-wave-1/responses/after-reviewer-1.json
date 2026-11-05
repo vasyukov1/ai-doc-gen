@@ -1,0 +1,32 @@
+{
+  "persona": "reviewer",
+  "input_kind": "Independent simulated rewalk (U6, U8, U12); synthetic fixture screenshots, updated source, and manual logs. Predicted effects are hypotheses; no tablet screenshot or actual PDF content was reviewed.",
+  "checks": [
+    {
+      "step": "Treat completed / 100 percent as verification",
+      "result": "Addressed in observed UI. Predicted reduced ambiguity, not a measured user outcome.",
+      "evidence": "after-status-phone.png and after-status-laptop.png label PDF compiled, explain availability is not a content-quality score, and state compilation does not verify requirements, behavior or tests. Outline warning precedes downloads."
+    },
+    {
+      "step": "Assume browser-session wording means local-only processing",
+      "result": "Addressed; private server processing is explicitly disclosed (invariant).",
+      "evidence": "after-phone.png shows files uploaded to and processed on this server, provider transfer with a model key, and cookie-related access loss. Footer in status and index screenshots says Server-stored documents."
+    },
+    {
+      "step": "Follow unavailable retry advice",
+      "result": "Addressed for shown outline state; provider requirement is explicit. Actual provider continuation was not exercised.",
+      "evidence": "job.html and both status screenshots direct to review sections and condition continuing unfinished sections on a working connected provider; no unavailable retry button appears in the completed fixture."
+    },
+    {
+      "step": "Check no-key outline stays honest",
+      "result": "Pass on fixture evidence (invariant).",
+      "evidence": "walk.log reports outcome outline, baseline 4, model 0, unresolved 4. after-status-phone.png shows outline placeholders only and Outline PDF."
+    },
+    {
+      "step": "Assess reliability of status during connection failure",
+      "result": "Addressed on synthetic failure/recovery evidence.",
+      "evidence": "after-poll-phone.png says last known state and processing may still be running, with Refresh status action. poll.log records stale notice then recovery. job.ts updates model count and distinguishes inaccessible document from transient failure."
+    }
+  ],
+  "remaining": []
+}

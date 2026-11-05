@@ -1,0 +1,13 @@
+C5 guide: arc42: архитектура, компоненты, сценарии, решения и риски. Добавьте контекст проекта для содержательного документа.
+phone width [ 390, 390 ]
+C1 PDF blocked: Choose .txt or .md / Выберите .txt или .md.
+C1 two spec sources: Use one specification source: text, file OR structured fields. / Оставьте один источник ТЗ.
+C3 no-key job: completed {
+  baseline: 4,
+  outcome: 'outline',
+  available: 4,
+  model: 0,
+  unresolved: 4
+}
+C3 quality PDF compiled — review the content
+browser errors []

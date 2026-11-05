@@ -67,10 +67,10 @@
       </div>
     </form>
 
-    {{if and .Job.FreeDraft .Editable}}
+    {{if and .Job.FreeDraft .Editable (gt .Job.Content.Baseline 0)}}
     <section class="card">
       <div class="card__body stack">
-        <h2>Unfinished sections</h2>
+        <h2 id="unfinished">Unfinished sections</h2>
         <p class="form-note">Run another pass over the sections that are still outline placeholders. Saved prose is kept.</p>
         <form method="post" action="/jobs/{{.Job.ID}}/generation/continue" data-busy data-profile="{{.Job.ProfileID}}">
           <button class="button button--quiet" type="submit" data-busy-label="Starting…">Continue unfinished sections</button>

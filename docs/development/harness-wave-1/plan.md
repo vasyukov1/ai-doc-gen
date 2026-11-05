@@ -27,11 +27,11 @@ D10 defaults: prioritize observed journey failures, not a visual rewrite; use ex
 
 ## Execution
 
-- [ ] Baseline: fresh persona critiques twice each; capture current phone/laptop screens; triage at most five accepted changes.
-- [ ] T1 + T5: creation guidance and validation.
-- [ ] T2: saved tables and recoverable edit flow.
-- [ ] T3 + T4: honest result and connection feedback.
-- [ ] Walk again, inspect screenshots, build Go and frontend; review own diff and preserve unrelated changes.
+- [x] Baseline: fresh persona critiques twice each; capture current phone/laptop screens; triage at most five accepted changes.
+- [x] T1 + T5: creation guidance and validation.
+- [x] T2: saved tables and recoverable edit flow.
+- [x] T3 + T4: honest result and connection feedback.
+- [x] Walk again, inspect screenshots, build Go and frontend; review own diff and preserve unrelated changes.
 
 ## Coordination
 
@@ -39,4 +39,6 @@ Claim: primary agent owns forms.ts, job.ts, section save, index/section/job temp
 
 ## Resume
 
-Status: analysis. Next command: `git diff --stat`.
+Status: implementation and manual checks complete; verification evidence is in README.md and checks/. Full localization and regeneration history are deferred. Next command: `go build ./...`.
+
+Verification adjustment: isolated native services exercised the wave before local Compose refresh. Existing PDF-viewer work remains unstaged; shared-file deltas and generated assets are staged separately against HEAD. Provided rule documents are imported unchanged as task references, not installed over the root product instructions.

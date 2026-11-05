@@ -1,0 +1,40 @@
+{
+  "persona": "reviewer",
+  "input_kind": "Independent simulated rewalk (U6, U8, U12); synthetic phone/laptop screenshots, current templates and polling code, saved manual logs. Tablet layout and downloaded PDF content were not directly inspected; predicted user effects are hypotheses.",
+  "checks": [
+    {
+      "step": "Mistake: interpret completed/100 percent as verified content.",
+      "result": "Addressed in the observed status UI. Hypothesis: Noor can distinguish compilation and availability from verification.",
+      "evidence": "after-status-phone.png and after-status-laptop.png show PDF compiled, availability rather than a quality score, and Successful compilation does not verify requirements, code behavior or test results. job.html places these statements beside progress and downloads."
+    },
+    {
+      "step": "Mistake: assume browser-session privacy means local-only processing.",
+      "result": "Addressed explicitly, with a remaining prominence concern.",
+      "evidence": "after-phone.png shows files uploaded to and processed on this server, provider disclosure, cookie-access consequences, and Server-stored documents in the footer. index.html contains the same disclosure."
+    },
+    {
+      "step": "Mistake: follow unavailable retry advice after an outline result.",
+      "result": "The observed copy now makes provider availability a condition and supplies manual review as an immediate path. Destination execution was not tested in this rewalk.",
+      "evidence": "after-status-phone.png shows Review sections and TODOs plus With a working connected provider before Continue unfinished sections. job.html conditionally displays the continuation link when baseline sections exist."
+    },
+    {
+      "step": "Observe a failed status refresh and recover.",
+      "result": "Addressed in the supplied fixture; no implication that processing stopped.",
+      "evidence": "after-poll-phone.png shows last known state and Refresh status. job.ts exposes a retry button, retains state, and resumes polling. poll.log records stale notice visible followed by recovery to 4 of 4 available and 1 model-improved."
+    },
+    {
+      "step": "Invariant: no-key outline remains honest; saved edits/tables remain; private processing is not described as local.",
+      "result": "Supported by screenshots, code and supplied manual evidence; not an independent persistence or PDF-content test.",
+      "evidence": "walk.log reports outcome outline, baseline 4, model 0, unresolved 4; status screenshot labels Outline PDF. sections.html displays preserved tables and storage/sections.go changes section.Body without clearing tables. edits.log records stored tables, other unsaved edit preservation, navigation guard and retained text after error. after-phone.png explicitly states server processing."
+    }
+  ],
+  "remaining": [
+    {
+      "screen": "New document",
+      "problem": "Simulated hypothesis: when skimming the privacy claim before choosing source files, Noor encounters Private access tied to this browser near the top, but the explicit server/provider disclosure appears below Create document. The disclosure is accurate yet easy to miss before acting.",
+      "severity": 1,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Place a short server-processing disclosure beside the source input or the top privacy claim, keeping the existing detailed notice."
+    }
+  ]
+}

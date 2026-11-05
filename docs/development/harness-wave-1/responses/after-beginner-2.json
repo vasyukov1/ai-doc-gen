@@ -1,0 +1,77 @@
+{
+  "persona": "beginner",
+  "input_kind": "Independent simulated rewalk 2 of fictional Mira (U6, U8, U12); current source, synthetic screenshots and saved manual logs; no real-user observations or provider calls.",
+  "checks": [
+    {
+      "step": "Select Russian and choose coursework technical specification on phone.",
+      "result": "Partly addressed: Russian profile guidance explains the required source requirements, and the academic specification badge becomes bilingual. The supplied phone screenshot demonstrates Russian guidance for arc42, so the coursework variant is supported by code rather than that screenshot.",
+      "evidence": [
+        "web/src/profile.ts: tz Russian guidance and language change listener",
+        "web/src/forms.ts: academic specification validation and badge",
+        "tmp/harness-wave-1/after-phone.png",
+        "tmp/harness-wave-1/walk.log: 390px page width equals viewport width"
+      ]
+    },
+    {
+      "step": "Mistakenly supply both GitHub and ZIP.",
+      "result": "Addressed in inspected code: submission gets a Russian/English choose-one-source error and the selected archive has a remove control. This exact mistake was not demonstrated in the supplied screenshots or logs.",
+      "evidence": [
+        "web/src/forms.ts: hasRepo === hasArchive custom validity",
+        "web/src/forms.ts: Remove file / Убрать файл control"
+      ]
+    },
+    {
+      "step": "Attach a PDF as the specification.",
+      "result": "Addressed: accepted formats are explained, PDF is rejected before sending, and invalid controls inside collapsed groups are revealed. A synthetic manual log confirms the PDF rejection.",
+      "evidence": [
+        "web/templates/index.html: UTF-8 .txt or .md explanation",
+        "web/src/forms.ts: fileProblem and reveal on invalid",
+        "tmp/harness-wave-1/walk.log: C1 PDF blocked"
+      ]
+    },
+    {
+      "step": "Submit with missing title-page details.",
+      "result": "Addressed in current code: warning identifies missing labels and red TODO consequence; Fill missing fields opens and focuses the first missing field, while Continue with TODOs is an explicit alternative. The older phone screenshot does not show this interaction, so no visual verification of the new control is claimed.",
+      "evidence": [
+        "web/src/forms.ts: missing metadata confirmation, fill.onclick and proceed.onclick"
+      ]
+    },
+    {
+      "step": "Without a key, mistake the compiled baseline for finished coursework.",
+      "result": "Honesty invariant passes in the observed fixture: outline-only warning, Outline PDF label, zero model improvements, unresolved gaps and non-quality percentage explanation are visible. Russian comprehension remains a hypothesis below.",
+      "evidence": [
+        "tmp/harness-wave-1/after-status-phone.png",
+        "tmp/harness-wave-1/walk.log: completed outcome outline, baseline 4, model 0, unresolved 4",
+        "web/templates/index.html: no-key outline warning",
+        "web/templates/job.html: compilation does not verify content"
+      ]
+    },
+    {
+      "step": "Invariant: editing an outline preserves saved edits and generated tables.",
+      "result": "Supported by synthetic log and source: saving leaves the second unsaved edit present, tables remain stored, and ChangeSection changes body without replacing tables. This is fixture evidence, not a new end-to-end execution.",
+      "evidence": [
+        "tmp/harness-wave-1/after-edits-laptop.png",
+        "tmp/harness-wave-1/edits.log: stored tables, other edit preserved, navigation guard, error retains text",
+        "internal/storage/sections.go: ChangeSection"
+      ]
+    },
+    {
+      "step": "Invariant: private access does not imply local-only processing.",
+      "result": "Pass: creation footer explicitly says files are uploaded and processed on the server, explains provider sharing and cookie access loss; the footer says server-stored documents.",
+      "evidence": [
+        "tmp/harness-wave-1/after-phone.png",
+        "tmp/harness-wave-1/after-status-phone.png",
+        "web/templates/index.html: processing disclosure"
+      ]
+    }
+  ],
+  "remaining": [
+    {
+      "screen": "Creation and compiled document status on phone",
+      "problem": "Simulated hypothesis: Mira chooses Russian and then tries to decide whether her no-key PDF is ready for class. Profile guidance changes to Russian, but the no-key warning, outline-only status explanation, quality disclaimer and Outline PDF control remain English in the observed screenshots and templates. A reader with limited English may still misread the green compiled badge as coursework readiness.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Provide Russian equivalents for the no-key limitation, outline download label and content-review instructions when Russian is selected; retain the explicit availability-versus-quality distinction."
+    }
+  ]
+}

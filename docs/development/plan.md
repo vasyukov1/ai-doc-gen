@@ -141,3 +141,7 @@ Add independently selectable `srs` and `arc42` profiles with bilingual structure
 ### Milestone 9 corrective acceptance — response formatting and form feedback
 
 Normalize Markdown section bodies into trusted Typst structures without executing generated code. Keep internal evidence separate from external bibliography, exclude assistant metadata from source analysis, and show required-input/submit errors within the form. Preserve saved text and user edits. Validate Russian/English PDF rendering, unsafe markup, source filtering and browser form retention manually; do not start the deferred automated testing milestone.
+
+### Milestone 9 corrective acceptance — harness wave 1
+
+See [the wave index](harness-wave-1/plan.md) and [triage](harness-wave-1/triage.md). Five accepted changes cover correctable submission, preserved edits/tables, honest compilation/content status, visible connection failures, and profile/privacy guidance. Keep simulated reviews separate from measured checks; full localization and regeneration history remain deferred. This does not start milestone 8.
