@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -20,10 +22,15 @@ type Provider interface {
 }
 
 type ProviderError struct {
-	Code       string
-	Message    string
-	Temporary  bool
-	RetryAfter time.Duration
+	Code        string
+	Message     string
+	Temporary   bool
+	RetryAfter  time.Duration
+	InputLimit  int
+	OutputLimit int
+	// Rejected keeps the model output that failed validation so the next
+	// attempt can repair it instead of repeating the same prompt.
+	Rejected string
 }
 
 func (e *ProviderError) Error() string { return e.Message }
@@ -113,9 +120,10 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 		} `json:"choices"`
 		Usage domain.Usage `json:"usage"`
 		Error struct {
-			Code    json.RawMessage `json:"code"`
-			Message string          `json:"message"`
-			Type    string          `json:"type"`
+			Code             json.RawMessage `json:"code"`
+			Message          string          `json:"message"`
+			Type             string          `json:"type"`
+			FailedGeneration string          `json:"failed_generation"`
 		} `json:"error"`
 	}
 	p.Diagnostics.ResponseBytes = len(data)
@@ -131,6 +139,17 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 		message := strings.ToLower(result.Error.Message)
 		failure := &ProviderError{Code: "provider_rejected", Message: "The model provider rejected this request. Check its configuration."}
 		switch {
+		case strings.Contains(code, "json_validate_failed") || strings.Contains(message, "failed to generate json") || result.Error.FailedGeneration != "":
+			// Providers reject malformed JSON with a 400 that describes the model
+			// output, not the request configuration. Keep the provider usable and
+			// let the next attempt repair the rejected text.
+			failure.Code = "provider_invalid_output"
+			failure.Message = "The model returned invalid JSON; retrying with the rejected output."
+			failure.Temporary = true
+			failure.Rejected = clipText(result.Error.FailedGeneration, 20000)
+		case strings.Contains(code, "context_length") || strings.Contains(message, "context length") || strings.Contains(message, "reduce the length"):
+			failure.Code = "provider_context_budget"
+			failure.Message = "The chapter prompt exceeds the model context window. Choose a model with a larger window."
 		case response.StatusCode == 402, strings.Contains(code, "insufficient_quota"), strings.Contains(code, "daily_limit"), response.StatusCode == 429 && (strings.Contains(message, "tokens per day") || strings.Contains(message, "requests per day") || strings.Contains(message, "requestsperday") || strings.Contains(message, "tokensperday")):
 			failure.Code = "provider_quota"
 			failure.Message = "Model quota is exhausted. Wait for a reset or use another free provider."
@@ -142,6 +161,16 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 			failure.Message = "Model rate limit reached. Drafts are saved; retrying shortly."
 			failure.Temporary = true
 			failure.RetryAfter = retryAfter(response.Header.Get("Retry-After"))
+			// Free accounts publish per-minute input and output token windows
+			// that can be smaller than the account TPM entered on the form.
+			failure.InputLimit = messageLimit(result.Error.Message, "input tokens per minute")
+			failure.OutputLimit = messageLimit(result.Error.Message, "output tokens per minute")
+			if failure.OutputLimit > 0 {
+				failure.Message = fmt.Sprintf("Provider output limit is %d tokens per minute; the next attempt will fit the response to it.", failure.OutputLimit)
+			}
+			if failure.InputLimit > 0 {
+				failure.Message = fmt.Sprintf("Provider input limit is %d tokens per minute; the next attempt will fit the chapter to it.", failure.InputLimit)
+			}
 		case response.StatusCode >= 500 || response.StatusCode == 408:
 			failure.Code = "provider_network"
 			failure.Message = "The model provider is temporarily unavailable."
@@ -153,6 +182,26 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 		return "", usage, invalidOutput()
 	}
 	return result.Choices[0].Message.Content, usage, nil
+}
+
+var limitPattern = regexp.MustCompile(`(?i)limit (\d+)`)
+
+// messageLimit reads the enforced per-minute limit from a provider message such
+// as "Limit 7000, Used 6366, Requested 6590". It returns zero when absent.
+func messageLimit(message, marker string) int {
+	index := strings.Index(strings.ToLower(message), marker)
+	if index < 0 {
+		return 0
+	}
+	match := limitPattern.FindStringSubmatch(message[index:])
+	if len(match) != 2 {
+		return 0
+	}
+	value, err := strconv.Atoi(match[1])
+	if err != nil || value <= 0 {
+		return 0
+	}
+	return value
 }
 
 func retryAfter(value string) time.Duration {

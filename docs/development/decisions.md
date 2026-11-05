@@ -122,6 +122,14 @@ Data still enters through literal JSON/text, never executable model or uploaded 
 
 The editor can clear a section's missing-information warnings only through an explicit checked “missing information is filled in” action on save. Ordinary saves retain warnings; other sections and stored artifacts are unchanged until an explicit rebuild. Signature/date TODOs are deliberate paper-signing placeholders. Blank archival/change-registration cells remain form cells rather than invented change records. Previously downloaded bundles retain their own layout and remain reproducible.
 
+## 2026-11-05 — Provider rejections and outline documents
+
+A technical-overview run finished as `completed` while every section stayed a baseline placeholder. Persisted diagnostics showed Groq returning HTTP 400 `json_validate_failed` ("Failed to generate JSON") for the chapter call. The worker classified every unknown rejection as a permanent configuration error, disabled the only connected provider, and never retried, although the 12-admission budget was almost untouched.
+
+Provider rejections now follow the model output they describe. A malformed-JSON rejection becomes `provider_invalid_output`: the provider stays enabled, the rejected generation is stored as private job data, and the next attempt receives it as repair material with an explicit instruction. Context-window rejections become `provider_context_budget`. A free account may publish per-minute input/output token windows smaller than the account TPM entered on the form; the worker reads those limits from the rejection and fits the next chapter and response to them instead of repeating an oversized request until the budget is gone.
+
+Content outcome stays independent of execution status. Completed jobs that are not `draft_ready` now show a visible warning on the job and sections pages with the recorded reason and the next step; the generation details block remains the full diagnostic view. Baseline sections still render with `TODO` markers, so an outline is never presented as generated prose.
+
 ## 2026-11-05 — Distinct SRS and arc42 document profiles
 
 The user requested an SRS profile and arc42. The supplied architecture URL identifies ISO/IEC/IEEE 42010:2022, not arc42; implement the explicitly named arc42 format using its official twelve-part structure. SRS is an independently authored requirements specification informed by ISO/IEC/IEEE 29148:2018's public scope. Neither a complete licensed standard reproduction nor formal conformity is claimed.

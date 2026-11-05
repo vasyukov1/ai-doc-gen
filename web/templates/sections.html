@@ -36,6 +36,13 @@
     </section>
     {{end}}
 
+    {{if and .Job.FreeDraft (eq .Job.Content.Outcome "outline")}}
+    <p class="callout callout--warn">
+      Generation did not produce section text; every section is an outline placeholder.
+      {{with .Job.GenerationReason}}Reason: {{.}}{{end}}
+    </p>
+    {{end}}
+
     {{if .Job.FreeDraft}}
     <details class="group group--flush">
       <summary>Generation details</summary>

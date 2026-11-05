@@ -22,6 +22,18 @@
       {{if .Job.LatestMessage}}<p class="lead">{{.Job.LatestMessage}}</p>{{end}}
     </header>
 
+    {{if and .Job.FreeDraft (eq .Job.Status "completed") (ne .Job.Content.Outcome "draft_ready")}}
+    <section class="card">
+      <div class="card__body stack">
+        <p class="callout callout--warn">
+          {{if eq .Job.Content.Outcome "outline"}}Generation did not produce section text. This document contains outline placeholders only.{{else}}Some sections were not generated; unresolved gaps remain.{{end}}
+        </p>
+        {{if .Job.GenerationReason}}<p class="form-note">Reason: {{.Job.GenerationReason}}</p>{{end}}
+        <p class="form-note">Check the provider key, model ID and the account limits entered on the form, then submit the project again or use “Retry saved stage”.</p>
+      </div>
+    </section>
+    {{end}}
+
     <div class="job-grid">
       <div class="stack-lg">
         <section class="card">

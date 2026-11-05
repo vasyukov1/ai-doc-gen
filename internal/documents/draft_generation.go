@@ -80,6 +80,10 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 	defer cancel()
 	verified := map[string]bool{}
 	schemas := map[string]bool{}
+	// Free accounts publish input/output token windows that may be smaller than
+	// the account TPM entered on the form. Learn them from provider rejections.
+	inputCaps := map[string]int{}
+	outputCaps := map[string]int{}
 	if w.provider == nil {
 		for _, c := range run.Connections {
 			ok, schema, cacheErr := w.jobs.DraftCatalog(ctx, claim.ID, c.Provider, c.Model)
@@ -118,6 +122,7 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 			for offset := range run.Connections {
 				providerIndex := (nextProvider + offset) % len(run.Connections)
 				connection := run.Connections[providerIndex]
+				limitKey := connection.Provider + "/" + connection.Model
 				if modelCtx.Err() != nil || run.Attempts >= 12 {
 					break
 				}
@@ -219,11 +224,26 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 				for _, item := range group.Plans {
 					ids = append(ids, item.ID)
 				}
+				tpm := connection.TPM
+				if cap := inputCaps[limitKey]; cap > 0 && cap < tpm {
+					tpm = cap
+				}
 				outputTokens := min(6000, max(1800, len(group.Plans)*650))
-				outputTokens = min(outputTokens, connection.TPM/2)
-				fitted := fitChapter(group, job.Language, connection.TPM-outputTokens-256)
+				outputTokens = min(outputTokens, tpm/2)
+				if cap := outputCaps[limitKey]; cap > 0 {
+					outputTokens = min(outputTokens, cap)
+				}
+				if outputTokens < 400 {
+					reason = connection.Provider + ": the account token limits are too small for a chapter response."
+					run.Disabled[connection.Provider] = "provider_context_budget"
+					if err = w.queue.DraftNote(ctx, claim.ID, w.owner, reason, run.Disabled); err != nil {
+						return err
+					}
+					continue
+				}
+				fitted := fitChapter(group, job.Language, tpm-outputTokens-256)
 				prompt := GroupPrompt(fitted, job.Language)
-				if estimateTokens(prompt)+outputTokens+128 > connection.TPM || len(fitted.Sources)+len(fitted.Brief.Context) == 0 {
+				if estimateTokens(prompt)+outputTokens+128 > tpm || len(fitted.Sources)+len(fitted.Brief.Context) == 0 {
 					reason = connection.Provider + ": account TPM is too small for this chapter and useful source context. Increase the configured limit only if your account supports it."
 					run.Disabled[connection.Provider] = "provider_context_budget"
 					if err = w.queue.DraftNote(ctx, claim.ID, w.owner, reason, run.Disabled); err != nil {
@@ -235,7 +255,9 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 					p.MaxTokens = outputTokens
 				}
 				reservedTokens := estimateTokens(prompt) + outputTokens + 128
-				callID, wait, reserveErr := w.queue.ReserveDraftCall(modelCtx, claim.ID, w.owner, scope, connection, reservedTokens, ids)
+				limited := connection
+				limited.TPM = tpm
+				callID, wait, reserveErr := w.queue.ReserveDraftCall(modelCtx, claim.ID, w.owner, scope, limited, reservedTokens, ids)
 				if errors.Is(reserveErr, pgqueue.ErrDraftBudget) {
 					reason = "Generation budget reached; remaining sections retain their baseline."
 					continue
@@ -277,8 +299,9 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 						}
 					}
 				}
+				var failure *ProviderError
 				if callErr != nil {
-					failure := providerFailure(callErr)
+					failure = providerFailure(callErr)
 					if failure.Code != "provider_invalid_output" {
 						for _, id := range ids {
 							run.SectionAttempts[id]--
@@ -288,6 +311,19 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 					reason = connection.Provider + ": " + failure.Message
 					if failure.RetryAfter > cooldown {
 						cooldown = failure.RetryAfter
+					}
+					if failure.InputLimit > 0 {
+						inputCaps[limitKey] = failure.InputLimit
+					}
+					if failure.OutputLimit > 0 {
+						outputCaps[limitKey] = failure.OutputLimit
+					}
+					if failure.Rejected != "" {
+						group.Previous = clipText(failure.Rejected, 12000)
+						group.Issues = []domain.ValidationIssue{{
+							SectionID: ids[0],
+							Reason:    "The previous response was not valid JSON. Return one complete JSON object with every requested section.",
+						}}
 					}
 					if !failure.Temporary {
 						run.Disabled[connection.Provider] = code
@@ -300,7 +336,10 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 				diagnostic.Issues = group.Issues
 				diagnostic.ReservedTokens = reservedTokens
 				rejected := ""
-				if len(group.Issues) > 0 {
+				if failure != nil && failure.Rejected != "" {
+					rejected = clipText(failure.Rejected, 100000)
+				}
+				if len(group.Issues) > 0 && raw != "" {
 					rejected = clipText(raw, 100000)
 				}
 				if ctx.Err() == nil {

@@ -194,3 +194,14 @@ Live-provider SRS requirement correctness, cross-chapter requirement-level trace
 Repeated identical SRS and arc42 fixture submissions restored all model sections from cache with zero API calls (1.27 and 1.25 seconds respectively), confirming both new profiles use the existing validated section cache.
 
 The local Docker site was rebuilt and restarted after confirming no active production jobs. Both options appeared in the submission form; deployed no-key SRS RU and arc42 EN jobs rendered successfully (1.26 and 0.83 seconds). Only these synthetic production jobs were deleted through their owner session. Temporary native workers/provider and the isolated smoke database were stopped/removed; prior user jobs were preserved.
+
+## 2026-11-05 — Provider rejection classification and outline warnings
+
+Manual checks only; no automated suite was added. `go build ./...`, `gofmt -l internal/documents` and the template parse/execute check passed.
+
+Read-only diagnosis of the local database for job `135a6e7f-96d5-49e6-9239-dece23f4c99c` (technical-overview, EN) found: two admissions (catalog plus one generation call), `provider_rejected` disabling Groq, and four baseline sections. The recorded Groq response was HTTP 400 `json_validate_failed` with the message "Failed to generate JSON". The same database shows job `f7af9915-75e1-4211-8e8a-2acda4bb7169` completed with no providers connected, and job `0f234fbb-8fc7-4f4a-b7b2-6b00de3a749b` wasting eight of twelve admissions on 429 responses that reported an output limit of 1000 tokens per minute.
+
+- A local HTTP stub returned the recorded Groq 400 body: the adapter now reports `provider_invalid_output`, temporary, with the rejected generation retained for repair. The same stub returned a 429 OTPM rejection: the adapter reports `provider_rate_limit` with the parsed 1000-token output limit. Context-window and unknown 400 bodies map to `provider_context_budget` and `provider_rejected` respectively.
+- The next-attempt fitting for learned input/output limits and the repair prompt reuse were not exercised against a live provider. Live Groq retry behavior, repair success rate and the actual effect of the 1000-token output window remain unverified.
+- Outline and partial completed jobs now render a visible warning on the job and sections pages; the template check executed all seven pages successfully.
+- No existing job, section or artifact was modified. Jobs created before this change keep their stored diagnostics and reasons.
