@@ -1,0 +1,20 @@
+product: A small website that turns uploaded project source into editable documentation and PDF.
+personas:
+  - id: beginner
+    name: Mira (fictional beginner)
+    device: phone
+    language: Russian, limited English
+    goal: Obtain coursework specification before class without a model key.
+    mistakes: Chooses both GitHub and ZIP; uploads PDF as specification; mistakes a baseline for finished prose.
+  - id: maintainer
+    name: Leon (fictional maintainer)
+    device: laptop
+    language: English
+    goal: Correct architecture sections and keep generated tables.
+    mistakes: Edits two sections before saving either; follows a link with unsaved text; retries after a network failure.
+  - id: reviewer
+    name: Noor (fictional reviewer)
+    device: tablet
+    language: English
+    goal: Establish whether a delivered PDF is reliable enough to review.
+    mistakes: Treats completed/100 percent as verified; assumes browser-session wording means local-only storage; follows unavailable retry advice.
