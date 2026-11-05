@@ -1,0 +1,839 @@
+# triage → claude-opus-5-5
+
+## System
+
+You triage usability findings from simulated users into one wave of product changes. You are the product's
+owner, not one of the users. The product's directive is fixed; it does not change in this wave or because a
+user asked:
+
+<directive>
+# Directive — ReLibrary (the student's side of a course)
+
+Derived from `PLAN.md` §1 (the brief) and the student app as built (`apps/recipient`). Fixed for all three waves.
+
+## Directive
+
+ReLibrary brings a course's knowledge to each student in small parts, arriving top to bottom in the order
+they are taught, like a channel, and in the form that fits that student. Every part can be checked: it
+carries a badge saying who verified it, and the student can test their own understanding of it and say in
+their own words what is clear and what is not. The teacher (the course's knowledge manager) stays in control
+of what is taught and when; the student controls their own pace, their own record and what they ask, and
+the library answers from the course.
+
+## Invariants (what no wave may break)
+
+- **I1 — Small parts, in order.** The course reaches the student as separate parts in a top-to-bottom stream
+  in the order they were taught; no wave replaces the stream with one long page or a re-sorted feed.
+- **I2 — Every part can be checked.** Every part shows its verification badge, and a part with a check keeps
+  its check; a badge reads the same to every student.
+- **I3 — The student's own word, not a hidden score.** What the student marks (got it, unclear, not now) is
+  theirs, visible to them and correctable by them; nothing grades them silently.
+- **I4 — The teacher decides what is taught.** Students cannot add to, reorder or remove the course's parts;
+  their questions and notes stay their own, and the teaching team can read what is said to the library.
+- **I5 — The form fits the student, the content does not change.** Personalisation changes the form, the
+  order of extras and the length; it never changes what a part says or what the course requires.
+</directive>
+
+Do this:
+
+1. **Deduplicate.** Group findings that describe the same underlying problem (across personas and runs).
+   One change per group; list every finding id it covers and the persona ids that raised it.
+2. **Decide each change:**
+   - **ACCEPT** — it fixes a real problem *and* keeps every clause of the directive. At most 5
+     ACCEPTs: prefer what several personas hit, high severity, and cheap to build; one wave must be small
+     enough to build and re-walk before the next one.
+   - **DEFER** — sound and compatible with the directive, but outside this wave's cap, unclear, or raised
+     once at low severity.
+   - **REJECT** — it conflicts with the directive (for example: it would hide what was checked, take
+     control of what is taught away from the teacher, or replace small parts with one long page), or it
+     asks for something the product deliberately does not do.
+3. **Give a one-line reason for every decision that cites the directive** (quote the clause, or name the
+   invariant). For a REJECT, say which clause it breaks and what part of the user's problem could still
+   be solved without breaking it.
+4. **List what must not change** in this wave: the directive's invariants, each as one checkable sentence.
+5. **List the journey steps to walk again** after the wave is built: the screens or situations the
+   accepted changes touch, plus one step that checks an invariant still holds.
+
+Write each change as something a developer can build ("Show … on …", "Move …", "Rename … to …"), not as a
+wish. Reply with JSON only:
+
+{"changes": [{"id": "W1", "change": "...", "findings": ["F03", "F11"], "personas": ["..."],
+              "decision": "ACCEPT | DEFER | REJECT", "reason": "one line citing the directive"}],
+ "must_not_change": ["..."],
+ "rewalk": ["..."]}
+
+## User
+
+
+Findings:
+
+[
+ {
+  "id": "F01",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I looked for the big coloured thing to tap to start my 5-minute check, and the pale green \"Ask the library\" button at the bottom was the biggest one, so I went for it.",
+  "what_happened": "The \"Ask the library\" panel (a grey explainer line, the \"Write something...\" box and the wide pale button) plus the six-icon bar takes about a third of the screen and stays there, so today's content gets the top two thirds. The button looks greyed out, as if it is switched off.",
+  "problem": "I can't tell whether that button works or is broken, and it pulls my thumb away from what I came for. I also can't hide or shrink the panel, so on a phone in a corridor I only ever see a few lines of the course.",
+  "severity": 3,
+  "heuristic": "User control and freedom",
+  "suggestion": "Fold \"Ask the library\" into a small round button or a single closed row that I open when I want it, so the course gets the whole screen."
+ },
+ {
+  "id": "F02",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I scrolled the top of Day 1 to see what I have to do and by when.",
+  "what_happened": "\"Day 1 · Mon 19 Oct · Setup and tooling\" appears twice, once as a header and once as a green card with \"1 min ago\". Then an orange box says \"Due Fri, Oct 23, 09:00 AM (in 4 days)\" for Homework 1, and the white box right under it says \"Homework 1 in 4 days\" again, with \"due Day 5\" in the orange box as a third way of saying when.",
+  "problem": "I read the same thing two or three times before I reach anything new. Each repeat costs me part of my 6 minutes and part of the screen, and \"1 min ago\" tells me nothing useful. \"Day 5\" and \"Fri Oct 23\" make me stop and work out whether they are the same day.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show the day title once and one deadline block (\"Homework 1 · Fri 23 Oct, 09:00 · 4 days left\"), with the other deadlines as a small line below it."
+ },
+ {
+  "id": "F03",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I went to the \"Quick knowledge sync\" card because it looked like the 5-minute check I wanted.",
+  "what_happened": "The chips show \"5 min\", \"10 min\" and \"20 min\", with 10 min already picked. The first card, \"Week 1: your own brain\", is cut off by the Ask panel, and its label reads \"Simpler · 2 n...\" with the end chopped off. I can't see anything that says Start.",
+  "problem": "I only have 5 minutes, and the app picked 10 for me, so I have to notice that and tap again. I can't see what to tap to begin or what \"Simpler\" means. A big arrow with a green \"29\" on it floats over the card and I don't know what it counts.",
+  "severity": 3,
+  "heuristic": "Flexibility and efficiency of use",
+  "suggestion": "Remember the time I picked last time, or default to 5 min. Make one clear green \"Start 5-min check\" button that is always visible, and say what the \"29\" arrow does (for example \"29 new parts below\")."
+ },
+ {
+  "id": "F04",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I wanted to test myself on a section, so I looked for a test button on \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\".",
+  "what_happened": "The only thing I found is \"Test this section\", a small underlined black link under the section title. Next to it, \"Try again\" in the card above is a proper rounded button.",
+  "problem": "A test is my main reason to be here, yet it looks like the least important thing on the screen. I skim small text, so I could scroll past it, and I wouldn't guess it starts a test because it looks like any other link.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Make \"Test this section\" a real coloured button next to the section title, styled like \"Try again\", with a short note such as \"5 questions · about 3 min\"."
+ },
+ {
+  "id": "F05",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I read my result on the \"Why data\" card, which says the first reason is \"finding a market ___\", and tried to understand what I got wrong.",
+  "what_happened": "A small grey line says \"You answered \"certainly not this\" — not quite.\" The only next step is a \"Try again\" button. The card above, which I got right, says \"You answered \"questions\" — that's it.\" in dark green text.",
+  "problem": "Being right or wrong is told only by a small grey sentence and a slightly different text colour, so I would skim it and not notice. When I'm wrong I get no hint and no answer, so I have to guess again, and with no programming background that is just frustrating. I also can't see which options I had.",
+  "severity": 3,
+  "heuristic": "Help users recognize, diagnose, and recover from errors",
+  "suggestion": "Show a clear tick or cross with colour and an icon, then give a one-line hint or a \"Show the answer\" button next to \"Try again\", with a link back to the part that explains it."
+ },
+ {
+  "id": "F06",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I tried to work out what the bottom panel is for. On the next screen I saw the same thing again.",
+  "what_happened": "Above \"Ask the library\" there is a line that reads \"About: A notebook's state follows run order ×\". The screen I am looking at is Section 1 and Section 2's heading. On the \"What you missed\" screen it says \"About: Tidy data ×\", which is not what I am looking at either.",
+  "problem": "I don't know what \"About\" refers to, or why it is a topic I haven't opened. If I type a question I'm not sure which part the library will answer about, and I don't know whether the little × is safe to tap.",
+  "severity": 2,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Show the topic only when I tapped something on a card, in words like \"Asking about: Why data\". Put it on the card I tapped, and leave it out when nothing is selected."
+ },
+ {
+  "id": "F07",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I opened Day 3 after missing a day and tried to catch up on \"What you missed on Day 2\".",
+  "what_happened": "It says \"21 parts were taught while you were away\" and lists them as underlined links in two ragged columns. Long titles wrap onto a second line with the bullet on a different line, so \"Type hints are not / enforced\" looks like two items. Many titles are code words, such as \"*args and **kwargs\", \"Decorators\", \"Generators\" and \".loc by label, .iloc by position\". The list runs on past the Ask panel.",
+  "problem": "To me it is a wall of underlined words. I can't tell which ones I really need, how long each takes, or what a Decorator even is. I would close it and leave catch-up for later, which means I never do it.",
+  "severity": 3,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show just 3 \"Start here\" parts, each with a 2 min label and a one-line plain explanation, in one column with the bullet on the first line. Put the other 18 under \"See all 21\"."
+ },
+ {
+  "id": "F08",
+  "persona": "ayla",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "When I got home I opened it on my laptop and looked at \"Your week\" to see what to do next.",
+  "what_happened": "A row of small grey pills reads \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\". Under \"Three to look at next\" are three cards with notes like \"taught today · 3 later parts build on it\" and \"Data-backed personas · taught today · you have not shown what it builds on\". Every card shows \"2 min\", but there is no button.",
+  "problem": "\"172 not met yet\" and \"0 fluent\" make me feel behind before I've started. I don't know what \"met\" or \"fluent\" mean, or how they differ from \"understood\". The card notes read like system language, so I can't tell what I should do, and I don't know whether to tap the whole card.",
+  "severity": 2,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Replace the pills with one friendly line such as \"3 parts to do today · about 6 min\". Give each of the three cards a green \"Start\" button and a plain reason (\"you'll need this for Homework 1\")."
+ },
+ {
+  "id": "F09",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I opened Day 1 looking for the 5-minute check and scrolled past the cards at the top to find it.",
+  "what_happened": "The title \"Day 1 · Mon 19 Oct · Setup and tooling\" shows twice (the bar and the green card), the deadline shows twice (the orange \"Due Fri, Oct 23\" card and the \"Your deadlines\" card), and \"Quick knowledge sync\" with the 5 min / 10 min / 20 min chips only starts at the bottom edge, with 10 min already selected.",
+  "problem": "Three cards say things I already know before I reach the one thing I came for. On one hand between classes I run out of patience, and I am not sure whether tapping 5 min changes the list or starts something.",
+  "severity": 3,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Put the check first on the day's page as one big button, \"5-minute check\", and fold the repeated title and deadline into a single line at the top."
+ },
+ {
+  "id": "F10",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I tapped the round white arrow button with the green number (48 here, 29 on the first screen) because it looked like \"jump to the latest\".",
+  "what_happened": "I cannot tell what the number counts. It differs from screen to screen (29, 48) and from the \"21 parts\" in the card. The button also sits on top of the text, covering \"2 min\" on the first screen and the end of \"The exam: tasks like the homework, as an interview\" here.",
+  "problem": "A badge I do not understand next to a card that says 21 makes me distrust both numbers, and it hides text I am trying to read.",
+  "severity": 2,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Label it \"29 new parts below\" (or remove the number) and move it so it never sits on top of the card text."
+ },
+ {
+  "id": "F11",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I answered the fill-in-the-blank cards (\"Three whiteboard interviews\", \"Why data\") and read the result under each.",
+  "what_happened": "After my wrong answer it only says, in small grey text, \"You answered “certainly not this” — not quite.\" There is a pale outlined \"Try again\" pill and the right answer is not shown. The card titles (\"Three whiteboard interviews\", \"Why data\") do not describe what the question asks.",
+  "problem": "I skim grey text, so I barely notice that I was wrong. I have no idea what the right answer was, so \"Try again\" turns into guessing. Between classes I would just close it.",
+  "severity": 3,
+  "heuristic": "Help users recognize, diagnose, and recover from errors",
+  "suggestion": "Show wrong answers in a bigger, clearly coloured line, with a \"Show me the answer\" option and a one-line reason beside \"Try again\"."
+ },
+ {
+  "id": "F12",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I looked for the test and tapped the big green button first, which is \"Ask the library\".",
+  "what_happened": "The real test entry is \"Test this section\", a small underlined text link under the heading \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\", right next to the round arrow button. The only strong coloured button on the screen is \"Ask the library\".",
+  "problem": "The thing I came for looks like a footnote while the pinned button looks like the main action. I also cannot tell whether it tests Section 2 or the Section 1 I just finished, or how long it takes.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Make \"Test this section\" a proper button that says how long it takes (for example \"Test section 2 · 5 min\") and make \"Ask the library\" the quieter control."
+ },
+ {
+  "id": "F13",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I opened \"What you missed on Day 2\" to catch up and picked something to tap.",
+  "what_happened": "A card says \"21 parts were taught while you were away\" and lists all 21 as underlined links in two cramped columns. The wrapped lines make the bullets hard to match to titles (\"Type hints are not enforced\" has its bullet below its own text). The names are technical (\"*args and **kwargs\", \"Decorators\", \"Generators\", \"dtypes\").",
+  "problem": "It is a wall of blue underlined text. I know no programming, I cannot tell which parts matter or how long they take, and I do not know what to tap first, so I leave.",
+  "severity": 3,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show the three parts that matter with a big \"Start here\" button and the time each takes, and hide the other 18 behind \"Show all 21\"."
+ },
+ {
+  "id": "F14",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I read the line above the text box, then glanced at \"About: Tidy data ×\" and typed a question.",
+  "what_happened": "I never chose \"Tidy data\", and the \"About\" chip changes from screen to screen (\"A notebook's state follows run order\" on the test screen, \"Tidy data\" here). The panel's grey line also says \"Just you and the library\" on the first screen but \"your teachers can read it\" on the others. The \"Ask the library\" button looks pale and switched off, with a tiny ▾ at its edge.",
+  "problem": "I do not know which topic my question goes to, I cannot tell whether my teacher sees it, and I cannot tell whether the button works. I would not ask anything I did not want my teacher to read.",
+  "severity": 2,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Say the same privacy line everywhere, make the topic chip say \"Asking about: Tidy data\" with a bigger ×, and give the button its full colour once I start typing."
+ },
+ {
+  "id": "F15",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked at \"Your week\" to see what to do next. (This is the laptop screen, and I only use my phone.)",
+  "what_happened": "There is a row of small grey pills, \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\", then three cards with lines like \"taught today · 3 later parts build on it\" and \"you have not shown what it builds on\". None of them looks like a button, and the text is tiny.",
+  "problem": "\"Not met yet\", \"worked on\" and \"fluent\" are not words I use for my own studying, and \"172 not met yet\" feels like a failure score. I cannot tell whether the cards open something or what \"build on it\" means for me today.",
+  "severity": 2,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Say it plainly: \"Next up, 3 things, 6 min in all\", with a big \"Start\" on the first card, and drop the five count pills or put them behind a \"See details\" link."
+ },
+ {
+  "id": "F16",
+  "persona": "ayla",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "On my phone I looked for \"Your week\" and the checks in the bottom bar with six icons.",
+  "what_happened": "The bar has a house, books, a bell, a person, a speech bubble with a question mark and \"•••\", with no words. \"Your week\" and \"Checks\" only appear with names on the laptop's left menu, as \"Your page\", \"Your knowledge\", \"Where we reach you\" and \"Checks — DS403 — Python the...\" (cut off).",
+  "problem": "I have to guess between the person icon and the ••• icon. The speech bubble could be the library, the class chat or the checks. I am standing in a corridor and I do not want to open each one.",
+  "severity": 2,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Put a one-word label under each bottom icon (Today, Checks, Alerts, Me) and keep \"Checks\" as its own tab."
+ },
+ {
+  "id": "F17",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I tapped the orange 'Due Fri, Oct 23, 09:00 AM ... Homework 1 — data manipulation on sessions 1–4' card, expecting it to open the homework or show what I need to know for it.",
+  "what_happened": "Nothing on the card looks tappable, and it says 'sessions 1–4' and 'due Day 5' while everything else on the screen is headed 'Day 1 · Mon 19 Oct' and '§1'. There is no list of the parts the homework needs.",
+  "problem": "I found what is due in one glance, but the second half of my goal, what I must know for it, is not answered. 'Sessions', 'Days' and dates are three different ways of counting time, so I cannot map 'sessions 1–4' to anything in the stream without working it out myself.",
+  "severity": 3,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Make the due card a button that opens the homework with a short list 'You need these parts: ...' and each part linked. Use the same unit throughout, e.g. 'Day 1–4'."
+ },
+ {
+  "id": "F18",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I scrolled down from the top to get to the actual content, since I know the due date now.",
+  "what_happened": "The 'Day 1 · Mon 19 Oct · Setup and tooling' heading is shown twice, once as the header and once as a green card with '1 min ago'. 'Homework 1 in 4 days' is then repeated in 'Your deadlines' right under the orange due card. The 'Quick knowledge sync' card with 5, 10 and 20 min chips comes next and pushes the first part ('Week 1: your own brain', with 'Simpler · 2 n...' cut off) to the edge of the screen.",
+  "problem": "On a phone on the train I scroll past three cards that tell me the same thing or ask me to choose a duration before I see any content. That is the 'read a paragraph to find the button' situation.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show the deadline once, drop the duplicate day card, and collapse 'Quick knowledge sync' into one line with a default length so the first part is visible without scrolling."
+ },
+ {
+  "id": "F19",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I ignored the bottom of the screen and tried to read the stream, then to scroll past 'Ask the library' and the nav.",
+  "what_happened": "'Ask the library' stays pinned: a heading, a line about DS403, an input and a big pale-green button with a small ▾ on its edge, then the bottom nav. On screens 2 and 3 a chip also appears above it, 'About: A notebook's state follows run order ×' and 'About: Tidy data ×', which I did not choose.",
+  "problem": "On a phone this is roughly the lower third of the screen, always, so I read the course through a two-thirds window. The pale button looks disabled, I do not know what the ▾ does, and the 'About:' chip changes as I scroll, so I do not know what the library thinks I am asking about.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "On a phone, collapse it to a single 'Ask' icon or one-line bar that opens on tap. Show the 'About:' chip only when I tap a part's own ask button."
+ },
+ {
+  "id": "F20",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I answered the two fill-in-the-blank questions to see whether I had passed section 1.",
+  "what_happened": "Two cards, 'Three whiteboard interviews' (\"You answered 'questions' — that's it.\") and 'Why data' (\"You answered 'certainly not this' — not quite.\"), with a 'Try again' button on the second. There is no score, no heading saying which test these are the results of, and no 'section done' state. The 'Test this section' link for Section 2 sits right below as a small underlined text link that looks like part of the heading.",
+  "problem": "I cannot tell whether I passed, how many questions there were or what is left. I would not notice that Section 2 has its own test, because the link looks like a caption and not a button, which is not how buttons look in GitHub or Slack.",
+  "severity": 2,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Put a header on the results, 'Section 1 test: 1 of 2 right', and make 'Test this section' a real button showing the number of questions and minutes."
+ },
+ {
+  "id": "F21",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "On 'Why data', where it said 'not quite', I wanted to see the right answer and move on, not guess again.",
+  "what_happened": "The card says \"You answered 'certainly not this' — not quite.\" and offers one button, 'Try again'.",
+  "problem": "My only options are guessing again blindly or leaving the card. It does not say what the correct word was or which part explains it, so I would give up on this one or click 'Try again' several times.",
+  "severity": 3,
+  "heuristic": "Help users recognize, diagnose, and recover from errors",
+  "suggestion": "Next to 'Try again' add 'Show answer', and a link to the part that explains it. Give a hint after the first miss."
+ },
+ {
+  "id": "F22",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I looked in 'What you missed on Day 2' for the few parts I need for Homework 1, and planned to skip the rest, since I already know decorators and generators.",
+  "what_happened": "I got a flat list of 21 underlined titles ('Names bind to objects', '*args and **kwargs', 'Decorators', 'Generators', 'Dataclasses', '%time and %timeit' and so on), with no sign of which ones the homework needs, how long each takes, or any way to mark one as known.",
+  "problem": "To skip the basics I would have to open parts one by one and guess. I have the same 21 items whether I am a beginner or know Python well, so there is nothing for the shortest path.",
+  "severity": 3,
+  "heuristic": "Flexibility and efficiency of use",
+  "suggestion": "Tag each item 'needed for Homework 1' or 'extra'. Add 'I know this' next to each, and a top button 'Show only what Homework 1 needs'."
+ },
+ {
+  "id": "F23",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I scanned the two-column list to pick items quickly.",
+  "what_happened": "Long titles wrap onto several lines, and the bullet of the next item sits next to the end of the previous item's text ('Type hints are not enforced', 'Reading a CSV dtypes, and str in pandas 3'). In the right column, 'The exam: tasks like the homework, as an interview' and 'The course project: one...' run under the round '48' scroll button.",
+  "problem": "I cannot tell where one title ends and the next begins, so I misread them as other items. Part of the list is hidden behind the button, and two columns make me read in a zigzag instead of top to bottom.",
+  "severity": 2,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Use a single column with a proper hanging indent, one title per row. Keep the scroll button out of the text, or move it above the list."
+ },
+ {
+  "id": "F24",
+  "persona": "rune",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "On the laptop Home I looked at 'Your week' to see what is due and what to do next.",
+  "what_happened": "'Your week' shows pills '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent', then 'Three to look at next', each '2 min', with notes like 'taught today · 3 later parts build on it' and 'you have not shown what it builds on'. The homework and its date appear nowhere in this card or above the fold. The deadline lives in a card further up the stream, and the top tabs 'Your map', 'Your skills', 'For you' and the sidebar 'Your page', 'Your knowledge' overlap in name.",
+  "problem": "'Your week' does not tell me what is due this week. The pill counts mean nothing to me without a legend, and I ignore badges anyway. 'Next' is chosen by what later parts build on, not by Homework 1, so I could not tell which of these 3 I actually need. I would click 'Homework' in the tabs, but only because I guessed that name.",
+  "severity": 3,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Start 'Your week' with 'Due: Homework 1, Fri 09:00' and a button. Base the 'next' list on what the homework needs, and drop or explain the five count pills."
+ },
+ {
+  "id": "F25",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I tapped the orange card \"Due Fri, Oct 23, 09:00 AM ... Homework 1\" expecting it to open the task and show what I need to know for it, like a GitHub issue link would.",
+  "what_happened": "Nothing on the card looks tappable: no arrow, no \"Open homework\" button, no list of the parts it covers. The \"Your deadlines\" card right under it repeats the same Homework 1 date and is just as inert.",
+  "problem": "I found the deadline in two seconds but then hit a dead end. Getting from \"what is due\" to \"what do I need to know for it\" is the whole reason I came, and the screen gives me no path. I would go looking in the tabs and probably give up.",
+  "severity": 3,
+  "heuristic": "Flexibility and efficiency of use",
+  "suggestion": "Make the orange Homework card one tap target that opens the homework, with a single line under it such as \"Needs: 9 parts, 4 you haven't shown yet\" that links to exactly those parts."
+ },
+ {
+  "id": "F26",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I looked at \"What you missed on Day 2: 21 parts were taught while you were away\" for the few items that matter for Homework 1, so I could skip the rest.",
+  "what_happened": "I get 21 underlined links in a flat list, with no marking for which are needed for the homework, no time per part, and no way to say \"I know this\". Names bind to objects, decorators, generators and *args are in there, and I use those at work every day. The list also runs on past the fold, with \"The exam\" and \"The course project\" mixed in with the concepts.",
+  "problem": "Twenty-one links is 21 clicks for something I want done in 3 minutes. I cannot tell the 5 I need from the 16 I can skip, so I either read all of it or ignore the card.",
+  "severity": 3,
+  "heuristic": "Flexibility and efficiency of use",
+  "suggestion": "Sort the list so the parts Homework 1 depends on come first under a \"Needed for Homework 1\" heading, put the rest behind \"Show the other 16\", and add \"I know this\" to each row (or one \"I know Python basics\" button) so the list shrinks."
+ },
+ {
+  "id": "F27",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "On the laptop Home I looked at the \"Your week\" card for what is due this week and what I must know for it.",
+  "what_happened": "I get a row of chips (\"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\") and \"Three to look at next\": Look before concluding, One dtype per array, Data-backed personas. None of the three says whether it is for Homework 1. The homework deadline is not on this screen at all. It was only on the Day 1 stream card.",
+  "problem": "A card called \"Your week\" shows no deadline, so I have to remember Friday 09:00 from another screen. The chips use words I do not know how to read (\"met\", \"worked on\", \"fluent\"), and 172 \"not met yet\" just feels like a wall of debt. I do not know what to do with any of it.",
+  "severity": 3,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Put \"Homework 1 due Fri 09:00 (in 4 days)\" as the first line of \"Your week\", and have \"Three to look at next\" pick the parts Homework 1 needs, each labelled \"for Homework 1\". Drop or hide the five count chips behind a \"details\" link."
+ },
+ {
+  "id": "F28",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I answered the fill-in-the-blank question \"finding a market ___\" and got it wrong. I wanted to see the right answer and move on.",
+  "what_happened": "The screen says \"You answered 'certainly not this' — not quite.\" in grey text, with only a \"Try again\" button. It does not give a hint, the answer, or a way to skip.",
+  "problem": "A free-text blank is a guessing game. I am not going to guess three times for a word I have no way to look up. \"Not quite\" tells me nothing about how close I was. I would give up on the check, and then I would not trust any of the other ones.",
+  "severity": 3,
+  "heuristic": "Help users recognize, diagnose, and recover from errors",
+  "suggestion": "Next to \"Try again\" add a \"Show answer\" button that shows the expected word and the one sentence from the part it comes from. Make the blank a few choices where the question allows, so I tap instead of typing."
+ },
+ {
+  "id": "F29",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I scrolled through Day 1 with Ask the library open at the bottom and wanted to ask a quick question about what I was reading.",
+  "what_happened": "The box says \"About: A notebook's state follows run order ×\", but what I can see on the screen is §1 \"How this course works\" and the start of Section 2. On stage3_what_you_missed.jpg the chip changes to \"About: Tidy data\", and there is nothing about tidy data on that screen either.",
+  "problem": "I never picked those topics, and the chip is small grey text I would not read. I would type my question and get an answer about the wrong part, and I would only find out after I had read it.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Show the chip as a clearly tappable \"About: ...\" tag that only changes when I tap a part, not while I scroll. Add a visible \"Whole course\" option next to it, and say in the answer which part it was based on."
+ },
+ {
+  "id": "F30",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I tapped \"Test this section\" under \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\" to find out if I already know it and could skip it.",
+  "what_happened": "It is a small underlined text link next to the section title, with no button look and no hint of how long the test is. It is also styled differently from the pill-shaped \"Try again\" button on the same screen. I could not tell whether it opens a quiz in place or on another page, or whether it covers the section above or below it.",
+  "problem": "The one control that could save me 10 minutes of reading is the hardest thing on the screen to see. I would have to tap it blind to find out what it does.",
+  "severity": 2,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Make it a pill button like \"Try again\", labelled \"Test this section · 4 questions\", and say on it that a pass lets me skip the section."
+ },
+ {
+  "id": "F31",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I tried to scan the two-column list of Day 2 parts fast to pick out the few I cared about.",
+  "what_happened": "The long link titles wrap onto 2 or 3 lines, so a bullet sits on one line and the rest of its title on the next. It is hard to see where one item ends and the next begins (\"Type hints are not enforced\", \"Reading a CSV dtypes, and str in pandas 3\"). The round \"48\" arrow button also sits on top of the last visible lines (\"The exam: tasks like the homework, as an interview\").",
+  "problem": "I read the first words and cannot tell what the part is about, so I cannot skip with any confidence. I cannot read the lines under the floating button either. On a phone on the train this is worse.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Use one column of rows, each with the title on a single line (cut it with an ellipsis if it is long) and a \"2 min\" tag at the right. Keep the floating arrow off the content, or drop it on this card."
+ },
+ {
+  "id": "F32",
+  "persona": "rune",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked at the left menu and the top tabs for where the homework and what to study for it would be.",
+  "what_happened": "I see top tabs (Stream, Your map, Homework, Your skills, For you, Class chat, Contents 202) and a left menu with Home, Notifications, Your page, Notes, Your knowledge, How you read, Where we reach you, Checks — DS403, Members. \"Your map\", \"Your skills\", \"Your knowledge\" and \"Your page\" all sound like the same thing. \"Homework\" is just one tab among many.",
+  "problem": "I have to guess which of four \"Your ...\" places holds what I know and what is due. I would try \"Homework\" first, which probably works, but I can't tell what the other pages add and I have no reason to open them. That is a lot of navigation for someone who wants it done in 3 minutes.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Merge \"Your map\", \"Your skills\" and \"Your knowledge\" into one place called something plain like \"My progress\", and put \"Homework\" first in the tabs, with the next deadline as a small label on it."
+ },
+ {
+  "id": "F33",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_day_one.jpg (and stage3_section_test.jpg)",
+  "what_i_tried": "I looked at the 'Ask the library' box to see whether I could write down what I do not understand without anyone seeing it.",
+  "what_happened": "On the first screen the box says 'Just you and the library, about DS403'. On the quiz screen, the same box says 'The library answers from the course; your teachers can read it.' There is also a small '▾' on the green button that says nothing about what it opens.",
+  "problem": "These two lines say opposite things, so I do not know who will read my question. I am already afraid that asking about something basic looks like failing, so I would stop asking, or ask only safe questions. The '▾' makes it worse, because I cannot tell whether it hides a choice about who sees my message.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Use one clear sentence in the same place on every screen, for example 'Your teachers can read your questions, but they are not marked', and give the '▾' a visible word (for example 'Options') so I know what it changes."
+ },
+ {
+  "id": "F34",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I read the result of the 'Why data' question to find out whether I understood the idea.",
+  "what_happened": "The card says 'You answered “certainly not this” — not quite.' with only a 'Try again' button. The question before it ends with 'You answered “questions” — that's it.'",
+  "problem": "I did not type 'certainly not this', so I take it literally and think the app is putting words in my mouth or judging me. 'that's it' can mean 'correct' or 'nothing more' and I read English slowly, so I cannot tell which. 'Not quite' does not tell me what the right idea was or where in the course to read it again, so 'Try again' is only guessing.",
+  "severity": 3,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Show my own answer exactly as I gave it, then plain words: 'Correct' or 'Not correct yet'. After a wrong answer, add a one-line hint and a link to the part that explains it."
+ },
+ {
+  "id": "F35",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I had just finished the §1 questions and wanted to ask the library about the one I got wrong.",
+  "what_happened": "The bar above the question box says 'About: A notebook's state follows run order ×', which is a Section 2 part. 'Test this section' sits right under the 'SECTION 2 · NOTEBOOKS YOU CAN TRUST' heading. On stage3_what_you_missed.jpg the bar says 'About: Tidy data' while I am reading a list of 21 Day 2 parts.",
+  "problem": "I open many things at once and lose which one I am answering. Here the 'About' part is not the one on my screen, and I did not choose it. I might send a question about the wrong part without noticing. I also cannot tell whether 'Test this section' tests section 1, which I just did, or section 2.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Make the 'About' bar always show the part I am looking at or tapped last, with a clear 'change' control. Put 'Test this section' at the end of the section it tests, and name it, for example 'Test §1'."
+ },
+ {
+  "id": "F36",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I wanted to work through the 21 parts I missed on Day 2 from first to last.",
+  "what_happened": "The card shows 21 underlined links in two narrow columns. Long titles wrap onto several lines and the bullets do not line up with the text, for example 'Type hints are not enforced' and 'Copy-on-Write: no chained assignment'. The last items are cut off ('The course project: one'). There is no order, no minutes per part and no mark for what I have read.",
+  "problem": "I cannot see where one item ends and the next begins, so I do not know if I have 21 things or 30. I cannot tell where to start or how long it takes. With 60 to 90 minutes a night I need to plan. After I open a part and come back, I cannot tell which ones I have finished.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Show one numbered column, each row with its time (for example '2 min') and a tick once I have read it, with a line at the top like '3 of 21 read · about 45 min left'."
+ },
+ {
+  "id": "F37",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked at the 'Your week' summary to see how far behind I am.",
+  "what_happened": "It shows '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent'. One suggested part says 'taught today · you have not shown what it builds on'.",
+  "problem": "I take 'met' literally, like meeting a person. 'Not met yet' for 172 things looks frightening when I missed only one day. I cannot tell whether 'met' includes 'understood', although the numbers add up to the 202 in 'Contents'. 'You have not shown' sounds as if I failed a test I did not know I was taking. '0 fluent' is discouraging and tells me nothing to do.",
+  "severity": 2,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Use plain labels like 'not started', 'read', 'practising', 'understood', and say what each one means in one line when I tap it. Say 'Not checked yet' instead of 'you have not shown'."
+ },
+ {
+  "id": "F38",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked for where I could see which parts I know and which I should study, among the tabs and the left menu.",
+  "what_happened": "The tabs say 'Your map', 'Your skills', 'For you', 'Contents 202'. The left menu says 'Your page', 'Notes', 'Your knowledge', 'How you read', 'Where we reach you', and there is a 'Your week' card on the page itself. The course names are cut off ('DS403 — Python the Generat…', 'Checks — DS403 — Python the…').",
+  "problem": "'Your map', 'Your skills', 'Your knowledge', 'Your page' and 'Your week' all sound like 'what I know', so I have to open each one and remember what was in it. I do not trust a name when two names could mean the same thing. 'Where we reach you' also makes me wonder what the app does with my contact details.",
+  "severity": 2,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Give every place a name that says what is inside (for example 'Progress by topic', 'Skills list', 'My notes'), drop the repeated 'Your', and add a short grey line under each menu item."
+ },
+ {
+  "id": "F39",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I read the homework card to find out what I have to do by Friday.",
+  "what_happened": "The orange card says 'Homework 1 — data manipulation on sessions 1–4 — due Day 5', under a header 'Day 1 · Mon 19 Oct'. Elsewhere the page says 'Week 1', the quiz screen says '§1' and 'SECTION 2', and the missed-parts card says 'parts'.",
+  "problem": "I count Day 1 and Day 5 as days, but 'sessions 1–4' is said to be done by Day 5, and I do not know if a session is a day, a lesson or something else. Day, session, week, section (§) and part all appear and I take each one literally, so I am not sure what I should have finished by Friday.",
+  "severity": 2,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Pick one word for each unit and keep it everywhere. Write the homework line as 'covers Days 1–4 · due Fri 23 Oct, 09:00'."
+ },
+ {
+  "id": "F40",
+  "persona": "thao",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I picked a time in 'Quick knowledge sync' (5, 10 or 20 min) and looked at the first card, 'Week 1: your own brain'.",
+  "what_happened": "The 10 min button is selected. The card shows 'Simpler · 2 n…', cut off at the edge, and the rest of the card is hidden behind the question bar.",
+  "problem": "'Sync' means synchronising data to me, and 'your own brain' is an idiom I have to translate slowly. I cannot tell if 'Simpler' is a label for this card or a button that makes it easier, and I cannot read the minutes. I do not know what I am meant to do with this box.",
+  "severity": 2,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Rename it to something literal like 'Quick review: pick how much time you have', show 'Simpler version · 2 min' in full, and say in one line what happens when I choose 5, 10 or 20 minutes."
+ },
+ {
+  "id": "F41",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I started to read the 21 parts of the day I missed from the top of the “What you missed on Day 2” list, one after another.",
+  "what_happened": "The 21 titles are underlined links in two narrow columns with bullets, and long titles wrap onto a second line with no bullet (for example “The audience table / Keep the two tables / distinct”, “Type hints are not / enforced”), and the round “48” arrow button sits on top of the last titles (“The exam: tasks like the homework, as an interview”, “The course project: one…”).",
+  "problem": "I cannot tell where one part ends and the next begins, so I do not know if “Keep the two tables distinct” is one part or a continuation of “The audience table”; I also do not know in which order to read the columns, and I cannot read the end of the last titles. I read slowly in English, so every guess costs me.",
+  "severity": 3,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show the parts in one column, in the order they were taught, one part per row (numbered 1 to 21, each title on its own row without cutting it), with the scroll button moved so it does not cover any title."
+ },
+ {
+  "id": "F42",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I read my answers to “Three whiteboard interviews” and “Why data” in Section 1 and then wanted to ask the library about the one I got wrong.",
+  "what_happened": "Under the text box the line “About: A notebook's state follows run order ×” is pinned, which is a part of Section 2 that I am not looking at; on the Day 2 list screen it says “About: Tidy data ×” and I cannot find “Tidy data” in the titles I can see.",
+  "problem": "I open many things at once and lose which one I am answering, and this tells me the library thinks I am asking about something else; if I type “I do not understand this”, I would get an answer about a part I never meant, and I would not know it until I read the answer. The small × is the only way to change it.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Make the “About” chip follow the part I opened or answered last, show its full name with a clear “change” action, and when I press the box on a test result, fill it with that exact question."
+ },
+ {
+  "id": "F43",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I looked at the question box at the bottom to see if I could ask something I do not understand without anybody seeing it.",
+  "what_happened": "On this screen the box says “Just you and the library, about DS403 — Python the Generative Way”, but on the next three screens the same box says “The library answers from the course; your teachers can read it.”",
+  "problem": "The two sentences say opposite things about who sees my question, and I take labels literally; I do not know which one is true, so I would not ask anything that sounds like I am failing, which was my whole reason to come.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Use one sentence everywhere, in plain words, that says exactly who can read my question (for example “Your teachers can read your questions, but they are not marked”), and if there is a private mode, let me pick it before I send."
+ },
+ {
+  "id": "F44",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I read the feedback on my two test answers to understand what I got wrong in “Why data”.",
+  "what_happened": "The first says “You answered ‘questions’ — that's it.” and the second says “You answered ‘certainly not this’ — not quite.” with only a “Try again” button; neither shows the correct word or any reason.",
+  "problem": "“that's it” can mean “correct” or “that is all”, and I do not know the idiom for sure; “certainly not this” looks like a label from the system, not an answer I would type, so I do not trust that it reflects what I did. “Not quite” does not tell me what is missing, so I can only guess again.",
+  "severity": 2,
+  "heuristic": "Help users recognize, diagnose, and recover from errors",
+  "suggestion": "Write “Correct” or “Not correct”, then “Your answer: …”, then “The course says: …” with one short sentence of why and a link to the part that explains it."
+ },
+ {
+  "id": "F45",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I read the row of numbers at the top of “Your week” to know how much of the course I have already covered.",
+  "what_happened": "It shows “172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent”, with no explanation of any of the five words.",
+  "problem": "I take it literally: “met” could mean I read it, I was tested on it, or that I met a requirement; “172 not met yet” sounds like I am failing 172 things, and I do not know who decides when something is “understood” or “fluent” (me, a test, or the teacher). If one word means two things I stop trusting the numbers.",
+  "severity": 2,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Write each count as a plain phrase with the rule inside it (for example “172 parts you have not opened yet”, “3 parts you answered correctly in a test”) and show what each word means when I hover or press it."
+ },
+ {
+  "id": "F46",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked at “Three to look at next” and wanted to open “Data-backed personas” because I did not understand why it was there.",
+  "what_happened": "The card says “taught today · you have not shown what it builds on” without naming what it builds on, the three cards do not look like buttons, and nothing says why these three were chosen out of 202.",
+  "problem": "I cannot tell which earlier part I am missing, so I have to search the contents list from memory; the sentence also sounds like I am being told off for not proving something, and I do not know how to “show” it.",
+  "severity": 2,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Name the earlier part in the card (“Builds on: One dtype per array — test yourself first”) with a button that opens it, and add one line saying why this card is on the list."
+ },
+ {
+  "id": "F47",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I wanted to write a few lines about the day I missed, including what I did not understand, in the “What did you learn?” box.",
+  "what_happened": "The box asks for “what you can now do or explain, and what is still unclear”, says “Your teacher reads it; it is not marked”, and has Today / Last 3 days / This week tabs and a Save button, with “today 12:00” at the top right.",
+  "problem": "I would be writing my confusion for my teacher to read, and “not marked” does not tell me if it is remembered or compared with other students, so I would write only the safe half; the tabs do not tell me which period my text is saved into, and I cannot tell if “today 12:00” is a deadline or the time the card was made (I study after 22:00).",
+  "severity": 3,
+  "heuristic": "User control and freedom",
+  "suggestion": "Let me choose “Only me” or “Share with my teacher” before Save, show after Save the period it went into with a way to edit or delete it, and replace “today 12:00” with a clear label such as “Posted today at 12:00”."
+ },
+ {
+  "id": "F48",
+  "persona": "thao",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I checked when Homework 1 is due so I can plan my evenings.",
+  "what_happened": "The same homework appears twice in different words: “Due Fri, Oct 23, 09:00 AM (in 4 days) Homework 1 — data manipulation on sessions 1–4 — due Day 5” and “Your deadlines: Homework 1 in 4 days · project planning in 11 days · project in 18 days”, under a Day 1 title that is shown twice (the header and the green card).",
+  "problem": "I have to work out that “Day 5” is Friday and that “in 4 days” at 09:00 means only three of my evenings; the repetition makes me wonder whether these are two different deadlines, and I read the same lines several times in English.",
+  "severity": 1,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Show each deadline once, with the date and the time left in hours or evenings (for example “Fri 23 Oct, 09:00 — 3 evenings left”), and drop the repeated Day 1 title."
+ },
+ {
+  "id": "F49",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I looked at the \"Your week\" card to see how far the class is and who is behind.",
+  "what_happened": "The card shows \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\" and \"Three to look at next\" (Look before concluding, One dtype per array, Data-backed personas). Nothing says whose week this is, and nothing names a class or a student.",
+  "problem": "I cannot tell if these numbers are mine, a sample student's, or the whole class's. If they are a student's view I am assuming it is what every student sees, and if they are the class's, I cannot tell who is behind. I lose trust in everything on the page.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Put a clear line at the top of the card saying whose numbers these are (\"Student preview: Lena K.\" or \"Whole class, 22 students\"), and give me a teacher switch that shows the class's counts and the names of the students who are behind."
+ },
+ {
+  "id": "F50",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I scrolled down to the \"What did you learn?\" box to see what students write there.",
+  "what_happened": "It is an open text box (\"In a few lines: what you can now do or explain...\") with a \"Save\" button and the line \"Your teacher reads it; it is not marked.\" It looks the same as it would for a student, with no sign that I am only looking.",
+  "problem": "I came to look without changing anything. One click on Save, or typing a line to test it, could leave an entry in the class's data. I am the teacher, so the sentence \"your teacher reads it\" does not tell me whether I am previewing or really writing.",
+  "severity": 3,
+  "heuristic": "Error prevention",
+  "suggestion": "In a teacher or preview mode, grey out the box and Save and say \"Preview only: nothing you type here is saved or shown to students.\""
+ },
+ {
+  "id": "F51",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I checked which day I am looking at, to be sure it is the one students will see tomorrow.",
+  "what_happened": "The header and a green card both say \"Day 1 · Mon 19 Oct · Setup and tooling\", with \"1 min ago\" beside it, and the deadline card says \"in 4 days\". The other screens show Day 3 (Wed 21 Oct) and Day 5 (Fri 23 Oct). Nothing marks which day is \"today\", and the shelf name is cut off (\"DS403 — Python the Generat...\").",
+  "problem": "I forget which class and which day I am on, and this screen does not help. \"1 min ago\" does not tell me whether the post is live for students or a draft. I cannot tell what students will see tomorrow compared with what I am seeing now.",
+  "severity": 3,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Keep a fixed label at the top of every screen with the full course name, the day and date, and \"Students see up to Day 3\". Mark which day is today, and say plainly whether a post is published or scheduled."
+ },
+ {
+  "id": "F52",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I looked at the section's test to see what a student gets after answering.",
+  "what_happened": "It shows \"Three whiteboard interviews\" with \"You answered \"questions\" — that's it.\" and \"Why data\" with \"You answered \"certainly not this\" — not quite.\" plus \"Try again\". I never typed either answer. \"Test this section\" is a small underlined link under the Section 2 heading, below the Section 1 results.",
+  "problem": "I cannot tell whose answers these are or whether they were saved. If I press \"Try again\" or \"Test this section\", I do not know whether my attempt counts in the class results. The link sits between two sections, so I am also not sure which section it tests.",
+  "severity": 3,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Say whose attempts are shown (\"Your sample answers: preview, not recorded\"). Make \"Test this section\" a proper button inside the section it tests, and say whether it is recorded."
+ },
+ {
+  "id": "F53",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I wanted to ask the library about the test question I was reading.",
+  "what_happened": "The bar above the composer says \"About: A notebook's state follows run order ×\" while the screen shows \"Three whiteboard interviews\" and \"Why data\". On stage3_what_you_missed.jpg it says \"About: Tidy data\" over a list of Day 2 parts.",
+  "problem": "The attached topic does not match what I am reading. I would send a question to the library about the wrong part without noticing, and I would then trust a wrong answer.",
+  "severity": 2,
+  "heuristic": "Error prevention",
+  "suggestion": "Either update the \"About:\" topic to the part on screen, or clear it when I scroll away. Show the topic's title in the composer itself, so I see what I am asking about before I send."
+ },
+ {
+  "id": "F54",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I read the line under \"Ask the library\" to see whether my questions would be seen by the students.",
+  "what_happened": "This screen says \"Just you and the library, about DS403 — Python the Generative Way.\" The next two screens say \"The library answers from the course; your teachers can read it.\"",
+  "problem": "The two lines promise opposite things: private, or readable by teachers. As the teacher I do not know what a student really sees here, and I cannot tell whether my own test questions will show up in the class's history. I need to be sure that what I check is what students see.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Use one sentence on every screen, and add a second sentence in teacher view: \"Your questions here are not shown to students.\""
+ },
+ {
+  "id": "F55",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I opened Day 3 to see what a student who missed Day 2 would be shown.",
+  "what_happened": "A card on top says \"What you missed on Day 2 — Python for data: 21 parts were taught while you were away.\" followed by a long list of links. I was not away.",
+  "problem": "I do not know if this card is shown to every student, only to absent students, or only to me. I also cannot see how many students are behind on Day 2, and that was my reason for being here.",
+  "severity": 3,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "In teacher view, change the title to \"Shown to students who missed Day 2: 5 of 22\", and let me click the number to see their names."
+ },
+ {
+  "id": "F56",
+  "persona": "petra",
+  "run": 1,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I read the list of 21 parts to check that the Day 2 content is complete.",
+  "what_happened": "The list runs in two narrow columns, and every title is a link with an underline. Long titles wrap, so a bullet stands alone on one line and its words sit on the next line (\"Type hints are not / enforced\", \"Reading a CSV / dtypes, and str in / pandas 3\"). The round \"↓ 48\" button covers the end of \"The exam: tasks like the homework, as an...\". The number 48 is not explained, and another screen shows 29.",
+  "problem": "I cannot tell where one item ends and the next begins, so I cannot count the parts or check them against my plan. A badge that covers a title makes it worse, and I do not know whether 48 means unread parts.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Use one column with the bullet and its title on the same line, no underline on every row, and move the \"↓\" button so it never covers text. Say what the number means, for example \"48 new parts below\"."
+ },
+ {
+  "id": "F57",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_day_one.jpg",
+  "what_i_tried": "I opened Home to see what students will see tomorrow and looked for a sign of which class, which day and which view (mine or the students') I was in.",
+  "what_happened": "I see a card 'Day 1 · Mon 19 Oct · Setup and tooling' marked '1 min ago', a deadline 'Due Fri, Oct 23, 09:00 AM (in 4 days)', and 'Ask the library — Just you and the library, about DS403'. Nothing says 'preview', 'teacher' or 'student view'. Other screens show Day 3 and Day 5, and 'taught today', so I cannot tell which day the app thinks is today.",
+  "problem": "I came to check tomorrow's session without touching anything, and I cannot tell whether students see exactly this, on this day, in this order. '1 min ago' on a Day 1 card makes me wonder if something was just published or changed. I do not trust a screen that does not say whose view it is, and I would not sign off on it.",
+  "severity": 4,
+  "heuristic": "Visibility of system status",
+  "suggestion": "Put a permanent banner at the top of every screen, such as 'Class DS403 · Teacher preview of the student view · Day 4, Thu 22 Oct (tomorrow)'. Add a day switcher and a one-line statement of what is different from what students see, or 'nothing'."
+ },
+ {
+  "id": "F58",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_day_one.jpg / stage3_section_test.jpg",
+  "what_i_tried": "I read the line under 'Ask the library' on the first screen, then the same line on the section screen, to understand who could read a question I might type to test the answers.",
+  "what_happened": "The first screen says '— Just you and the library, about DS403 — Python the Generative Way.' The second says '— The library answers from the course; your teachers can read it.'",
+  "problem": "The two lines contradict each other: private versus 'your teachers can read it'. I am a teacher, so I cannot tell whether my test questions are private, visible to me as a teacher, or logged under a student's name. I will not type anything until I know that.",
+  "severity": 3,
+  "heuristic": "Consistency and standards",
+  "suggestion": "Use one fixed sentence in the same place on every screen. For me, make it say plainly what applies to teachers, for example 'Preview: your questions are not saved and not shown to anyone'."
+ },
+ {
+  "id": "F59",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I scrolled through a part to see how the self-test looks and whether clicking in it would change something.",
+  "what_happened": "The blocks already say 'You answered “questions” — that's it.' and 'You answered “certainly not this” — not quite.' with a 'Try again' button. I never answered anything, and I cannot see where those answers came from.",
+  "problem": "I do not know if I am looking at a sample student's answers, my own earlier answers, or demo data. If I press 'Try again' or answer, I may record a result as a student without realising it. 'Not quite' also does not show me the correct answer, so I cannot check the question itself. My goal says 'without editing anything by accident'.",
+  "severity": 3,
+  "heuristic": "Error prevention",
+  "suggestion": "In preview mode, mark the quiz 'Preview only: answers are not saved' and let me reveal the correct answer without answering. Never show 'You answered' text that I did not enter."
+ },
+ {
+  "id": "F60",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_section_test.jpg",
+  "what_i_tried": "I looked for the control that tests a whole section, to see what the section test is like for students.",
+  "what_happened": "'Test this section' is a small underlined link under the heading 'SECTION 2 · NOTEBOOKS YOU CAN TRUST', while the quiz blocks above it belong to '§1 · How this course works' (the sticky header still says §1). A chip 'About: A notebook's state follows run order ×' sits above 'Ask the library' and matches neither visible section.",
+  "problem": "I cannot tell whether the link tests Section 2 (the heading below it) or Section 1 (the content above it). The 'About' chip points to a third thing I did not pick. I forget which section or day I am in, and this screen makes that worse, so I could test or ask about the wrong material.",
+  "severity": 2,
+  "heuristic": "Recognition rather than recall",
+  "suggestion": "Put 'Test this section' on a visible button next to its own section heading, with the section name on it, for example 'Test §2 · Notebooks you can trust'. Make the 'About' chip show the part I last clicked and say so."
+ },
+ {
+  "id": "F61",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "On the Day 3 page I wanted to see what the students' Day 3 starts with.",
+  "what_happened": "A card says 'What you missed on Day 2 — Python for data: 21 parts were taught while you were away.' with a two-column list of underlined links. The 'About: Tidy data ×' chip is attached below it.",
+  "problem": "I was not away; I wrote this material. Seeing it shows me I am looking at a student who skipped a day, and I cannot tell if students who were present get this card too. I wanted to know who is behind, and this only tells me about one imagined student. It also gives me 21 parts in the same blue link style, with no sign of which ones matter.",
+  "severity": 3,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Say who sees the card: 'Shown to students who missed Day 2 (3 of 14 this week)'. Show it to me with the class count instead of 'you were away'."
+ },
+ {
+  "id": "F62",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_what_you_missed.jpg",
+  "what_i_tried": "I read the list of 21 parts to check that the Day 2 recap is complete and in the right order.",
+  "what_happened": "The two-column list wraps badly. Bullets sit on different lines from their text, for example 'Type hints are not' with 'enforced' on a separate bullet line, and 'Reading a CSV' / 'dtypes, and str in' / 'pandas 3'. Everything is underlined, and the last rows are cut off by the Ask-the-library bar and the round '48' button. I cannot tell where one part ends and the next begins.",
+  "problem": "On the phone I use to check the student view, I cannot read the list reliably. I might think there are more entries than there are, miss that 'The course project: one…' is cut off, and not trust that I saw the whole list. The Ask bar takes about a third of the screen all the time.",
+  "severity": 2,
+  "heuristic": "Aesthetic and minimalist design",
+  "suggestion": "Use a single column on a phone, with one part per row, a number or the part's section, and a plain 'show all 21' fold. Make the Ask bar collapse while I read."
+ },
+ {
+  "id": "F63",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "On the laptop I looked at 'Your week' for a sign of who in the class is behind.",
+  "what_happened": "I see 'Your week' with chips '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent' and 'Three to look at next', for example 'Data-backed personas — taught today · you have not shown what it builds on'. Nothing says whose numbers these are.",
+  "problem": "'Met', 'worked on', 'understood' and 'fluent' are not words I use for learning. I cannot tell if '172 not met yet' is the whole class, one demo student, or me. 'You have not shown what it builds on' speaks to a student, not to me. I could not find who is behind, and the only guess is 'Members' in the sidebar. I came for exactly that.",
+  "severity": 3,
+  "heuristic": "Match between system and the real world",
+  "suggestion": "Give me a clearly named class view: 'Class: 14 students · 3 behind on Day 2' with the names, and keep 'Your week' as the student's view marked 'as a student sees it'. Use the course's own words for the five states."
+ },
+ {
+  "id": "F64",
+  "persona": "petra",
+  "run": 2,
+  "screen": "stage3_your_week_laptop.jpg",
+  "what_i_tried": "I scrolled down the Stream to the bottom of the page and looked at the 'What did you learn?' card.",
+  "what_happened": "A text box says 'In a few lines: what you can now do or explain, and what is still unclear.' with 'Today / Last 3 days / This week' chips, an 'Add a screenshot of your work' link and a 'Save' button. It says 'Your teacher reads it; it is not marked.'",
+  "problem": "I am the teacher, so 'Your teacher reads it' means me, and a click on 'Save' could post a note under a student's name or my own. It is a live input on a page I am only supposed to look at. If I try it to see what happens, I may leave a stray entry that students or I will find later.",
+  "severity": 3,
+  "heuristic": "Error prevention",
+  "suggestion": "In the teacher preview, grey out the box and Save and label it 'Students write here; you will read it under Members'. If it stays live, ask 'Save as a test entry? It will be removed' and offer an undo."
+ }
+]

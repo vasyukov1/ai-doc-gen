@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04 and US.C.87.05",
+      "what_i_tried": "I opened the course on a teaching day looking for one place that lists what is due and by when.",
+      "what_happened": "The first screen is 'Your N minutes', which is built from a time budget. Homework is 'pinned with its deadline' inside the day's feed, between 'every part as its own post' and the 'What did you learn?' prompt. No screen lists the due items across days, and nothing says whether I have already sent mine.",
+      "problem": "My whole goal is 'what is due'. I would have to scroll a day's feed, and then the earlier days, to assemble that list myself. A time budget is not a deadline. I would give up and ask a classmate.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Put a 'Due' strip at the very top of the course: one row per homework with the deadline and a state (not sent, sent v2 on time, revised after the deadline). One tap on a row opens it."
+    },
+    {
+      "screen": "US.C.87.04 (homework pinned, parts as separate posts)",
+      "what_i_tried": "I opened the pinned homework and wanted to see which parts I need to know to do it, so I could skip the rest.",
+      "what_happened": "The structure shows the homework pinned with its deadline and every part as its own post with a test after each section. It does not say the homework points at the parts it needs. The only prerequisites mentioned are wired inside the kernel, not shown to me.",
+      "problem": "I would have to remember which parts the homework is about and scan 40 or so posts to find them. That is exactly the reading I am trying to avoid, and I would miss one.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Under the homework, list 'Needs these parts' as links with a tick on each part I have already passed its Check me for. Tapping one opens that part at the right level."
+    },
+    {
+      "screen": "US.C.87.04 (UA.01, UA.02, UA.03, UA.08, UA.09)",
+      "what_i_tried": "I looked at a single part to get the code and the one fact I need, and move on.",
+      "what_happened": "Each post carries Read more, Simpler · Core · Deeper, In code, Taught again, Unclear, Check me, Suggest a change and Ask about this. 'In code' sits behind Read more and then the level switch.",
+      "problem": "That is eight or more controls per post and I have to open the post before I reach the one I want, which is the code. Two taps for what should be one. I will ignore most of them, and they may hide the one that matters.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the code toggle on the collapsed post. Keep Check me and Ask about this visible, and put Unclear, Suggest a change and Taught again under a single overflow menu."
+    },
+    {
+      "screen": "US.C.87.05 (UA.01 to UA.03)",
+      "what_i_tried": "I set 'Your N minutes' to my three minutes and took the first item.",
+      "what_happened": "The budget has three values, 5, 10 and 20 minutes. Each item comes 'with why', and tapping it opens the post at the suited level with Check me open.",
+      "problem": "I have three minutes, not five, so the list is already too long for me. The 'why' line is a sentence I will not read. There is also no way to say 'I know this, skip it', so Check me is the only shortcut and it is not labelled as one.",
+      "severity": 2,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a 3 minute budget or a free number field. Add an 'I know this' button on each item that runs the one check and, if I pass, ticks the part off and moves to the next."
+    },
+    {
+      "screen": "US.C.70.11 (Just you and the library tab) with UA.US.C.87.04.09 and UA.US.C.87.05.04",
+      "what_i_tried": "I typed a question into the box under a card the way I would in Slack, and hit the button.",
+      "what_happened": "There are two tabs. The privacy notice, 'Just you and the library — unless you ask an expert to check this card, which shares it', is a paragraph at the top of the panel. The only other difference is that the send button says Ask on one tab and Comment on the other. There are also two more entries for asking the library, 'Ask about this' on a post and 'ask the library a course question'.",
+      "problem": "I skip paragraphs, so I will not read the notice, and the one-word button change is easy to miss. I could post a naive question publicly under my name, or write to the library thinking an expert reads it. Three differently named doors to the same library also make me unsure which one keeps my history.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Make the button itself carry the audience: 'Ask the library (private)' and 'Post comment (public, as Rune)'. Use one name, 'Ask the library', for all three entries."
+    },
+    {
+      "screen": "Section 1 (brief): 'what a recipient is shown is decided from everything the product knows about them' and US.C.81.03",
+      "what_i_tried": "I assumed the due items and the parts I must know would be in the same place for everyone, and I would not have to check.",
+      "what_happened": "The brief says the digital twin decides what and in what form a recipient is shown. The only way to see the stream unshaped is a separate situation, 'see the stream unpersonalized'.",
+      "problem": "I cannot trust a list that a model may have reordered or trimmed for me. If a deadline is not in my view I fail without noticing. I also will not go looking for a personalization switch.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Keep deadlines and homework outside personalization, and show a fixed 'N due, all shown' counter on the course screen. Any personalized list gets a visible 'show all' toggle right next to it."
+    },
+    {
+      "screen": "US.C.87.04, US.C.87.05 and US.C.70.05 (switch between streams and chats)",
+      "what_i_tried": "I opened the course on my work laptop, between meetings.",
+      "what_happened": "Both course situations are written as 'on their phone', with the course as a first screen with 'Your N minutes'. The brief's desktop is a Slack-like split of streams and chats, and the course day is not placed in it, so I cannot tell where the course lives or how a due item shows there.",
+      "problem": "Most of my use is at a desk, and I expect the Slack or Telegram pattern: a left list with the course marked as due or unread. If the course is one stream among several communities I may open the wrong one and not see the minutes block at all.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Specify the laptop course day too: the course pinned at the top of the streams list with a due count badge, opening to the same 'Due' strip and 'Your N minutes' block as the phone."
+    },
+    {
+      "screen": "US.C.89 (02 the morning briefing arrives, 05 turn it down or off) and TS.C.87.04.01 (release event)",
+      "what_i_tried": "I connected Slack or Telegram so that I get only what is due and nothing else.",
+      "what_happened": "A morning briefing arrives, and an undated piece now also raises a release notice, pooled in the next send window. The only control listed is 'turn it down or off', and the structure does not say what the briefing holds or whether I can filter it.",
+      "problem": "Every undated reading now reaches me as a notice, so the useful message (what is due) is buried in noise. A piece with no date is told to me with no sign of whether it is required. If the only choice is all or off, I turn it off and miss the real deadlines.",
+      "severity": 2,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a per-channel setting 'only things with a deadline'. Put the due items first in the briefing, each with a link to the homework, and mark undated pieces 'optional' or 'required'."
+    }
+  ]
+}

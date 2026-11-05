@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked at the \"Your week\" card to see how far the class is and who is behind.",
+      "what_happened": "The card shows \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\" and \"Three to look at next\" (Look before concluding, One dtype per array, Data-backed personas). Nothing says whose week this is, and nothing names a class or a student.",
+      "problem": "I cannot tell if these numbers are mine, a sample student's, or the whole class's. If they are a student's view I am assuming it is what every student sees, and if they are the class's, I cannot tell who is behind. I lose trust in everything on the page.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Put a clear line at the top of the card saying whose numbers these are (\"Student preview: Lena K.\" or \"Whole class, 22 students\"), and give me a teacher switch that shows the class's counts and the names of the students who are behind."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I scrolled down to the \"What did you learn?\" box to see what students write there.",
+      "what_happened": "It is an open text box (\"In a few lines: what you can now do or explain...\") with a \"Save\" button and the line \"Your teacher reads it; it is not marked.\" It looks the same as it would for a student, with no sign that I am only looking.",
+      "problem": "I came to look without changing anything. One click on Save, or typing a line to test it, could leave an entry in the class's data. I am the teacher, so the sentence \"your teacher reads it\" does not tell me whether I am previewing or really writing.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "In a teacher or preview mode, grey out the box and Save and say \"Preview only: nothing you type here is saved or shown to students.\""
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I checked which day I am looking at, to be sure it is the one students will see tomorrow.",
+      "what_happened": "The header and a green card both say \"Day 1 · Mon 19 Oct · Setup and tooling\", with \"1 min ago\" beside it, and the deadline card says \"in 4 days\". The other screens show Day 3 (Wed 21 Oct) and Day 5 (Fri 23 Oct). Nothing marks which day is \"today\", and the shelf name is cut off (\"DS403 — Python the Generat...\").",
+      "problem": "I forget which class and which day I am on, and this screen does not help. \"1 min ago\" does not tell me whether the post is live for students or a draft. I cannot tell what students will see tomorrow compared with what I am seeing now.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Keep a fixed label at the top of every screen with the full course name, the day and date, and \"Students see up to Day 3\". Mark which day is today, and say plainly whether a post is published or scheduled."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I looked at the section's test to see what a student gets after answering.",
+      "what_happened": "It shows \"Three whiteboard interviews\" with \"You answered \"questions\" — that's it.\" and \"Why data\" with \"You answered \"certainly not this\" — not quite.\" plus \"Try again\". I never typed either answer. \"Test this section\" is a small underlined link under the Section 2 heading, below the Section 1 results.",
+      "problem": "I cannot tell whose answers these are or whether they were saved. If I press \"Try again\" or \"Test this section\", I do not know whether my attempt counts in the class results. The link sits between two sections, so I am also not sure which section it tests.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Say whose attempts are shown (\"Your sample answers: preview, not recorded\"). Make \"Test this section\" a proper button inside the section it tests, and say whether it is recorded."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I wanted to ask the library about the test question I was reading.",
+      "what_happened": "The bar above the composer says \"About: A notebook's state follows run order ×\" while the screen shows \"Three whiteboard interviews\" and \"Why data\". On stage3_what_you_missed.jpg it says \"About: Tidy data\" over a list of Day 2 parts.",
+      "problem": "The attached topic does not match what I am reading. I would send a question to the library about the wrong part without noticing, and I would then trust a wrong answer.",
+      "severity": 2,
+      "heuristic": "Error prevention",
+      "suggestion": "Either update the \"About:\" topic to the part on screen, or clear it when I scroll away. Show the topic's title in the composer itself, so I see what I am asking about before I send."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I read the line under \"Ask the library\" to see whether my questions would be seen by the students.",
+      "what_happened": "This screen says \"Just you and the library, about DS403 — Python the Generative Way.\" The next two screens say \"The library answers from the course; your teachers can read it.\"",
+      "problem": "The two lines promise opposite things: private, or readable by teachers. As the teacher I do not know what a student really sees here, and I cannot tell whether my own test questions will show up in the class's history. I need to be sure that what I check is what students see.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one sentence on every screen, and add a second sentence in teacher view: \"Your questions here are not shown to students.\""
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I opened Day 3 to see what a student who missed Day 2 would be shown.",
+      "what_happened": "A card on top says \"What you missed on Day 2 — Python for data: 21 parts were taught while you were away.\" followed by a long list of links. I was not away.",
+      "problem": "I do not know if this card is shown to every student, only to absent students, or only to me. I also cannot see how many students are behind on Day 2, and that was my reason for being here.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "In teacher view, change the title to \"Shown to students who missed Day 2: 5 of 22\", and let me click the number to see their names."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I read the list of 21 parts to check that the Day 2 content is complete.",
+      "what_happened": "The list runs in two narrow columns, and every title is a link with an underline. Long titles wrap, so a bullet stands alone on one line and its words sit on the next line (\"Type hints are not / enforced\", \"Reading a CSV / dtypes, and str in / pandas 3\"). The round \"↓ 48\" button covers the end of \"The exam: tasks like the homework, as an...\". The number 48 is not explained, and another screen shows 29.",
+      "problem": "I cannot tell where one item ends and the next begins, so I cannot count the parts or check them against my plan. A badge that covers a title makes it worse, and I do not know whether 48 means unread parts.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Use one column with the bullet and its title on the same line, no underline on every row, and move the \"↓\" button so it never covers text. Say what the number means, for example \"48 new parts below\"."
+    }
+  ]
+}

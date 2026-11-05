@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the grey 'Everyone' dropdown at the top first, to find out which class and which day I am looking at.",
+      "what_happened": "It only says 'Everyone', with no label. The stream below has entries dated 2026-08-11, 2026-08-14, 2026-08-18 and 2026-08-24, and nowhere does it say which class or which session day this is.",
+      "problem": "I forget which class or day I am on, and here nothing reminds me. 'Everyone' could be a class, an audience filter or a student picker. I cannot tell whether I am looking at tomorrow's session or at last month.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Replace the bare 'Everyone' with a fixed header line such as 'Class DS402-A · Session of 30 Oct · viewing as teacher', so the class, the day and my role are always readable."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I tried to read the stream as a list of who is behind, starting with the entry from 'nour'.",
+      "what_happened": "The entry reads 'nour  worked: the sharding exercise sheet  finished: 3 of 5  askedFor: an easier sheet'. It uses lowercase names and raw field names such as 'askedFor', and it is in a different style from the cards around it. A card from 'twin-ada' says 'You have opened the placement chapter three times this fortnight without finishing it'.",
+      "problem": "The raw labels look like a database record, not like something meant for a teacher. The 'twin-ada' card is written to a student ('You have opened...'), so I cannot tell whether I am seeing a student's private nudge or the shared stream. If students can see each other's notes I have a privacy problem. If they cannot, I am not seeing what they see.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write these entries in plain sentences ('Nour finished 3 of 5 on the sharding sheet and asked for an easier one'). Mark every entry with who can see it, for example 'Only Ada sees this' or 'Whole class'."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I wanted to scroll to the bottom to see the newest entries, and I looked at the 'Write something...' box and the 'Ask the library' button.",
+      "what_happened": "The newest card ('Graph storage moved to per-record documents', 3 experts · 1 twin) is cut off by the pinned composer. The composer has one big button, 'Ask the library', with a small arrow. The box is labelled 'Write something...' while the stream header says 'Everyone'.",
+      "problem": "I cannot tell whether typing here posts to the stream for everyone, or sends a private question to the library. The arrow suggests other actions but does not say which. Writing to the whole class by accident is exactly what I am afraid of.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Make the composer say where the text goes ('Private question to the library' or 'Post to the whole class'). Make the other action a clearly named second button, or ask me to confirm before anything is posted to everyone."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I looked for what students will see tomorrow, and read 'Revision r14 · Sep 9, 2026' and '12 elements in 4 chapters'.",
+      "what_happened": "The page shows a revision number and a date, and 'Kept by the infra community' with initials under KEEPERS. It does not say whether r14 is what students have now or what they get tomorrow, or whether there are unpublished changes.",
+      "problem": "I assume that what I see is what students see, and this page does nothing to confirm it. 'Revision' and 'Kept by' read like a wiki, not like a teacher's session. If r15 goes out tonight I would not know.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Add a line such as 'Students see revision r14 now. Tomorrow's session shows r14 (no changes since)'. Give me a clear 'See as a student' switch with a banner saying so while it is on."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I read the grey text under the tabs and the green badges on each element ('3 experts · 1 twin') to judge whether the content is ready.",
+      "what_happened": "The text says 'Every element is checked on its own. There is no score for the kernel as a whole — three confirmed definitions say nothing about a contested caveat.' The badges show '✓ 3 experts · 1 twin' with several overlapping round initials, such as AC, BL, AT and LI, that run into each other.",
+      "problem": "I know the content perfectly, but I do not know what a 'kernel', a 'twin' or a 'contested caveat' mean here, or whether '3 experts' is good enough for tomorrow. The overlapping initials cannot be read.",
+      "severity": 2,
+      "heuristic": "Help and documentation",
+      "suggestion": "Use plain words ('checked by 3 teachers', 'a student's digital assistant' or whatever twin means). Add a small 'What does this mean?' link next to the badge. Let me tap the badge to see the full names."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I opened 'Your map' hoping it would show who in the class is behind.",
+      "what_happened": "It shows '0 learned · 0 worked on · 12 not yet' and the text 'From your own answers, not a score.' So it is my own map, and it is empty. The tab row (Stream, Your map, Homework, Your skills, 'Fo...') has nothing for the class.",
+      "problem": "My main goal tonight is to see who is behind. This screen is built for a student, and I get my own blank progress instead, which looks as if I had never studied my own course. I can find no view of the class anywhere in the three screens.",
+      "severity": 4,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "For a teacher, show the class on this tab: each element with how many students have learned it, and a short list of the students who are behind, which I can open one by one."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I considered tapping 'I understand everything here' and 'Reply' on 'A shard' to see what a student sees.",
+      "what_happened": "The page says 'Open a piece to read it, see what its level rests on and correct it: your correction wins and stays marked as yours.' There is an 'I understand everything here' button and a 'Reply' link on every piece. Nothing says that I am only previewing.",
+      "problem": "I am afraid to click anything. A tap on 'I understand everything here' might mark all 3 pieces as learned, and a 'correction' might change something the students see. I cannot tell what is undoable.",
+      "severity": 3,
+      "heuristic": "User control and freedom",
+      "suggestion": "Give teachers a read-only preview where these buttons are greyed out and a banner says 'Preview: nothing here is saved'. Add a visible 'Undo' after any action that marks or corrects something."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked at the top of the page to see how the sections are organised.",
+      "what_happened": "A white box with only 'What a shard is' sits above the counts, and the same heading comes back below with a triangle and '3 pieces · 0 of 3 learned'. The tabs are cut off at the right edge ('Fo...'). The text on each piece is truncated ('A shard is one horizontal slice of a collectio...').",
+      "problem": "It looks broken or duplicated, so I trust it less. I cannot see all the tabs, and I cannot read a whole definition without opening it, which is slow when I want to check many pieces tonight.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the section heading once. Let the tab row wrap or show a 'more' menu so no tab is hidden. Show the full first sentence of each piece, or give me an 'expand all' control."
+    }
+  ]
+}

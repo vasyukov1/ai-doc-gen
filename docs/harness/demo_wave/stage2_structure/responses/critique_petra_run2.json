@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.06 — A teacher runs the class (and section 3, C.87 list)",
+      "what_i_tried": "I looked for the one place where I can open tomorrow's course the way my students will see it, so I can check it tonight.",
+      "what_happened": "US.C.87.06 gives me five things to do (register, ask one student, read homework, set levels and rules, split a syllabus); no situation in the whole list lets a teacher view the student course, and the only student day described, US.C.87.04, is written for a student on a phone, on a teaching day.",
+      "problem": "My main goal tonight is to see what students will see tomorrow. If there is no preview, I will assume the manager pages I see are the student view, or I will go to the student side and not know whether it is the same. I lose trust the moment I cannot tell whether students see what I see.",
+      "severity": 4,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Give me a 'Students tomorrow' view: the course day exactly as a student gets it (announcement, parts, tests, homework with deadline, pinned question), reading only, with a visible label that says 'preview, not sent' and the class and day it shows."
+    },
+    {
+      "screen": "US.C.87.07 — who is on a course / US.C.87.06 / US.C.87.04.02",
+      "what_i_tried": "I looked for 'who is behind' and opened 'who is on a course' first, because it is the only title that sounds like a list of my students.",
+      "what_happened": "By its title (and the invitation and removal wording in US.C.87.08.03) it is a roster of who is in the class, not who is behind; in US.C.87.06 the only way to see a student's state is to read one student's homework at a time, and students' taps on 'Unclear' or their 'What did you learn?' entries 'are seen by the teacher' (US.C.87.04.02) with no place named where I read them.",
+      "problem": "To answer 'who is behind' I would have to open every student separately and remember what I saw; with 30 minutes in the evening I will not finish, and the signals students send me have no home that I can find.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "One class page: a row per student with homework sent / missing against the deadline, parts they ticked, and the parts where they tapped 'Unclear', sorted so the ones who are behind are on top, each row opening that student's detail."
+    },
+    {
+      "screen": "US.C.87.06.01 — keep the register for a session (taught, present, room checks) and US.C.87.04 'What is on screen'",
+      "what_i_tried": "I tried to mark a session as 'taught' tonight, to see whether the tests that come 'after each section once taught' would then show up in the student view.",
+      "what_happened": "The student's screen is described as showing 'sections with a test after each once taught', so the register entry I make as a record also decides what students see; the structure does not say that marking 'taught' releases anything, and US.C.87.08.05 lists taking back a verdict, an extension or a mark, but not a register entry.",
+      "problem": "I could change what the whole class sees tomorrow while I think I am only checking or keeping notes, and I may not find a way to take it back, which is exactly the accident I am afraid of.",
+      "severity": 3,
+      "heuristic": "User control and freedom",
+      "suggestion": "Say on the register control what it does ('Marking this taught shows the tests to the class now') and ask once before it does; add a 'Take back' next to the entry that returns the class to the state before."
+    },
+    {
+      "screen": "US.C.87.04 — A student's course day (opened on my phone)",
+      "what_i_tried": "I opened the course on my phone to check how it looks, then tapped 'Check me' and 'Unclear' on a part to see what the student gets.",
+      "what_happened": "Every action on that screen is a real action for a real person: 'Unclear' means 'the teacher sees it', 'Ask about this' is answered 'with their last answer there', homework and 'What did you learn?' are sent, and US.C.87.08.01 shows that anything posted lands in front of the whole class; nothing says that I am viewing as a teacher or that my taps are not counted.",
+      "problem": "I cannot test the student side without perhaps leaving answers, flags or remarks in the class record, and I do not know whether my own taps will appear in the numbers I use to see who is behind.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "When a teacher opens the student surface, show a fixed bar 'Preview: nothing you tap here is saved or shown to the class', and make the send buttons do nothing but show a sample result."
+    },
+    {
+      "screen": "US.C.87.06 — A teacher runs the class (surface S.71.F.13) and US.C.87.04 (before the session, after it, in the evening)",
+      "what_i_tried": "I opened the register and homework for the class and wanted to be sure which class, which session and which day I was working on.",
+      "what_happened": "US.C.87.06 says only 'during and after a session week'; no situation names a current class, session or day on screen, and the student's day (US.C.87.04) changes between before the session, after it and in the evening, so it matters which of those I am looking at.",
+      "problem": "I forget which class or day I am on, and at 9 pm tonight the course would look different from how it looks tomorrow morning. I could read, mark or extend a deadline in the wrong session and not notice.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Keep the class name, session number and date, and 'now' or 'tomorrow morning' fixed in the header of every teacher screen, and ask me to confirm the session before I extend a deadline or mark."
+    },
+    {
+      "screen": "US.C.87.06.04 — set the course's levels and rules, with US.C.82.02 (you correct it) and US.C.87.04.01 (Simpler · Core · Deeper)",
+      "what_i_tried": "I set the course's levels and rules and then wanted to confirm that each student will get what I set.",
+      "what_happened": "US.C.82.02 says the student's own correction outranks the machine and the moderator, and the student surface switches Simpler, Core, Deeper per person, so two students may see different text for the same part; nothing in what I am shown lets me see how many students differ from what I set.",
+      "problem": "'What students see tomorrow' is not one thing; I cannot tell which version of a part I am checking, and I cannot tell who has overridden my settings, so I cannot trust that I have seen the same as them.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "On each part in the manager, show the level the class gets by default, and a line 'N students see another level or changed their own setting' that opens the list; let me switch my preview between Simpler, Core and Deeper."
+    },
+    {
+      "screen": "TS.C.87.04.01 — A release event, and US.C.89.03 greenlight a send window",
+      "what_i_tried": "I prepared a part for tomorrow tonight and tried to find out whether publishing it sends it to students now, in tomorrow's morning message, or only when I say.",
+      "what_happened": "The task spec says a piece with no deadline 'is raised on publish' and 'appears in the next window', and the only control I can see is 'greenlight a send window' in C.89; neither says what the next window is or what time it falls on.",
+      "problem": "Publishing is outward-facing and I cannot take back a message that has already gone to students' Telegram; if I do not know when it goes I will either not publish or publish too early.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Before and after I publish, show 'Goes to students at 08:30 tomorrow (Telegram and in the course)' with the time, and let me hold it or change the time until it is sent."
+    },
+    {
+      "screen": "US.C.87.08 — A mistake is taken back (UA.US.C.87.08.09 and the 'Tests' list)",
+      "what_i_tried": "I tried to find where I read what happened on the course and recover something a correction replaced.",
+      "what_happened": "The way is written as `GET /kernels/{k}/actions`, errors are written as '(403)' and 'not found', and the text says what cannot be undone yet is 'written down' in G1–G6 and that 13 gaps are known, in a document, not in the app.",
+      "problem": "I am a teacher, not a developer: I cannot use a web address and I do not know which mistakes I can still take back. 'Nothing is lost' does not help me if I cannot reach it and I do not know the 13 exceptions when I am about to tap something.",
+      "severity": 3,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "A 'History' page in the teacher's panes, in plain words ('You extended Anna's deadline on Tuesday, 18:02 - Take back'), and a short list there of what can still not be taken back, shown next to the action that is affected."
+    }
+  ]
+}

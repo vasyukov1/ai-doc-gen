@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the grey box at the top that says \"Everyone\" and expected it to be a way to pick a class or to see the page as a student sees it.",
+      "what_happened": "It is a bare dropdown with the word \"Everyone\" and no label; the same box sits unchanged at the top of all three screens, and nothing says whether it filters the posts, switches the class, or switches who I am.",
+      "problem": "I cannot tell which class or audience I am looking at, and I cannot tell whether what I see is exactly what students see tomorrow. That is the one thing I need to trust, so I would stop trusting the page.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Replace the bare dropdown with a labelled bar such as \"Viewing: Class 2B as a student sees it\" (with the class name written out), and make it obvious how to switch to the teacher view and back."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scrolled the stream for what students will see tomorrow and for any sign of which day and which course these posts belong to.",
+      "what_happened": "The posts are stamped 2026-08-11 to 2026-08-24, they are about chunk map retention and graph storage while the course screen is about sharding, and nothing marks a post as \"today\", \"tomorrow\" or \"not yet published\".",
+      "problem": "I forget which day and which class I am in, and here I have no way to find out; I cannot separate what is already visible to students from what comes tomorrow, so I cannot do my evening check.",
+      "severity": 4,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show the course name on every post, group the stream by day with a clear \"Tomorrow, Thursday\" section, and mark posts that students do not see yet as \"scheduled\"."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I read the grey card from \"nour\" to find out who is behind with the homework.",
+      "what_happened": "It shows the raw lines \"worked: the sharding exercise sheet  finished: 3 of 5  askedFor: an easier sheet\" with a user name in lower case and no heading, like a data record.",
+      "problem": "It looks like debug output, not a message, so I am not sure whether it is a note to me, a log, or something the whole class also reads; \"askedFor: an easier sheet\" about a named student worries me if everyone can see it.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write it as a sentence a person would read (\"Nour finished 3 of 5 on the sharding exercise sheet and asked for an easier one\") and say on the card who can see it (\"only you\")."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I read the card from \"twin-ada\" to see whether this is something a student receives or something about a student.",
+      "what_happened": "The text speaks to \"you\" (\"You have opened the placement chapter three times this fortnight without finishing it\") but the card is labelled twin-ada and shows \"0 experts · 1 twin\", so I cannot tell who \"you\" is.",
+      "problem": "If this is a private nudge to Ada, I should not be reading it in the same stream as the course posts; if it is addressed to me, it is wrong. I do not know whether students see each other's cards, and I do not know what a \"twin\" is.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Say on the card whom it is for and who sees it (\"Private note to Ada Torres, visible only to her and to you\"), and explain \"twin\" once in plain words the first time it appears."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the small pills under each post (\"Not yet checked\", \"0 experts · 1 twin\", \"! 3 experts · 1 twin\" with coloured initials) to learn whether a post is reliable before students read it.",
+      "what_happened": "The pills use \"experts\" and \"twin\" with no explanation, the exclamation mark on the last one is not explained, and \"Not yet checked\" does not say by whom or what happens next; the avatars overlap and are cut off at the bottom edge.",
+      "problem": "I cannot tell if \"Not yet checked\" means students are already reading unchecked material, and I do not know if the red \"!\" with 3 experts is good or bad news.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use plain words (\"Checked by 3 teachers; 1 student asked about it\") and a short \"What do these mean?\" link under the first pill; for \"Not yet checked\" say whether students can see it."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I opened \"Your map\" to see who in the class is behind.",
+      "what_happened": "It says \"0 learned · 0 worked on · 12 not yet\" and \"From your own answers, not a score\", so it is my own empty map as if I were a student, with no class or student list.",
+      "problem": "I read the zeros first as the class being completely behind; only after the second sentence do I understand it is about me. The screen does not answer my question and I cannot find where the class overview is.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "For a teacher, put a class overview first (\"6 of 24 students have not started this chapter\", with names) and keep the personal map behind a clearly named \"My own map\" tab."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I wanted to open pieces and look at them, but I was afraid to touch anything: there is \"I understand everything here\" under the section title and a \"Reply\" link on each piece.",
+      "what_happened": "Both are live-looking controls with no sign that I am only previewing; the text says \"your correction wins and stays marked as yours\", which tells me my clicks are recorded.",
+      "problem": "My goal is to check without editing anything by accident; a wrong tap could mark a section as understood or post a reply under my name, and I would not know how to undo it.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Add a visible \"Preview, nothing you do here is saved\" banner in teacher view and disable or ask for confirmation on \"I understand everything here\" and \"Reply\"."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I tapped into the \"Write something...\" box at the bottom of the stream, wondering whether it would post to the class or to the library.",
+      "what_happened": "On the stream the box has no caption and the green \"Ask the library\" button has a small arrow beside it; on the two course screens the same box has the line \"Just you and the library, about Sharding and data placement\", which the stream does not have.",
+      "problem": "I cannot tell whether my text would go to all students or only to the library, and the arrow may hide another choice such as posting to everyone; one slip and a half-written teacher remark is in front of the class.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Show the same caption on the stream as on the other screens, and when the arrow offers \"Post to everyone\" label it plainly and ask \"Send to the whole class?\" before posting."
+    }
+  ]
+}

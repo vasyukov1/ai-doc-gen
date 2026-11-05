@@ -1,0 +1,195 @@
+{
+  "changes": [
+    {
+      "id": "W1",
+      "change": "In US.C.87.04 and US.C.87.05, define one top-down order for the student's course screen and add it as acceptance lines to both: first a 'Due' strip listing every open homework across the whole course, sorted by deadline, each row with title, deadline and state (not sent / sent / sent late) opening the homework in one tap, headed 'N due, all shown' and never personalised; then the 'Your N minutes' card, named by the chosen budget ('Your 5 minutes'), with the 5 / 10 / 20 switch on the card itself; then the day's stream of parts in taught order.",
+      "findings": ["F01", "F08", "F16", "F19", "F24", "F29"],
+      "personas": ["ayla", "rune"],
+      "decision": "ACCEPT",
+      "reason": "Two personas at severity 3 in six findings and the two specs disagree; homework and deadlines are 'what the course requires', so they stay unpersonalised (I5), and the stream stays below in taught order (I1)."
+    },
+    {
+      "id": "W2",
+      "change": "In US.C.87.04 (Ask about this), US.C.87.05 (ask the library a course question), US.C.70.11 and US.C.87.08 (the class discussion box), put the audience on every send button: 'Ask the library' with the line 'Not shown to the class · your teaching team can read it', and 'Post to the class as <name>' in a different colour with a confirm on the first public post; rename all three library entries to 'Ask the library' and use 'part' everywhere instead of card, piece and post; clear or warn about a typed draft when switching tabs; rename 'ask an expert to check this card' to 'Ask an expert to verify this part' and add a confirm step listing what the expert will read (the part and the student's questions on it), with Cancel.",
+      "findings": ["F04", "F11", "F12", "F14", "F15", "F23", "F28", "F33", "F36", "F41", "F44"],
+      "personas": ["ayla", "rune", "thao"],
+      "decision": "ACCEPT",
+      "reason": "Three personas, mostly severity 3; I4 says 'their questions and notes stay their own, and the teaching team can read what is said to the library', so the label states exactly that and never 'only you', and 'check' is kept for the self-test (I2)."
+    },
+    {
+      "id": "W3",
+      "change": "In US.C.87.08, add the student's take-backs as user actions with acceptance lines: Unclear (UA.US.C.87.04.02) becomes a toggle the student taps again to withdraw, with a short 'Withdrawn' line, and shows one plain line stating exactly what the teacher sees before it is tapped; a Check me or section-test answer can be answered again and the student sees their latest answer; a remark's 'Delete' is renamed 'Remove from the class' and its confirm says 'Your teaching team can still read the original in the course record'.",
+      "findings": ["F05", "F21", "F32", "F38", "F40", "F45"],
+      "personas": ["ayla", "rune", "thao"],
+      "decision": "ACCEPT",
+      "reason": "Three personas; I3 requires that what the student marks (unclear included) be 'visible to them and correctable by them', and today Unclear and a Check me answer cannot be taken back; the remove wording stays true to I4."
+    },
+    {
+      "id": "W4",
+      "change": "Add a teacher situation to US.C.87.06, 'Preview a day as students see it': the teacher picks a class and a day and gets the student's course screen for it (announcement, parts in taught order with badges and checks, section tests, pinned homework with deadline, pinned question) under a fixed bar 'Preview: <class>, <day>; students see this from <date, time>; nothing you tap here is saved or counted', with a Simpler / Core / Deeper switch and the line 'Each student's level is their own; what a part says is the same at every level'; every student control in the preview is a try-out that writes nothing to the class's Unclear, tests, questions or history.",
+      "findings": ["F48", "F50", "F52", "F56", "F59", "F61"],
+      "personas": ["petra"],
+      "decision": "ACCEPT",
+      "reason": "Severity 4 twice; 'the teacher stays in control of what is taught and when' (I4) requires seeing it before students do, the level switch shows that only form varies (I5), and try-outs keep students' own records clean (I3)."
+    },
+    {
+      "id": "W5",
+      "change": "In US.C.87.04, mark each part as new / read / checked for that student; add 'Continue where you left off' at the top of the course screen, reopening the last open part or the Check me question left half-done; add a situation 'I missed a day' with a day list (per session day: parts read of total, open homework with its deadline, the teacher's question if still open) and 'Read this day from the start', which walks that day's parts in taught order.",
+      "findings": ["F02", "F13", "F34", "F46"],
+      "personas": ["ayla", "thao"],
+      "decision": "ACCEPT",
+      "reason": "Two personas at severity 3; catching up walks small parts 'top to bottom in the order they are taught' (I1), the marks are the student's own (I3), and 'the student controls their own pace'."
+    },
+    {
+      "id": "W6",
+      "change": "In US.C.87.05, add a 'Start' action on the Your N minutes card that runs its items' questions one after another with a 'k of n' counter, ticks an item after any answer (a wrong one marked 'to revisit'), and makes 'Another question' the default after 'not quite'.",
+      "findings": ["F06"],
+      "personas": ["ayla"],
+      "decision": "DEFER",
+      "reason": "Sound under I3 (the student's own record, 'nothing grades them silently') but raised once at severity 2; W5 already returns the student to an open question."
+    },
+    {
+      "id": "W7",
+      "change": "In US.C.87.05, add 'All of it' and a 3-minute choice next to 5 / 10 / 20, list items needed for open homework first, show each item's 'why' as a short tag, show each item's time at the student's own reading speed, and add 'I know this' on an item that runs its one Check me and ticks it if passed.",
+      "findings": ["F18", "F27", "F35"],
+      "personas": ["rune", "thao"],
+      "decision": "DEFER",
+      "reason": "Budgets change 'the order of extras and the length', which I5 allows; severity 2, and W1's Due strip answers 'only what is due' in this wave."
+    },
+    {
+      "id": "W8",
+      "change": "In US.C.87.04, give each homework item a 'Needs these parts' list of the parts it requires (from the kernel's prerequisites), each a one-tap link that opens the part in place in the stream with Check me ready and shows a tick if the student has passed its check.",
+      "findings": ["F17", "F25"],
+      "personas": ["rune"],
+      "decision": "DEFER",
+      "reason": "Links into parts without re-sorting the stream (I1) and the teacher defines the homework (I4); one persona, outside this wave's cap of five."
+    },
+    {
+      "id": "W9",
+      "change": "In US.C.87.04, show on a collapsed part its title, badge, Check me (the one coloured button), Ask the library and In code, move Suggest a change and Taught again into a 'More' menu, and allow the day's parts to show as titles with ticks, grouped by section in taught order, opening one at a time.",
+      "findings": ["F09", "F26"],
+      "personas": ["ayla", "rune"],
+      "decision": "DEFER",
+      "reason": "Compatible with I1 and I2 provided every collapsed part keeps its badge and its place in order; a redesign of the post, outside this wave's cap."
+    },
+    {
+      "id": "W10",
+      "change": "In UA.US.C.87.04.01 and .03, rename Simpler · Core · Deeper to Easier · Standard · More detail, In code to 'See the code', Taught again to 'What the teacher said in class' and Check me to 'Test myself (one question, not graded)'; show 'You are reading: <level>' with one line saying why on every part, and remember a level the student picks per topic.",
+      "findings": ["F03", "F10", "F20", "F39", "F42"],
+      "personas": ["ayla", "rune", "thao"],
+      "decision": "DEFER",
+      "reason": "Renames and a visible level change only the form (I5) and are cheap, but every finding is severity 2; first in line for the next wave."
+    },
+    {
+      "id": "W11",
+      "change": "In UA.US.C.87.04.01, add 'Same content, plainer English' next to the level switch, keeping hard terms with a short definition, and add an acceptance line that Simpler changes wording and length, not what the part says.",
+      "findings": ["F43"],
+      "personas": ["thao"],
+      "decision": "DEFER",
+      "reason": "I5 allows a plainer form but 'never changes what a part says', so this fits; raised once, outside this wave's cap."
+    },
+    {
+      "id": "W12",
+      "change": "In US.C.82.02, replace 'Your familiarity with ml reads as 0.7 out of 1' with a plain sentence and a three-way choice per area (I know this well / a bit / not yet), and rename 'Let this go back to being inferred' to 'Let the app guess again'.",
+      "findings": ["F07"],
+      "personas": ["ayla"],
+      "decision": "DEFER",
+      "reason": "I3 ('visible to them and correctable by them') supports plain wording of the model row; raised once at severity 2."
+    },
+    {
+      "id": "W13",
+      "change": "In US.C.87.04 and US.C.87.05, show the student's question quoted with its part's title above every answer, label the teacher's pinned question 'Goes to your teacher', keep a drafted answer when the student moves to another part, and add a 'My open questions' list.",
+      "findings": ["F37", "F47"],
+      "personas": ["thao"],
+      "decision": "DEFER",
+      "reason": "Keeps the student's questions their own (I4) and easier to find; one persona at severity 2."
+    },
+    {
+      "id": "W14",
+      "change": "Add a laptop variant of US.C.87.04 inside the streams-and-chats layout (US.C.70.05): the course pinned at the top of the streams list with a due-count badge, opening to the same Due strip, Your N minutes card and stream as on the phone.",
+      "findings": ["F30"],
+      "personas": ["rune"],
+      "decision": "DEFER",
+      "reason": "Compatible with I1 (the same stream on a laptop); raised once at severity 2."
+    },
+    {
+      "id": "W15",
+      "change": "In US.C.89, add a per-channel setting 'Only things with a deadline', put due items first in the morning briefing with a link to each homework, and mark undated pieces 'required' or 'optional' as the teacher set them.",
+      "findings": ["F31"],
+      "personas": ["rune"],
+      "decision": "DEFER",
+      "reason": "A briefing filter changes delivery form only (I5) and 'required' must be the teacher's marking (I4); raised once at severity 2."
+    },
+    {
+      "id": "W16",
+      "change": "In US.C.87.06 and US.C.87.08.05, keep the course, class, session number and date fixed in the header of every teacher pane, and make every confirm line restate them ('Extend the Session 9 homework deadline for Anna K., DS402 class B, to Friday?').",
+      "findings": ["F51", "F60"],
+      "personas": ["petra"],
+      "decision": "DEFER",
+      "reason": "Supports 'the teacher stays in control of what is taught and when' (I4); cap reached, and W4's preview bar already names the class and the day."
+    },
+    {
+      "id": "W17",
+      "change": "In TS.C.87.04.01 and US.C.89.03, show on each part and each day a status line 'Draft' / 'Published, in the students' course' / 'Sent to Telegram / Slack on <date, time>', show 'Goes to students at <time>' before and after publishing with hold and change-time, and warn the teacher in the evening when something for tomorrow has no release.",
+      "findings": ["F54", "F62"],
+      "personas": ["petra"],
+      "decision": "DEFER",
+      "reason": "The teacher decides 'what is taught and when' (I4), so showing draft / published / sent and the send time fits; outside this wave's cap, next teacher wave."
+    },
+    {
+      "id": "W18",
+      "change": "In UA.US.C.87.06.01, state on the register's 'taught' control what it releases ('Marking this taught shows the section tests to the class now'), confirm once, and add 'Take back' for a register entry to US.C.87.08.05.",
+      "findings": ["F58"],
+      "personas": ["petra"],
+      "decision": "DEFER",
+      "reason": "Makes the effect of a teacher action on 'what is taught and when' explicit (I4); raised once, outside this wave's cap."
+    },
+    {
+      "id": "W19",
+      "change": "Add a teacher situation 'What changed on this course' replacing GET /kernels/{k}/actions in UA.US.C.87.08.09: a dated list in plain words of every edit, extension and mark and who made it, with 'Take back' / 'Restore this version' next to each and what cannot yet be taken back shown beside the affected action; add a draft state for parts and announcements until Publish.",
+      "findings": ["F53", "F63"],
+      "personas": ["petra"],
+      "decision": "DEFER",
+      "reason": "Helps the teacher keep control of the content (I4) and a draft state fits it; a larger build, outside this wave's cap."
+    },
+    {
+      "id": "W20",
+      "change": "In US.C.87.06, rename teacher-facing terms to teacher words (register to Attendance; the manager's panes to Today's session, Students' homework and Course parts) and explain 'room checks' in one line where it appears.",
+      "findings": ["F55"],
+      "personas": ["petra"],
+      "decision": "DEFER",
+      "reason": "Wording only and compatible with the directive; raised once at severity 2."
+    },
+    {
+      "id": "W21",
+      "change": "Add a course-wide 'Skip basics' switch to US.C.82.02 that removes basic parts from the student's stream.",
+      "findings": ["F22"],
+      "personas": ["rune"],
+      "decision": "REJECT",
+      "reason": "Dropping parts changes 'what the course requires' (I5) and removes course parts, which only the teacher decides (I4); still solvable: plain per-area choices (W12) that shorten or collapse basics while every part stays in the stream with its check."
+    },
+    {
+      "id": "W22",
+      "change": "Add a teacher situation 'Who is behind': one row per student ranked from homework sent, tests done and Unclear taps, with the students behind on top.",
+      "findings": ["F49", "F57"],
+      "personas": ["petra"],
+      "decision": "REJECT",
+      "reason": "Ranking students from their Unclear taps and test answers grades them silently (I3, 'nothing grades them silently'); still solvable: a per-student homework sent / not sent / late list against the teacher's own deadlines, with Unclear shown as a per-part count."
+    }
+  ],
+  "must_not_change": [
+    "I1: The student's course shows each part as its own item in one top-to-bottom stream in the order taught; the Due strip, the Your N minutes card and the day list sit above the stream and link into it, and nothing in this wave replaces the stream with one long page or re-sorts it.",
+    "I2: Every part, in the stream, in the day list and in the teacher's preview, shows its verification badge, which reads the same to every student, and every part that has a Check me keeps it.",
+    "I3: Everything a student marks (got it, Unclear, not now, a Check me answer) is visible to that student and can be changed or withdrawn by them, and no situation adds a score, rank or 'behind' label computed from those marks.",
+    "I4: Students cannot add, reorder or remove the course's parts or homework; their questions to the library stay their own and remain readable by the teaching team, and every audience label says so truthfully.",
+    "I5: Levels, budgets and personalisation change only the form, the length and the order of extras; what a part says, the homework and its deadlines are the same for every student."
+  ],
+  "rewalk": [
+    "US.C.87.04 / US.C.87.05 first screen on a phone (W1, ayla and rune): the Due strip with every open homework and 'N due, all shown', then the Your N minutes card with 5 / 10 / 20 on it, then the day's stream in taught order.",
+    "Ask the library from a part, from the first screen and from the part's library tab, then post in the class discussion (W2, ayla, rune, thao): every send button names its audience; Ask an expert to verify shows the confirm listing what the expert reads.",
+    "US.C.87.08 take-backs (W3, thao and rune): tap Unclear, read what the teacher sees, tap it again to withdraw; answer Check me wrong and answer again; remove a remark from the class and read who can still see it.",
+    "US.C.87.06 preview (W4, petra): preview tomorrow for one class, read the bar's class and day, switch Simpler / Core / Deeper, tap Unclear and Check me, then confirm nothing appeared in the class's Unclear, tests or history.",
+    "Interrupted and returning (W5, ayla and thao): leave a Check me half-done, come back and use Continue where you left off; open a missed day from the day list and Read this day from the start.",
+    "Invariant check (I1, I2, I3): after W1 to W5, scroll a day's stream and confirm every part is still its own item in taught order with its badge and its Check me, and that no screen shows a teacher a per-student score built from Unclear or Check me."
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04 (UA.US.C.87.04.02, the Unclear button)",
+      "what_i_tried": "I reached a paragraph about weighting that I did not follow and wanted to press Unclear, but first I looked for who would see it.",
+      "what_happened": "The structure says that after Unclear the post opens more simply and 'the teacher sees it'. Nothing on screen is described that tells me, before I press, whether the teacher sees my name, a count, or only that the part was hard.",
+      "problem": "I am afraid the teacher reads Unclear as me failing. The only place the text says the teacher is told is in the spec, not in front of me. So I would avoid the button and keep struggling quietly, which is the opposite of what I came to do.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Put one plain line next to Unclear that says exactly what the teacher gets, for example 'Your teacher sees how many students pressed this, not who', and offer a second way to get the simpler version that tells nobody."
+    },
+    {
+      "screen": "US.C.87.04.09 / US.C.87.05.04 / US.C.70.11 (Ask about this, ask the library a course question, Ask)",
+      "what_i_tried": "I wanted to ask the library about a term in one post, and I saw three places that all say 'ask'.",
+      "what_happened": "'Ask about this' on a post is answered under that post. Asking the library from Your N minutes is answered in the feed with a button to the post. In the card's Just you and the library tab the button is 'Ask', and when I switch to the other tab the same box says 'Comment'.",
+      "problem": "Three things share one word and they end up in different places with different audiences. I take labels literally, so I cannot tell whether my question lands under the post for the whole class to read, in a private chat, or in the feed. After the second surprise I stop trusting the word.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one word for the private question to the library and say 'only you' on the button itself (for example 'Ask the library (private)'), and keep a different word for anything the class can see."
+    },
+    {
+      "screen": "US.C.87.04 (UA.US.C.87.04.01 and .03: Check me, Taught again, Core, In code)",
+      "what_i_tried": "I looked for a way to test myself on the part I had just read and found the button 'Check me'.",
+      "what_happened": "The labels are short phrases: 'Check me', 'Taught again', the level names 'Simpler · Core · Deeper', 'Your 10 minutes', 'Suggest a change'. None of them is explained on the screen as described.",
+      "problem": "My English is good but slow, and idioms confuse me. 'Check me' could mean 'grade me and tell the teacher'. 'Taught again' does not say by whom, or whether it is a recording or a new text. 'Core' does not tell me whether it is the minimum or the main part. I would press and find out, and a graded-looking button is exactly what I hesitate to press.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use full plain wording, such as 'Test myself (one question, not graded)', 'Read the lecture again, shorter' and 'Main level', and put one short explanation under each when I hover or tap."
+    },
+    {
+      "screen": "US.C.87.04.01 and US.C.87.04.02 (Simpler · Core · Deeper, 'the post opens more simply')",
+      "what_i_tried": "I pressed Unclear because the English was dense, expecting the same content in easier words.",
+      "what_happened": "The structure says the post 'opens more simply' and offers Simpler. It does not say whether that means simpler words or less content. No situation covers language, or a reader whose first language is not English.",
+      "problem": "My statistics is strong and my English reading is slow. If Simpler cuts the ideas I already know, I lose the details I want to check. If it only simplifies, I may still stumble on the idioms. I cannot ask for what I actually need, which is clear wording at the same depth.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a separate control, 'Same content, plainer English', next to Simpler, and let me keep the hard terms with a short definition so I can look them up."
+    },
+    {
+      "screen": "US.C.70.11 (UA.US.C.70.11.03, ask an expert to check the card; the notice 'Just you and the library — unless you ask an expert to check this card, which shares it')",
+      "what_i_tried": "After asking the library something I thought was a basic question, I wanted to ask an expert to check the card as well.",
+      "what_happened": "The notice changes to say it is shared. The brief says an expert asked to verify 'sees the current conversation on it first'. The notice says the card is shared and does not say that my own earlier questions are shared.",
+      "problem": "The word 'it' is unclear, because it could mean the card or my conversation. I would press the button to verify the card and expose every question I asked, including the naive ones, and I only find out afterwards. That is the exposure I am trying to avoid.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Before it sends, show a confirmation that lists exactly which of my messages the expert will read, with the choice 'Send the card only' or 'Send the card and my questions', and make the notice say 'my questions' instead of 'it'."
+    },
+    {
+      "screen": "US.C.87.08 (A mistake is taken back)",
+      "what_i_tried": "I pressed Unclear, or sent 'Ask about this', by accident, and looked for how to take it back.",
+      "what_happened": "The situation gives a student only two ways back: delete their own remark, and a double tap counting once. Nothing says how to take back Unclear, Ask about this, a Check me answer or a What did you learn? entry. The log keeps everything.",
+      "problem": "My typical mistake is pressing something and worrying what it shows the teacher. If the only undo is for remarks, I have to hope. I will be slow and careful before every tap, and a long evening of reading will not feel safe.",
+      "severity": 2,
+      "heuristic": "User control and freedom",
+      "suggestion": "After Unclear and Ask about this, show 'Undo' for a few minutes, and next to my past actions list 'Take back' for each one, saying what the teacher will see once I do."
+    },
+    {
+      "screen": "US.C.87.04 and US.C.87.05 (the first screen: Your 10 minutes, budgets 5 / 10 / 20 min, no situation for a missed day)",
+      "what_i_tried": "I opened the course at 22:00 to read the day I missed from the start, properly, in order.",
+      "what_happened": "US.C.87.04 covers a teaching day as it happens. US.C.87.05 starts the screen with 'Your N minutes' and offers 5, 10 or 20 minutes. I found nothing about catching up on a past day, and nothing for 60 to 90 minutes.",
+      "problem": "My whole goal is to read the day I missed in full, and the first screen pushes me toward a 20-minute summary. I would have to guess how to scroll back to yesterday's posts, and I could not tell what I had missed and what I had read.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a 'Catch up on a missed day' entry on the first screen that opens that day's parts in order, marks which I have read, and add a longer budget such as 'Whole evening (60+ min)'."
+    },
+    {
+      "screen": "US.C.87.04 (What is on screen: the pinned teacher's question, Check me, section tests, What did you learn?)",
+      "what_i_tried": "I opened several posts at once to compare them and started typing an answer.",
+      "what_happened": "The day shows a pinned teacher's question, a Check me question in place, a section test after each section, the homework and What did you learn? at the end. Each one takes an answer in place.",
+      "problem": "Several different questions are open at once and they look alike. I lose track of which one I am answering, and I may type into the teacher's pinned question when I meant the test, and the other way round. I worry about sending the wrong thing to the teacher.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Keep the question, with its post title, visible above every answer box, mark only the teacher's question 'Goes to your teacher', and keep a drafted answer when I move to another post."
+    }
+  ]
+}

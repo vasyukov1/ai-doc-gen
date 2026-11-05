@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I tapped the orange 'Due Fri, Oct 23, 09:00 AM ... Homework 1 — data manipulation on sessions 1–4' card, expecting it to open the homework or show what I need to know for it.",
+      "what_happened": "Nothing on the card looks tappable, and it says 'sessions 1–4' and 'due Day 5' while everything else on the screen is headed 'Day 1 · Mon 19 Oct' and '§1'. There is no list of the parts the homework needs.",
+      "problem": "I found what is due in one glance, but the second half of my goal, what I must know for it, is not answered. 'Sessions', 'Days' and dates are three different ways of counting time, so I cannot map 'sessions 1–4' to anything in the stream without working it out myself.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Make the due card a button that opens the homework with a short list 'You need these parts: ...' and each part linked. Use the same unit throughout, e.g. 'Day 1–4'."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I scrolled down from the top to get to the actual content, since I know the due date now.",
+      "what_happened": "The 'Day 1 · Mon 19 Oct · Setup and tooling' heading is shown twice, once as the header and once as a green card with '1 min ago'. 'Homework 1 in 4 days' is then repeated in 'Your deadlines' right under the orange due card. The 'Quick knowledge sync' card with 5, 10 and 20 min chips comes next and pushes the first part ('Week 1: your own brain', with 'Simpler · 2 n...' cut off) to the edge of the screen.",
+      "problem": "On a phone on the train I scroll past three cards that tell me the same thing or ask me to choose a duration before I see any content. That is the 'read a paragraph to find the button' situation.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the deadline once, drop the duplicate day card, and collapse 'Quick knowledge sync' into one line with a default length so the first part is visible without scrolling."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I ignored the bottom of the screen and tried to read the stream, then to scroll past 'Ask the library' and the nav.",
+      "what_happened": "'Ask the library' stays pinned: a heading, a line about DS403, an input and a big pale-green button with a small ▾ on its edge, then the bottom nav. On screens 2 and 3 a chip also appears above it, 'About: A notebook's state follows run order ×' and 'About: Tidy data ×', which I did not choose.",
+      "problem": "On a phone this is roughly the lower third of the screen, always, so I read the course through a two-thirds window. The pale button looks disabled, I do not know what the ▾ does, and the 'About:' chip changes as I scroll, so I do not know what the library thinks I am asking about.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "On a phone, collapse it to a single 'Ask' icon or one-line bar that opens on tap. Show the 'About:' chip only when I tap a part's own ask button."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I answered the two fill-in-the-blank questions to see whether I had passed section 1.",
+      "what_happened": "Two cards, 'Three whiteboard interviews' (\"You answered 'questions' — that's it.\") and 'Why data' (\"You answered 'certainly not this' — not quite.\"), with a 'Try again' button on the second. There is no score, no heading saying which test these are the results of, and no 'section done' state. The 'Test this section' link for Section 2 sits right below as a small underlined text link that looks like part of the heading.",
+      "problem": "I cannot tell whether I passed, how many questions there were or what is left. I would not notice that Section 2 has its own test, because the link looks like a caption and not a button, which is not how buttons look in GitHub or Slack.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Put a header on the results, 'Section 1 test: 1 of 2 right', and make 'Test this section' a real button showing the number of questions and minutes."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "On 'Why data', where it said 'not quite', I wanted to see the right answer and move on, not guess again.",
+      "what_happened": "The card says \"You answered 'certainly not this' — not quite.\" and offers one button, 'Try again'.",
+      "problem": "My only options are guessing again blindly or leaving the card. It does not say what the correct word was or which part explains it, so I would give up on this one or click 'Try again' several times.",
+      "severity": 3,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Next to 'Try again' add 'Show answer', and a link to the part that explains it. Give a hint after the first miss."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I looked in 'What you missed on Day 2' for the few parts I need for Homework 1, and planned to skip the rest, since I already know decorators and generators.",
+      "what_happened": "I got a flat list of 21 underlined titles ('Names bind to objects', '*args and **kwargs', 'Decorators', 'Generators', 'Dataclasses', '%time and %timeit' and so on), with no sign of which ones the homework needs, how long each takes, or any way to mark one as known.",
+      "problem": "To skip the basics I would have to open parts one by one and guess. I have the same 21 items whether I am a beginner or know Python well, so there is nothing for the shortest path.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Tag each item 'needed for Homework 1' or 'extra'. Add 'I know this' next to each, and a top button 'Show only what Homework 1 needs'."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I scanned the two-column list to pick items quickly.",
+      "what_happened": "Long titles wrap onto several lines, and the bullet of the next item sits next to the end of the previous item's text ('Type hints are not enforced', 'Reading a CSV dtypes, and str in pandas 3'). In the right column, 'The exam: tasks like the homework, as an interview' and 'The course project: one...' run under the round '48' scroll button.",
+      "problem": "I cannot tell where one title ends and the next begins, so I misread them as other items. Part of the list is hidden behind the button, and two columns make me read in a zigzag instead of top to bottom.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use a single column with a proper hanging indent, one title per row. Keep the scroll button out of the text, or move it above the list."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "On the laptop Home I looked at 'Your week' to see what is due and what to do next.",
+      "what_happened": "'Your week' shows pills '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent', then 'Three to look at next', each '2 min', with notes like 'taught today · 3 later parts build on it' and 'you have not shown what it builds on'. The homework and its date appear nowhere in this card or above the fold. The deadline lives in a card further up the stream, and the top tabs 'Your map', 'Your skills', 'For you' and the sidebar 'Your page', 'Your knowledge' overlap in name.",
+      "problem": "'Your week' does not tell me what is due this week. The pill counts mean nothing to me without a legend, and I ignore badges anyway. 'Next' is chosen by what later parts build on, not by Homework 1, so I could not tell which of these 3 I actually need. I would click 'Homework' in the tabs, but only because I guessed that name.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Start 'Your week' with 'Due: Homework 1, Fri 09:00' and a button. Base the 'next' list on what the homework needs, and drop or explain the five count pills."
+    }
+  ]
+}

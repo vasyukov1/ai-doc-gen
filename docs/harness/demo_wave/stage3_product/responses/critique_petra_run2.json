@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I opened Home to see what students will see tomorrow and looked for a sign of which class, which day and which view (mine or the students') I was in.",
+      "what_happened": "I see a card 'Day 1 · Mon 19 Oct · Setup and tooling' marked '1 min ago', a deadline 'Due Fri, Oct 23, 09:00 AM (in 4 days)', and 'Ask the library — Just you and the library, about DS403'. Nothing says 'preview', 'teacher' or 'student view'. Other screens show Day 3 and Day 5, and 'taught today', so I cannot tell which day the app thinks is today.",
+      "problem": "I came to check tomorrow's session without touching anything, and I cannot tell whether students see exactly this, on this day, in this order. '1 min ago' on a Day 1 card makes me wonder if something was just published or changed. I do not trust a screen that does not say whose view it is, and I would not sign off on it.",
+      "severity": 4,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Put a permanent banner at the top of every screen, such as 'Class DS403 · Teacher preview of the student view · Day 4, Thu 22 Oct (tomorrow)'. Add a day switcher and a one-line statement of what is different from what students see, or 'nothing'."
+    },
+    {
+      "screen": "stage3_day_one.jpg / stage3_section_test.jpg",
+      "what_i_tried": "I read the line under 'Ask the library' on the first screen, then the same line on the section screen, to understand who could read a question I might type to test the answers.",
+      "what_happened": "The first screen says '— Just you and the library, about DS403 — Python the Generative Way.' The second says '— The library answers from the course; your teachers can read it.'",
+      "problem": "The two lines contradict each other: private versus 'your teachers can read it'. I am a teacher, so I cannot tell whether my test questions are private, visible to me as a teacher, or logged under a student's name. I will not type anything until I know that.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one fixed sentence in the same place on every screen. For me, make it say plainly what applies to teachers, for example 'Preview: your questions are not saved and not shown to anyone'."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I scrolled through a part to see how the self-test looks and whether clicking in it would change something.",
+      "what_happened": "The blocks already say 'You answered “questions” — that's it.' and 'You answered “certainly not this” — not quite.' with a 'Try again' button. I never answered anything, and I cannot see where those answers came from.",
+      "problem": "I do not know if I am looking at a sample student's answers, my own earlier answers, or demo data. If I press 'Try again' or answer, I may record a result as a student without realising it. 'Not quite' also does not show me the correct answer, so I cannot check the question itself. My goal says 'without editing anything by accident'.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "In preview mode, mark the quiz 'Preview only: answers are not saved' and let me reveal the correct answer without answering. Never show 'You answered' text that I did not enter."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I looked for the control that tests a whole section, to see what the section test is like for students.",
+      "what_happened": "'Test this section' is a small underlined link under the heading 'SECTION 2 · NOTEBOOKS YOU CAN TRUST', while the quiz blocks above it belong to '§1 · How this course works' (the sticky header still says §1). A chip 'About: A notebook's state follows run order ×' sits above 'Ask the library' and matches neither visible section.",
+      "problem": "I cannot tell whether the link tests Section 2 (the heading below it) or Section 1 (the content above it). The 'About' chip points to a third thing I did not pick. I forget which section or day I am in, and this screen makes that worse, so I could test or ask about the wrong material.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put 'Test this section' on a visible button next to its own section heading, with the section name on it, for example 'Test §2 · Notebooks you can trust'. Make the 'About' chip show the part I last clicked and say so."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "On the Day 3 page I wanted to see what the students' Day 3 starts with.",
+      "what_happened": "A card says 'What you missed on Day 2 — Python for data: 21 parts were taught while you were away.' with a two-column list of underlined links. The 'About: Tidy data ×' chip is attached below it.",
+      "problem": "I was not away; I wrote this material. Seeing it shows me I am looking at a student who skipped a day, and I cannot tell if students who were present get this card too. I wanted to know who is behind, and this only tells me about one imagined student. It also gives me 21 parts in the same blue link style, with no sign of which ones matter.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Say who sees the card: 'Shown to students who missed Day 2 (3 of 14 this week)'. Show it to me with the class count instead of 'you were away'."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I read the list of 21 parts to check that the Day 2 recap is complete and in the right order.",
+      "what_happened": "The two-column list wraps badly. Bullets sit on different lines from their text, for example 'Type hints are not' with 'enforced' on a separate bullet line, and 'Reading a CSV' / 'dtypes, and str in' / 'pandas 3'. Everything is underlined, and the last rows are cut off by the Ask-the-library bar and the round '48' button. I cannot tell where one part ends and the next begins.",
+      "problem": "On the phone I use to check the student view, I cannot read the list reliably. I might think there are more entries than there are, miss that 'The course project: one…' is cut off, and not trust that I saw the whole list. The Ask bar takes about a third of the screen all the time.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Use a single column on a phone, with one part per row, a number or the part's section, and a plain 'show all 21' fold. Make the Ask bar collapse while I read."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "On the laptop I looked at 'Your week' for a sign of who in the class is behind.",
+      "what_happened": "I see 'Your week' with chips '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent' and 'Three to look at next', for example 'Data-backed personas — taught today · you have not shown what it builds on'. Nothing says whose numbers these are.",
+      "problem": "'Met', 'worked on', 'understood' and 'fluent' are not words I use for learning. I cannot tell if '172 not met yet' is the whole class, one demo student, or me. 'You have not shown what it builds on' speaks to a student, not to me. I could not find who is behind, and the only guess is 'Members' in the sidebar. I came for exactly that.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Give me a clearly named class view: 'Class: 14 students · 3 behind on Day 2' with the names, and keep 'Your week' as the student's view marked 'as a student sees it'. Use the course's own words for the five states."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I scrolled down the Stream to the bottom of the page and looked at the 'What did you learn?' card.",
+      "what_happened": "A text box says 'In a few lines: what you can now do or explain, and what is still unclear.' with 'Today / Last 3 days / This week' chips, an 'Add a screenshot of your work' link and a 'Save' button. It says 'Your teacher reads it; it is not marked.'",
+      "problem": "I am the teacher, so 'Your teacher reads it' means me, and a click on 'Save' could post a note under a student's name or my own. It is a live input on a page I am only supposed to look at. If I try it to see what happens, I may leave a stray entry that students or I will find later.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "In the teacher preview, grey out the box and Save and label it 'Students write here; you will read it under Members'. If it stays live, ask 'Save as a test entry? It will be removed' and offer an undo."
+    }
+  ]
+}

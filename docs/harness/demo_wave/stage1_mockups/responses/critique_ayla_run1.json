@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I opened the app between classes and looked at the first screen for today's parts and the 5-minute check.",
+      "what_happened": "The first card is a long block of text titled \"Chunk map retention raised to 14 days for the audit work\", dated 2026-08-11. The next ones are dated 08-14, 08-18 and 08-24. Nothing says \"today\", \"new\" or \"check\", and the only status is a small grey dashed \"Not yet checked\" chip.",
+      "problem": "I cannot tell what is new or what I should do now. It reads like a list of old technical news in words I do not know (chunk map, config server, rollback), and I do not know whether any of it is today's part. I would close the app after two seconds.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Put a big \"Today\" card at the very top: \"2 new parts · 5-minute check\" with one clear button. Show dates like \"Today\" or \"Yesterday\" instead of 2026-08-11 07:40, and put the newest first."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I skimmed the cards to see which one was mine.",
+      "what_happened": "The second card is tiny grey text with raw labels: \"nour\", \"worked: the sharding exercise sheet  finished: 3 of 5\", \"askedFor: an easier sheet\". Below it is another card from \"twin-ada\" with a purple chip \"0 experts · 1 twin\" and round avatars.",
+      "problem": "The first card looks like a debug log. It seems to be another student's data, which makes me worry about privacy and stops me trusting the app. \"Experts\", \"twin\" and the initials in circles mean nothing to me, and I skip grey small text anyway.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Write these cards as sentences with a face and a name, for example \"Nour asked for an easier sheet\", or hide them. Replace \"0 experts · 1 twin\" with plain words or an icon that opens a short explanation when I tap it."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I wanted to tap the most obvious green button at the bottom to get help.",
+      "what_happened": "\"Ask the library\" is pale green with white text, so it looks switched off. Its small dark ▾ part on the right looks like the real, active button. The last card in the list is cut off by the box.",
+      "problem": "I am not sure which part to tap. I would hit the dark ▾ because it is the strongest colour, and I do not know what it opens. I also lose the card behind the box.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Make it clearly disabled (grey) until I type, then fully green. Hide the ▾ menu behind a \"more\" option, and add some space at the bottom of the list so the last card is not cut off."
+    },
+    {
+      "screen": "stage1_stream.jpg (the bottom bar is the same on all three screens)",
+      "what_i_tried": "I looked for \"homework\" or \"check\" in the bottom bar with my thumb.",
+      "what_happened": "There are six icons with no words: books, lines, person, a question box, a speech bubble, three dots. They carry numbers 11, 8, 8 and 4, and I do not know what the numbers count.",
+      "problem": "I have to guess what each icon is and tap around. The numbers look like things I owe (11 unread? 8 tasks?) but they do not say what. When I get interrupted I forget which icon was which.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put a short word under each icon (Course, Stream, Me, Check, Chat, More). Keep a number only on the one that means \"to do\", and make it say what it counts."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I tapped the course icon to see what I should read for today.",
+      "what_happened": "A big heading \"Sharding and data placement\" with a paragraph, then \"Kept by the infra community\", \"Revision r14 · Sep 9, 2026\", \"12 elements in 4 chapters\", \"KEEPERS\" with two circles, and tabs \"Content kernel 12 / Experts / Rooms / From this ke…\". Below that is a grey paragraph: \"Every element is checked on its own. There is no score for the kernel as a whole — three confirmed definitions say nothing about a contested caveat.\"",
+      "problem": "That is a wall of grey text before I see any content, and I need a dictionary for it (kernel, keepers, revision, elements, contested caveat). I do not know which of the 12 pieces are today's, and the tab row is cut off at the right so I do not know what else is there.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Say it like a course: \"Today's parts (3)\", then the list. Move \"Kept by\" and \"Revision\" into a small \"About\" link. Delete the grey paragraph about the kernel, or show it only on tap. Use plain tab names such as Parts, People, Chats."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I tried to read the first definition card while holding the phone with one hand.",
+      "what_happened": "The \"Ask the library\" area (a heading, a grey sentence, an empty text box and a wide pale button) is stuck to the bottom, with the bottom bar under it. The card above is cut off after one sentence. The box has no side margin and its text touches the screen edge.",
+      "problem": "Almost half the screen is taken up by the ask box and bar, so I can see only one card at a time. The heading and the button both say \"Ask the library\". The edge-to-edge look makes it seem broken, so I trust it less.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Collapse the ask box into a small round \"Ask\" button, like a chat bubble, that opens the box when I tap it. Add normal side margins and use the freed space for the parts."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I saw the outlined green chip \"I understand everything here\" under the section title and thought this was my way to finish and move on.",
+      "what_happened": "It is the first thing under \"What a shard is\" and looks like a button, but nothing says what it does. There is no sign that I get tested, and I cannot see how to undo it.",
+      "problem": "I would tap it to get rid of the red \"not yet\" labels and I might mark all 3 as learned without testing myself. I would then trust a green map that is wrong, and I could not tell how to take it back.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Remove the chip, or ask \"Mark all 3 as learned? You can undo this.\" and show an \"Undo\" message after I tap. Better still, put the real check first and only offer this after it."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked on this screen for a way to do the 5-minute check on \"A shard\" and \"The shard key\".",
+      "what_happened": "Each piece has a grey \"not yet\" pill, a cut-off line of text (\"A shard is one horizontal slice of a collectio…\") and an underlined link \"Reply\" with a speech bubble. The intro says \"Open a piece to read it, see what its level rests on and correct it: your correction wins…\". There is no \"check\", \"quiz\" or \"test myself\" anywhere.",
+      "problem": "\"Reply\" sounds like answering a message, not testing myself, and \"not yet\" does not say not yet what. I cannot find the one thing I came for, and the intro paragraph is more small grey text that I skip. I would leave the app before the next class starts.",
+      "severity": 4,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Put one big green button at the top: \"5-minute check · 3 questions\". On each piece, replace \"Reply\" with \"Test me\" and change \"not yet\" to \"Not checked\". Cut the intro paragraph to one short line."
+    },
+    {
+      "screen": "stage1_course.jpg vs stage1_your_map.jpg",
+      "what_i_tried": "After the course screen I went looking for \"Your map\", \"Homework\" and \"Your skills\".",
+      "what_happened": "On the course screen the pill row is Content kernel / Experts / Rooms / From this ke…. On the map screen the pill row is Stream / Your map / Homework / Your skills / For…, with a smaller title above it. The map screen also repeats \"What a shard is\" as a heading in an empty white box and again as the section title just below. The last pill on each row is cut off, and I see no tap that took me from one row to the other.",
+      "problem": "It feels like two different apps. I do not know how I got to \"Your map\" or how to get back. The empty box with the repeated title looks like a loading error. Because I lose my place when I am interrupted, I would be lost.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one row of tabs for the whole course, in the same place on every screen: Parts · My map · Homework · Skills. Highlight the one I am on, and remove the empty duplicate title box."
+    }
+  ]
+}

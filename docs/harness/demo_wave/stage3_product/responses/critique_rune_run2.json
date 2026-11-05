@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I tapped the orange card \"Due Fri, Oct 23, 09:00 AM ... Homework 1\" expecting it to open the task and show what I need to know for it, like a GitHub issue link would.",
+      "what_happened": "Nothing on the card looks tappable: no arrow, no \"Open homework\" button, no list of the parts it covers. The \"Your deadlines\" card right under it repeats the same Homework 1 date and is just as inert.",
+      "problem": "I found the deadline in two seconds but then hit a dead end. Getting from \"what is due\" to \"what do I need to know for it\" is the whole reason I came, and the screen gives me no path. I would go looking in the tabs and probably give up.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Make the orange Homework card one tap target that opens the homework, with a single line under it such as \"Needs: 9 parts, 4 you haven't shown yet\" that links to exactly those parts."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I looked at \"What you missed on Day 2: 21 parts were taught while you were away\" for the few items that matter for Homework 1, so I could skip the rest.",
+      "what_happened": "I get 21 underlined links in a flat list, with no marking for which are needed for the homework, no time per part, and no way to say \"I know this\". Names bind to objects, decorators, generators and *args are in there, and I use those at work every day. The list also runs on past the fold, with \"The exam\" and \"The course project\" mixed in with the concepts.",
+      "problem": "Twenty-one links is 21 clicks for something I want done in 3 minutes. I cannot tell the 5 I need from the 16 I can skip, so I either read all of it or ignore the card.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Sort the list so the parts Homework 1 depends on come first under a \"Needed for Homework 1\" heading, put the rest behind \"Show the other 16\", and add \"I know this\" to each row (or one \"I know Python basics\" button) so the list shrinks."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "On the laptop Home I looked at the \"Your week\" card for what is due this week and what I must know for it.",
+      "what_happened": "I get a row of chips (\"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\") and \"Three to look at next\": Look before concluding, One dtype per array, Data-backed personas. None of the three says whether it is for Homework 1. The homework deadline is not on this screen at all. It was only on the Day 1 stream card.",
+      "problem": "A card called \"Your week\" shows no deadline, so I have to remember Friday 09:00 from another screen. The chips use words I do not know how to read (\"met\", \"worked on\", \"fluent\"), and 172 \"not met yet\" just feels like a wall of debt. I do not know what to do with any of it.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put \"Homework 1 due Fri 09:00 (in 4 days)\" as the first line of \"Your week\", and have \"Three to look at next\" pick the parts Homework 1 needs, each labelled \"for Homework 1\". Drop or hide the five count chips behind a \"details\" link."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I answered the fill-in-the-blank question \"finding a market ___\" and got it wrong. I wanted to see the right answer and move on.",
+      "what_happened": "The screen says \"You answered 'certainly not this' — not quite.\" in grey text, with only a \"Try again\" button. It does not give a hint, the answer, or a way to skip.",
+      "problem": "A free-text blank is a guessing game. I am not going to guess three times for a word I have no way to look up. \"Not quite\" tells me nothing about how close I was. I would give up on the check, and then I would not trust any of the other ones.",
+      "severity": 3,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Next to \"Try again\" add a \"Show answer\" button that shows the expected word and the one sentence from the part it comes from. Make the blank a few choices where the question allows, so I tap instead of typing."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I scrolled through Day 1 with Ask the library open at the bottom and wanted to ask a quick question about what I was reading.",
+      "what_happened": "The box says \"About: A notebook's state follows run order ×\", but what I can see on the screen is §1 \"How this course works\" and the start of Section 2. On stage3_what_you_missed.jpg the chip changes to \"About: Tidy data\", and there is nothing about tidy data on that screen either.",
+      "problem": "I never picked those topics, and the chip is small grey text I would not read. I would type my question and get an answer about the wrong part, and I would only find out after I had read it.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show the chip as a clearly tappable \"About: ...\" tag that only changes when I tap a part, not while I scroll. Add a visible \"Whole course\" option next to it, and say in the answer which part it was based on."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I tapped \"Test this section\" under \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\" to find out if I already know it and could skip it.",
+      "what_happened": "It is a small underlined text link next to the section title, with no button look and no hint of how long the test is. It is also styled differently from the pill-shaped \"Try again\" button on the same screen. I could not tell whether it opens a quiz in place or on another page, or whether it covers the section above or below it.",
+      "problem": "The one control that could save me 10 minutes of reading is the hardest thing on the screen to see. I would have to tap it blind to find out what it does.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Make it a pill button like \"Try again\", labelled \"Test this section · 4 questions\", and say on it that a pass lets me skip the section."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I tried to scan the two-column list of Day 2 parts fast to pick out the few I cared about.",
+      "what_happened": "The long link titles wrap onto 2 or 3 lines, so a bullet sits on one line and the rest of its title on the next. It is hard to see where one item ends and the next begins (\"Type hints are not enforced\", \"Reading a CSV dtypes, and str in pandas 3\"). The round \"48\" arrow button also sits on top of the last visible lines (\"The exam: tasks like the homework, as an interview\").",
+      "problem": "I read the first words and cannot tell what the part is about, so I cannot skip with any confidence. I cannot read the lines under the floating button either. On a phone on the train this is worse.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Use one column of rows, each with the title on a single line (cut it with an ellipsis if it is long) and a \"2 min\" tag at the right. Keep the floating arrow off the content, or drop it on this card."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked at the left menu and the top tabs for where the homework and what to study for it would be.",
+      "what_happened": "I see top tabs (Stream, Your map, Homework, Your skills, For you, Class chat, Contents 202) and a left menu with Home, Notifications, Your page, Notes, Your knowledge, How you read, Where we reach you, Checks — DS403, Members. \"Your map\", \"Your skills\", \"Your knowledge\" and \"Your page\" all sound like the same thing. \"Homework\" is just one tab among many.",
+      "problem": "I have to guess which of four \"Your ...\" places holds what I know and what is due. I would try \"Homework\" first, which probably works, but I can't tell what the other pages add and I have no reason to open them. That is a lot of navigation for someone who wants it done in 3 minutes.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Merge \"Your map\", \"Your skills\" and \"Your knowledge\" into one place called something plain like \"My progress\", and put \"Homework\" first in the tabs, with the next deadline as a small label on it."
+    }
+  ]
+}

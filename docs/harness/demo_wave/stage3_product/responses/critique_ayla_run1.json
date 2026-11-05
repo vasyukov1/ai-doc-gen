@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I looked for the big coloured thing to tap to start my 5-minute check, and the pale green \"Ask the library\" button at the bottom was the biggest one, so I went for it.",
+      "what_happened": "The \"Ask the library\" panel (a grey explainer line, the \"Write something...\" box and the wide pale button) plus the six-icon bar takes about a third of the screen and stays there, so today's content gets the top two thirds. The button looks greyed out, as if it is switched off.",
+      "problem": "I can't tell whether that button works or is broken, and it pulls my thumb away from what I came for. I also can't hide or shrink the panel, so on a phone in a corridor I only ever see a few lines of the course.",
+      "severity": 3,
+      "heuristic": "User control and freedom",
+      "suggestion": "Fold \"Ask the library\" into a small round button or a single closed row that I open when I want it, so the course gets the whole screen."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I scrolled the top of Day 1 to see what I have to do and by when.",
+      "what_happened": "\"Day 1 · Mon 19 Oct · Setup and tooling\" appears twice, once as a header and once as a green card with \"1 min ago\". Then an orange box says \"Due Fri, Oct 23, 09:00 AM (in 4 days)\" for Homework 1, and the white box right under it says \"Homework 1 in 4 days\" again, with \"due Day 5\" in the orange box as a third way of saying when.",
+      "problem": "I read the same thing two or three times before I reach anything new. Each repeat costs me part of my 6 minutes and part of the screen, and \"1 min ago\" tells me nothing useful. \"Day 5\" and \"Fri Oct 23\" make me stop and work out whether they are the same day.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the day title once and one deadline block (\"Homework 1 · Fri 23 Oct, 09:00 · 4 days left\"), with the other deadlines as a small line below it."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I went to the \"Quick knowledge sync\" card because it looked like the 5-minute check I wanted.",
+      "what_happened": "The chips show \"5 min\", \"10 min\" and \"20 min\", with 10 min already picked. The first card, \"Week 1: your own brain\", is cut off by the Ask panel, and its label reads \"Simpler · 2 n...\" with the end chopped off. I can't see anything that says Start.",
+      "problem": "I only have 5 minutes, and the app picked 10 for me, so I have to notice that and tap again. I can't see what to tap to begin or what \"Simpler\" means. A big arrow with a green \"29\" on it floats over the card and I don't know what it counts.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Remember the time I picked last time, or default to 5 min. Make one clear green \"Start 5-min check\" button that is always visible, and say what the \"29\" arrow does (for example \"29 new parts below\")."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I wanted to test myself on a section, so I looked for a test button on \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\".",
+      "what_happened": "The only thing I found is \"Test this section\", a small underlined black link under the section title. Next to it, \"Try again\" in the card above is a proper rounded button.",
+      "problem": "A test is my main reason to be here, yet it looks like the least important thing on the screen. I skim small text, so I could scroll past it, and I wouldn't guess it starts a test because it looks like any other link.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Make \"Test this section\" a real coloured button next to the section title, styled like \"Try again\", with a short note such as \"5 questions · about 3 min\"."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I read my result on the \"Why data\" card, which says the first reason is \"finding a market ___\", and tried to understand what I got wrong.",
+      "what_happened": "A small grey line says \"You answered \"certainly not this\" — not quite.\" The only next step is a \"Try again\" button. The card above, which I got right, says \"You answered \"questions\" — that's it.\" in dark green text.",
+      "problem": "Being right or wrong is told only by a small grey sentence and a slightly different text colour, so I would skim it and not notice. When I'm wrong I get no hint and no answer, so I have to guess again, and with no programming background that is just frustrating. I also can't see which options I had.",
+      "severity": 3,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Show a clear tick or cross with colour and an icon, then give a one-line hint or a \"Show the answer\" button next to \"Try again\", with a link back to the part that explains it."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I tried to work out what the bottom panel is for. On the next screen I saw the same thing again.",
+      "what_happened": "Above \"Ask the library\" there is a line that reads \"About: A notebook's state follows run order ×\". The screen I am looking at is Section 1 and Section 2's heading. On the \"What you missed\" screen it says \"About: Tidy data ×\", which is not what I am looking at either.",
+      "problem": "I don't know what \"About\" refers to, or why it is a topic I haven't opened. If I type a question I'm not sure which part the library will answer about, and I don't know whether the little × is safe to tap.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show the topic only when I tapped something on a card, in words like \"Asking about: Why data\". Put it on the card I tapped, and leave it out when nothing is selected."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I opened Day 3 after missing a day and tried to catch up on \"What you missed on Day 2\".",
+      "what_happened": "It says \"21 parts were taught while you were away\" and lists them as underlined links in two ragged columns. Long titles wrap onto a second line with the bullet on a different line, so \"Type hints are not / enforced\" looks like two items. Many titles are code words, such as \"*args and **kwargs\", \"Decorators\", \"Generators\" and \".loc by label, .iloc by position\". The list runs on past the Ask panel.",
+      "problem": "To me it is a wall of underlined words. I can't tell which ones I really need, how long each takes, or what a Decorator even is. I would close it and leave catch-up for later, which means I never do it.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show just 3 \"Start here\" parts, each with a 2 min label and a one-line plain explanation, in one column with the bullet on the first line. Put the other 18 under \"See all 21\"."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "When I got home I opened it on my laptop and looked at \"Your week\" to see what to do next.",
+      "what_happened": "A row of small grey pills reads \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\". Under \"Three to look at next\" are three cards with notes like \"taught today · 3 later parts build on it\" and \"Data-backed personas · taught today · you have not shown what it builds on\". Every card shows \"2 min\", but there is no button.",
+      "problem": "\"172 not met yet\" and \"0 fluent\" make me feel behind before I've started. I don't know what \"met\" or \"fluent\" mean, or how they differ from \"understood\". The card notes read like system language, so I can't tell what I should do, and I don't know whether to tap the whole card.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Replace the pills with one friendly line such as \"3 parts to do today · about 6 min\". Give each of the three cards a green \"Start\" button and a plain reason (\"you'll need this for Homework 1\")."
+    }
+  ]
+}

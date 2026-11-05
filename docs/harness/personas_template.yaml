@@ -1,0 +1,38 @@
+# Personas for simulate_wave.py — copy, then make each one specific.
+#
+# Rules of thumb:
+# - 3 to 5 personas, chosen to DISAGREE: different devices, time, knowledge, language, role.
+#   Four people who would all say the same thing are one persona run four times.
+# - Fictional names only. Never a real student, client or colleague: a persona is a caricature, and
+#   a caricature of a real person is not something you publish.
+# - Include at least one persona who is not your main user (the teacher, an admin, a parent): the wave
+#   must not break their side to please the main user.
+# - "mistakes" is the most useful field: it is what makes a simulated user walk off the happy path.
+
+# What the personas were told about the product (one or two sentences, in a user's words).
+# This is NOT the directive: users do not know your directive, and they should not be steered by it.
+product: >
+  <Name> — <what a user hears about it before opening it>.
+
+personas:
+  - id: p1                      # short, used in file names and in the triage
+    name: <First name> (<who, in three words>)
+    who: <age, study or job, one sentence of situation>
+    goal: <what they open the product for, today>
+    device: <phone between classes / laptop at night / ...>
+    time: <how long they have>
+    knows: <what they already know; what they do not>
+    language: <native language; how they read English>
+    mistakes: <the two or three things they typically do wrong>
+    patience: <what makes them leave>
+
+  - id: p2
+    name: ...
+    who: ...
+    goal: ...
+    device: ...
+    time: ...
+    knows: ...
+    language: ...
+    mistakes: ...
+    patience: ...

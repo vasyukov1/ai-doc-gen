@@ -71,6 +71,7 @@
             {{if .Job.FreeDraft}}<p>{{.Job.Content.Baseline}} baseline sections · {{.Job.ModelSections}} model-improved · {{.Job.Content.Unresolved}} unresolved gaps.</p>{{end}}
             <div class="downloads">
               <a class="button" href="/jobs/{{.Job.ID}}/artifacts/pdf">{{if eq .Job.Content.Outcome "outline"}}Outline PDF{{else}}Draft PDF{{end}}</a>
+              <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/pdf?view=1" target="_blank" rel="noopener" data-pdf-open>View</a>
               <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/typst">Typst source</a>
             </div>
           </div>
@@ -149,6 +150,7 @@
   </main>
 
   {{template "footer" .}}
+  {{template "pdf-viewer" .}}
   {{template "scripts" .}}
 </body>
 </html>

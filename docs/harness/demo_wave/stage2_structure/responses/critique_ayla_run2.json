@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04 and US.C.87.05",
+      "what_i_tried": "I opened the course on my phone in the corridor and looked for the 5-minute check to do before class.",
+      "what_happened": "US.C.87.05 says Your N minutes is on the first screen, but US.C.87.04 lists it after the announcement, every part's post, the section tests, the homework and the teacher's question, with What did you learn? at the very end. One calls it Your 10 minutes and the other Your N minutes, and neither says where the 5 / 10 / 20 switch is.",
+      "problem": "I have 6 to 10 minutes and I judge a screen in two seconds. If the check is not the first thing I see, I scroll through posts looking for it, lose my place and give up. I would never find a switch for 5 minutes if it is not in plain sight.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Put one big card at the very top of the course screen, above the announcement, called the same thing every day (Your 5 minutes), with the 5 / 10 / 20 choice inside it and the items listed right under it."
+    },
+    {
+      "screen": "US.C.87.04 (What is on screen, User actions 01 to 09)",
+      "what_i_tried": "I scrolled today's course screen to catch up on the parts I missed.",
+      "what_happened": "Every part is its own post, each followed by a section test once taught, plus pinned homework, a pinned teacher's question and the end-of-day box. Each post carries up to eight or nine actions: Read more, Simpler / Core / Deeper, In code, Taught again, Unclear, Check me, Suggest a change, Ask about this.",
+      "problem": "That is a wall on a 390 px screen. I cannot tell which button is the one I need, so I tap the biggest coloured one, which might be Unclear or Suggest a change instead of Check me. With one hand and no time, I leave.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show today's parts as a short list of titles with a tick, grouped by section, and open one post at a time. Make Check me the single coloured button on a post and tuck the rest into a small More menu."
+    },
+    {
+      "screen": "US.C.87.04.01 and US.C.87.04.02",
+      "what_i_tried": "I tapped Read more, then looked for a way to make the post easier to follow.",
+      "what_happened": "The spec offers Read more at the suited level, a Simpler · Core · Deeper switch, In code, Taught again, and an Unclear button.",
+      "problem": "I do not know what level I am at or who decided it. Core means nothing to me. In code is for programmers, and I cannot tell if Taught again is the teacher's recap or just a repeat of the same text. I would guess wrong and read the wrong version.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use plain words I would say aloud, such as Easier / Normal / More detail, and label the other two Show the code and Watch the explanation again. Show which level I am on right now."
+    },
+    {
+      "screen": "US.C.87.04.09 and US.C.87.05.04",
+      "what_i_tried": "I tapped Ask about this under a post and typed a basic question I was embarrassed to ask in front of the class.",
+      "what_happened": "The answer comes under the post, or in the feed, with a button to the post. Nothing in these situations says whether my question and the answer are visible to classmates or the teacher.",
+      "problem": "Under a post and in the feed look like public places, like comments on Instagram. I would not trust that it is private, so I would not ask. I skim small grey text, so a footnote would not reach me anyway.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Next to the Ask box, in readable type, show a lock and Only you see this. If a question can be seen by others, say so before I send it and make me choose."
+    },
+    {
+      "screen": "US.C.87.08 (UA.US.C.87.08.01 and 08.06)",
+      "what_i_tried": "I typed a worry about the homework into the first box I found and posted it, then realised it was for the teachers and not for the class.",
+      "what_happened": "The structure only gives me a way back after the fact: I delete my remark and a line stays so the replies still read. Nothing stops the mistake or says who will read it before I post.",
+      "problem": "I am the kind of person who posts while walking and gets interrupted. The class can already see it, and the leftover line tells everyone something was removed. I would be embarrassed and would stop writing in the course.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Show the audience on the box itself with a two-way choice, To the class / Only to the teachers, and after posting give me a short Undo bar (about 10 seconds) that removes the post without leaving a line."
+    },
+    {
+      "screen": "US.C.87.04.03 and US.C.87.05.02",
+      "what_i_tried": "I started a Check me question, got interrupted by a friend, and came back a few minutes later.",
+      "what_happened": "The spec shows Check me opening one question in place, with not quite leading to read it more simply or another question. It says nothing about where I am in the check, which item is next, or how to resume.",
+      "problem": "I lose my place when interrupted. I would not know whether I had finished the 5-minute check, which parts are still open, or whether not quite counted against me. I would have to start again, so I would quit.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Keep a visible progress strip on the Your 5 minutes card (for example 2 of 4 done, with the unfinished item highlighted), and when I reopen the app, take me straight back to the question I left."
+    },
+    {
+      "screen": "US.C.70.11 (Just you and the library) and UA.US.C.70.11.03 to .04",
+      "what_i_tried": "I asked the library what a term meant, then tapped to have an expert check the card and switched tabs to the comments.",
+      "what_happened": "A long grey sentence sits at the top of the panel: unless you ask an expert to check this card, which shares it. The notice only changes after I ask the expert, and the composer's button quietly changes from Ask to Comment when I switch tabs. Nothing says what happens to text I have already typed.",
+      "problem": "I skim small grey text, so I would not read that asking an expert makes my private chat shared. I could also type a private question, switch tabs and tap the same button, posting it publicly under my name.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Before an expert check is sent, show a plain confirm step with a big Cancel: The expert and others will see this chat. Keep a different colour and a lock icon on the private tab, and clear or warn about a typed draft when I switch tabs."
+    },
+    {
+      "screen": "US.C.70.11, US.C.87.04.09 and US.C.87.05.04",
+      "what_i_tried": "I wanted to ask the course something about a part I did not understand.",
+      "what_happened": "There are three different places to do that: Ask about this under a post, a course question answered in the feed, and the Just you and the library tab on a card. They use different words (post, part, card, piece) and buttons (Ask about this, Ask, Comment).",
+      "problem": "I do not know which one is the real one or whether they give the same kind of answer. I know Instagram and Notion, where there is one comment box in a fixed place, so here I would stall.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Call it one thing in one place on every post, an Ask button with the same label everywhere, and use post (or part) consistently instead of card and piece."
+    }
+  ]
+}

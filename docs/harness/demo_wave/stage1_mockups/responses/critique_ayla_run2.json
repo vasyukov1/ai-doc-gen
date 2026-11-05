@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I opened the app and looked at the first screen for today's parts and the 5-minute check.",
+      "what_happened": "The top card is a big bold title, \"Chunk map retention raised to 14 days for the audit work\", with a paragraph about a config server and a rollback, dated 2026-08-11 and tagged \"Not yet checked\". Nothing says \"today\" and nothing says \"start your check\".",
+      "problem": "I don't know any programming, so this reads like a foreign language, and I can't tell which of these cards are today's parts. It is a wall of text, so in two seconds I decide it isn't for me and leave.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Put one card at the very top that says \"Today: 3 new parts, 5-minute check\" with one big button, and write the card titles in plain words a first-year can follow."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scrolled down the stream to see what else is new, tapping nothing, just reading the cards.",
+      "what_happened": "One card shows \"nour  worked: the sharding exercise sheet  finished: 3 of 5  askedFor: an easier sheet\", which looks like raw data. Another says \"twin-ada\" and tells me I've opened a chapter three times. The badges say \"0 experts · 1 twin\" and \"! 3 experts · 1 twin\" with little coloured circles.",
+      "problem": "I can't tell whose log this is, why I'm seeing it, or what \"experts\" and \"twin\" mean. The red \"!\" makes me think something is wrong with my account, and the \"you opened it three times\" message feels like being watched.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write each card as a normal sentence with a name and a face, like \"Nour finished 3 of 5 on the sharding sheet\". Use plain badge words, and tap-to-explain for anything like \"twin\"."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I tapped the big green \"Ask the library\" button at the bottom first, because it is the biggest coloured thing on the screen.",
+      "what_happened": "The button is a very pale green with white text, so it looks switched off. The dark green arrow part on its right is the strongest colour, so my thumb goes there. The field above says \"Write something…\" and doesn't mention the library.",
+      "problem": "I can't tell if the button works, which part of it I should tap, or whether I'm writing a post to the class or asking a question. I might send something to everyone by accident.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Make the box say \"Ask the library about this course…\" and make the button a clear, solid colour once I've typed, greyed out only when it's empty. Put a plain label on the arrow part, or drop it."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I opened the course page to find the first part and the 5-minute check.",
+      "what_happened": "The first screen is all header: the title, a paragraph, \"Kept by the infra community\", \"Revision r14 · Sep 9, 2026\", \"12 elements in 4 chapters\" and \"KEEPERS\" with initials. Then a grey paragraph says \"Every element is checked on its own. There is no score for the kernel as a whole — three confirmed definitions say nothing about a contested caveat.\" The first real card is barely visible above the \"Ask the library\" box.",
+      "problem": "I have to scroll past words like \"kernel\", \"keepers\" and \"revision\" that I don't know, and I skim the small grey text anyway. I still can't see where to start the check, so I give up.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Shrink the header to the title and one line, with a big \"Start today's check\" button right under it. Move revision, keepers and the explainer paragraph behind a small \"i\" icon."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I looked for my homework and deadlines, moving between the course page and the \"Your map\" page.",
+      "what_happened": "The course page has tabs \"Content kernel 12 · Experts · Rooms · From this ke…\", cut off at both edges. On the map page the tabs are \"Stream · Your map · Homework · Your skills · Fo…\", also cut off. The bottom bar has six icons with no words, and the badges say 11, 8, 8 and 4.",
+      "problem": "Homework is in a different row on a different screen, and I have to remember which row it's in. The icons and numbers don't tell me what they count, and tabs cut off at the edge are easy to miss with one thumb.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one tab row on every screen with Homework and Check first, and keep it short enough to fit 390 px. Put a small word under each bottom icon, and say what each number counts."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked at the piece \"A shard\" and tapped \"Reply\" to start testing myself, since there's no other button on the card.",
+      "what_happened": "Each card shows the title, text cut off with \"…\", a grey outlined \"not yet\" pill and an underlined \"Reply\" with a speech bubble. \"A shard is one horizontal slice of a collectio…\" never finishes.",
+      "problem": "\"Reply\" sounds like answering a message, not checking myself. I don't know if it opens a quiz, a chat, or a post to others. \"not yet\" looks like a button, but I'm not sure what it would do.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Call the button \"Test myself · 1 min\" and make it a proper solid button. Show \"not learned yet\" as a quiet label, not a pill that looks tappable."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I tapped the outlined pill \"I understand everything here\" under \"What a shard is\", thinking it would just fold or skip the section.",
+      "what_happened": "I can't see what it does. It says I understand everything, yet the counter reads \"0 of 3 learned\" and each piece says \"not yet\". There's no sign of what happens if I tap it.",
+      "problem": "I could mark three things as learned without ever testing myself, and then the map would be wrong. If I'm interrupted, I couldn't tell whether I tapped it or not.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Rename it \"Mark all as learned\", ask me once to confirm, and show an \"Undo\" message afterwards."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked at the top of the map for a quick idea of how far I've got.",
+      "what_happened": "Right under the tabs is a white box with \"What a shard is\" and a lot of empty space, and the same title appears again below as \"What a shard is  3 pieces\". Between them are \"0 learned · 0 worked on · 12 not yet\" and a long grey paragraph: \"From your own answers, not a score. Open a piece to read it, see what its level rests on and correct it: your correction wins and stays marked as yours…\".",
+      "problem": "The empty white box looks broken or still loading. The paragraph is long, grey and full of abstract words, so I skip it and miss that I can open a piece or correct it. I'd like to see a picture of my progress instead.",
+      "severity": 2,
+      "heuristic": "Help and documentation",
+      "suggestion": "Remove the empty box and show a small progress bar with \"0 of 12 learned\". Cut the explanation to one short line, like \"Tap a piece to read it or fix the level\", with a \"?\" for more."
+    }
+  ]
+}

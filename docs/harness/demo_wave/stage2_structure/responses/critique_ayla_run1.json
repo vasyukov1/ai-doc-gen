@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04 (and US.C.87.05)",
+      "what_i_tried": "I opened the course in the corridor, looking for the 5-minute check, and started scrolling to find it.",
+      "what_happened": "US.C.87.04 lists the day's announcement, then every part as its own post, section tests, homework pinned, the teacher's question pinned, and only then 'Your 10 minutes' and 'What did you learn?'; US.C.87.05 says 'Your N minutes' is on the first screen.",
+      "problem": "Two descriptions disagree about where the one thing I came for sits, and in the first one it is under a pile of posts and two pinned items, so on a phone I would see a wall and leave. It also says '10 minutes' when I have 5.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Put one big 'Your 5 minutes' card at the very top of the course screen, above the announcement and the pins, with the 5 / 10 / 20 choice right on it, and fold the rest of the day's posts underneath."
+    },
+    {
+      "screen": "US.C.87.04 / US.C.87.05.04",
+      "what_i_tried": "I came back to the course after a teacher walked up to me and tried to carry on where I stopped.",
+      "what_happened": "Every part is a post in a top-to-bottom feed, and an answer from the library lands 'in the feed' with a button to its post; nothing in the structure says which parts are new or which I already read or did.",
+      "problem": "I lose my place when I'm interrupted, and I would have to scroll and re-read titles to remember what I had finished; I also would not know where my question's answer appeared in a long feed.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Mark each part as new, read or checked, add a 'Continue where you left off' button at the top, and when I ask the library, take me straight to the answer instead of dropping it somewhere in the feed."
+    },
+    {
+      "screen": "US.C.87.04.01",
+      "what_i_tried": "I tapped Read more on a part and then looked for the level that suits me.",
+      "what_happened": "The post opens 'at the suited level' and offers 'Simpler · Core · Deeper', plus 'In code' and 'Taught again'.",
+      "problem": "I know no programming, so 'In code' means nothing to me and I would not tap it, 'Core' and 'Taught again' are unclear, and I was never told why it opened at that level; the switch is also hidden inside the opened post.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use plain words I can picture (for example 'Easier · Normal · More detail', 'See the code', 'What the teacher said in class'), say once in a small line why this level was picked, and show the switch on the post itself without opening it."
+    },
+    {
+      "screen": "US.C.87.04.09 vs US.C.70.11",
+      "what_i_tried": "I tapped 'Ask about this' on a post because I did not understand a term, and typed my question.",
+      "what_happened": "The answer comes 'under it' on the post. A different place, the 'Just you and the library' tab, has a long grey notice about who can see it, and when I switch tabs the composer's button changes from Ask to Comment.",
+      "problem": "I cannot tell whether my question under the post is private or whether the whole class reads it, and I skim small grey text, so I would miss the notice and could post a 'dumb' question to everyone by tapping the big coloured button.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Next to the send button show a coloured label that says 'Only you and the library' or 'Everyone in the class' in the same colour as the button, and ask me to confirm before anything goes to the class."
+    },
+    {
+      "screen": "US.C.87.08 (with US.C.87.04.02 and .04)",
+      "what_i_tried": "I tapped 'Unclear' and then a wrong answer in a section test by mistake, one-handed, and wanted to take it back.",
+      "what_happened": "The only way back written for a student is deleting my own remark; 'Unclear' tells the teacher, a test is answered 'in place', and a double tap is simply done once.",
+      "problem": "A thumb slip on 'Unclear' is seen by the teacher and I cannot see how to withdraw it, and a mistaken test answer cannot be changed; I would get embarrassed and stop trying.",
+      "severity": 2,
+      "heuristic": "User control and freedom",
+      "suggestion": "Show a short 'Undo' line for a few seconds after 'Unclear' and after a test answer, and let me change my test answer once before it counts."
+    },
+    {
+      "screen": "US.C.87.04.03 / US.C.87.05.06",
+      "what_i_tried": "I tapped 'Check me' on one part after another to do my 5-minute check.",
+      "what_happened": "I get one question in place on each post; 'not quite' offers 'read it more simply' or 'another question'; a recommended part is ticked in the minutes only when I answer right.",
+      "problem": "The check is scattered across posts, a wrong answer leaves the item unticked so nothing shows I did it, and two choices after 'not quite' make me think about which to tap; I never see when my 5 minutes are done.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Give me one big 'Start' button that runs the questions one after another with a counter like '3 of 5', tick each item as done even if I got it wrong (marked 'to revisit'), and make 'another question' the big default after 'not quite'."
+    },
+    {
+      "screen": "US.C.82.02",
+      "what_i_tried": "I looked at the line about my own model and tried to understand what it says about me.",
+      "what_happened": "It reads 'Your familiarity with ml reads as 0.7 out of 1', attributed to inference, with 'Correct this', then 'You told us this' and 'Let this go back to being inferred'.",
+      "problem": "'ml', '0.7 out of 1' and 'inferred' are not words I use, I would take it as a grade on me, and I would not know what the release button does.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Say it in a picture and a plain sentence ('We think you know a medium amount about machine learning'), with a slider I can drag, and label the release button 'Let the app guess again'."
+    }
+  ]
+}

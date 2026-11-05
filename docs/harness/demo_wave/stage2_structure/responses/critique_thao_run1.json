@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04 (UA.US.C.87.04.02, the button Unclear)",
+      "what_i_tried": "I read a part about a method I did not follow and wanted to press Unclear, only to get an easier explanation, without anyone knowing that I was lost.",
+      "what_happened": "The structure says: Unclear -> the post opens more simply; the teacher sees it. The same button does two things, it changes my reading and it reports me to the teacher.",
+      "problem": "I take labels literally, so I read Unclear as a setting for me, but it is also a message to the teacher, and I only learn that from the small words after the arrow. I worry that a teacher who sees many Unclear taps from me thinks I am failing, so I would not press it at all and I would sit stuck instead. And once it is pressed there is no way to take it back.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Make two separate controls: a private one, 'Explain this more simply' (nobody sees it), and a second, optional one, 'Tell the teacher this part is unclear', which says before I press it what the teacher will see (for example 'Your teacher sees how many students pressed this, not who') and lets me undo it."
+    },
+    {
+      "screen": "US.C.87.04 (Check me, UA.US.C.87.04.03) and US.C.70.11 (ask an expert to check this card)",
+      "what_i_tried": "I saw a part with Check me and also, on another screen, the line 'unless you ask an expert to check this card', and I tried to work out which one is a quiz for me and which one sends my words to a person.",
+      "what_happened": "In US.C.87.04 'Check me' gives me one question in place, with 'not quite' if I am wrong. In US.C.70.11 and C.88 'check' means an expert verifies the card or paragraph, and that shares it. The word check means two different things.",
+      "problem": "My English is slow and I take the word as it is. 'Check me' could mean 'check my work' and send it to someone. I would hesitate to press it, or I would press the expert check thinking it is a self-test and share my private conversation. When a label has two meanings I stop trusting the app.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use the word 'check' for only one thing. Call the self-test 'Quiz me on this part' and the other 'Ask an expert to verify this', and show a short line under each one: 'only you see your answer' / 'an expert will read this'."
+    },
+    {
+      "screen": "US.C.87.04 (a student's course day) and US.C.87.05",
+      "what_i_tried": "At 22:30 I opened the course to read properly the teaching day I missed two days ago.",
+      "what_happened": "The situation describes the student on the teaching day itself: before the session, after it, in the evening. The first screen shows the day's announcement, a pinned teacher's question, pinned homework, 'Your 10 minutes' and, at the end of the day, 'What did you learn?'. Nothing says how I reach an earlier day, which days I have not read, or whether the pinned question and 'What did you learn?' still wait for me for a day that is over.",
+      "problem": "My goal is exactly this case, reading a missed day in order and fully. I would scroll a feed of 'every part as its own post' and not know where the missed day starts, which parts I did not read, and if the deadline pinned there already passed. I would worry that I am late and not see it explained.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Add a situation 'I missed a day' with a day list that shows for each day how many parts I have read and what is still open (homework and its deadline, the teacher's question), and a button 'Read this day from the start' that goes through the parts in order."
+    },
+    {
+      "screen": "US.C.87.05 (UA.US.C.87.05.01 and .03, Your N minutes, budget 5 / 10 / 20 min)",
+      "what_i_tried": "I looked for a way to tell the app I have 60 to 90 minutes tonight and want the whole day, not a short selection.",
+      "what_happened": "The only budgets are 5, 10 or 20 minutes, and the first screen is built around 'Your N minutes'. The product decides what fits in the time, but does not say how it counts a minute.",
+      "problem": "I read 'Your 10 minutes' literally as the time I should spend, and 20 is the largest, so my long session has no place. Also I read English slowly, so I think a count made for a fast reader would be too short for me, and I would not know if a 10-minute item takes me 25.",
+      "severity": 2,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a budget 'All of it' (and 60 / 90 min), and show for each item how long it takes at my own reading speed, with a way to say 'I read slowly' once."
+    },
+    {
+      "screen": "US.C.87.04 (UA.09 Ask about this), US.C.87.05 (UA.04 ask the library a course question) and US.C.70.11 (Just you and the library)",
+      "what_i_tried": "I wanted to ask about one thing I did not understand in a part and I looked for the place where only I and the library are present.",
+      "what_happened": "There are three names and two places: 'Ask about this' on a post, answered 'under it'; 'ask the library a course question', answered 'in the feed'; and a tab 'Just you and the library' whose notice reads 'unless you ask an expert to check this card, which shares it'. The words post, part, card and piece are used for what looks like the same thing.",
+      "problem": "I cannot tell if these are one function or three, and I cannot tell if my question and the answer 'in the feed' are visible to the class. The notice is hard for me: 'which shares it' - shares what, with whom? Asking without feeling exposed is my main goal, and here I cannot trust that it is private.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one name and one place for asking, put the same plain sentence next to every box ('Only you can see this question and the answer'), and rewrite the notice as 'Only you and the library can see this. If you ask an expert to verify it, the expert will also see this conversation.' Use one word (part) for the piece everywhere."
+    },
+    {
+      "screen": "US.C.87.04 and US.C.87.05 (the answer boxes: teacher's question pinned, section test, Check me, vague question 'which part?')",
+      "what_i_tried": "I opened several parts at once on my laptop, answered a section test, started a Check me question, and asked the library 'I don't get it'.",
+      "what_happened": "The structure puts several kinds of answer in place, in the feed, each under a different post. A vague question returns 'which part?' with the parts I most probably need, one tap each, and the library's answer to a course question arrives 'in the feed, with a button to its post'.",
+      "problem": "I open many things and lose which one I was answering. After I tap one of the guessed parts I do not see my first question any more, and an answer that arrives in the feed can land far from the part it talks about. I can answer the teacher's pinned question when I think I am answering a test.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Always show my question quoted above its answer, with the name of the part it is about, and mark the one box that is waiting for me ('Waiting: your answer to the teacher's question'). Keep a small list 'My open questions' so I can return to them."
+    },
+    {
+      "screen": "US.C.87.08 (UA.US.C.87.08.01 a student deletes their own remark, and UA.US.C.87.08.09 the teacher reads the action log)",
+      "what_i_tried": "I wrote a worry in the class by mistake that I did not want the teacher to see, and I tried to delete it.",
+      "what_happened": "The words are 'gone from everyone's view' and a line keeps the replies readable, but 'the action log keeps the words and both acts', and the teacher (owner, teacher or editor) can read every action with what was sent and recover what a correction replaced. There is no student action to take back an Unclear, a question or a Check me.",
+      "problem": "'Delete' does not delete: the teacher can still read it, and nothing on the screen told me. I would feel safe and then be exposed, and when I learn it I would not trust any button in the app. The line that stays behind also shows to the class that I removed something.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Call it 'Hide from the class', and in the confirmation step say in one plain sentence who can still see it ('Your teacher can still see the original in the course record'); also give me 'Undo' for a few minutes after I press Unclear or send a question."
+    },
+    {
+      "screen": "US.C.87.04 (UA.US.C.87.04.01 Read more at the suited level; Simpler · Core · Deeper; In code; Taught again)",
+      "what_i_tried": "I pressed Read more and wanted to read the statistics part in depth but the Python part in a simple way.",
+      "what_happened": "The part opens 'at the suited level', chosen by the product, and I can switch Simpler · Core · Deeper. The structure does not say what level I am on, who decided that it suits me, or whether my choice is remembered. 'Taught again' and 'Core' have no explanation.",
+      "problem": "I know statistics well and Python only medium, so one level for me is wrong for half of the parts, and I check claims, so I do not trust a level I did not choose. 'Core' and 'Taught again' are short labels that I take literally: core of what? taught again by whom, when?",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show the current level on the post ('You are reading: Core'), say why it was picked, remember my choice per topic, and use plain labels: 'Easier', 'Standard', 'More detail', and 'What the teacher said again in class' instead of 'Taught again'."
+    }
+  ]
+}

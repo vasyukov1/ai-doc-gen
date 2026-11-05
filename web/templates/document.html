@@ -99,6 +99,7 @@
         <h2>Downloads</h2>
         <div class="downloads">
           <a class="button" href="/jobs/{{.Job.ID}}/artifacts/pdf">{{if eq .Job.Content.Outcome "outline"}}Outline PDF{{else}}Draft PDF{{end}}</a>
+          <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/pdf?view=1" target="_blank" rel="noopener" data-pdf-open>View</a>
           <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/typst">Typst source</a>
         </div>
         <p class="form-note">Downloads are private to this browser and expire with the document. After editing, review and rebuild to get fresh artifacts.</p>
@@ -108,6 +109,7 @@
   </main>
 
   {{template "footer" .}}
+  {{template "pdf-viewer" .}}
   {{template "scripts" .}}
 </body>
 </html>

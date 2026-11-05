@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg (and stage3_section_test.jpg)",
+      "what_i_tried": "I looked at the 'Ask the library' box to see whether I could write down what I do not understand without anyone seeing it.",
+      "what_happened": "On the first screen the box says 'Just you and the library, about DS403'. On the quiz screen, the same box says 'The library answers from the course; your teachers can read it.' There is also a small '▾' on the green button that says nothing about what it opens.",
+      "problem": "These two lines say opposite things, so I do not know who will read my question. I am already afraid that asking about something basic looks like failing, so I would stop asking, or ask only safe questions. The '▾' makes it worse, because I cannot tell whether it hides a choice about who sees my message.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one clear sentence in the same place on every screen, for example 'Your teachers can read your questions, but they are not marked', and give the '▾' a visible word (for example 'Options') so I know what it changes."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I read the result of the 'Why data' question to find out whether I understood the idea.",
+      "what_happened": "The card says 'You answered “certainly not this” — not quite.' with only a 'Try again' button. The question before it ends with 'You answered “questions” — that's it.'",
+      "problem": "I did not type 'certainly not this', so I take it literally and think the app is putting words in my mouth or judging me. 'that's it' can mean 'correct' or 'nothing more' and I read English slowly, so I cannot tell which. 'Not quite' does not tell me what the right idea was or where in the course to read it again, so 'Try again' is only guessing.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Show my own answer exactly as I gave it, then plain words: 'Correct' or 'Not correct yet'. After a wrong answer, add a one-line hint and a link to the part that explains it."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I had just finished the §1 questions and wanted to ask the library about the one I got wrong.",
+      "what_happened": "The bar above the question box says 'About: A notebook's state follows run order ×', which is a Section 2 part. 'Test this section' sits right under the 'SECTION 2 · NOTEBOOKS YOU CAN TRUST' heading. On stage3_what_you_missed.jpg the bar says 'About: Tidy data' while I am reading a list of 21 Day 2 parts.",
+      "problem": "I open many things at once and lose which one I am answering. Here the 'About' part is not the one on my screen, and I did not choose it. I might send a question about the wrong part without noticing. I also cannot tell whether 'Test this section' tests section 1, which I just did, or section 2.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Make the 'About' bar always show the part I am looking at or tapped last, with a clear 'change' control. Put 'Test this section' at the end of the section it tests, and name it, for example 'Test §1'."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I wanted to work through the 21 parts I missed on Day 2 from first to last.",
+      "what_happened": "The card shows 21 underlined links in two narrow columns. Long titles wrap onto several lines and the bullets do not line up with the text, for example 'Type hints are not enforced' and 'Copy-on-Write: no chained assignment'. The last items are cut off ('The course project: one'). There is no order, no minutes per part and no mark for what I have read.",
+      "problem": "I cannot see where one item ends and the next begins, so I do not know if I have 21 things or 30. I cannot tell where to start or how long it takes. With 60 to 90 minutes a night I need to plan. After I open a part and come back, I cannot tell which ones I have finished.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show one numbered column, each row with its time (for example '2 min') and a tick once I have read it, with a line at the top like '3 of 21 read · about 45 min left'."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked at the 'Your week' summary to see how far behind I am.",
+      "what_happened": "It shows '172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent'. One suggested part says 'taught today · you have not shown what it builds on'.",
+      "problem": "I take 'met' literally, like meeting a person. 'Not met yet' for 172 things looks frightening when I missed only one day. I cannot tell whether 'met' includes 'understood', although the numbers add up to the 202 in 'Contents'. 'You have not shown' sounds as if I failed a test I did not know I was taking. '0 fluent' is discouraging and tells me nothing to do.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use plain labels like 'not started', 'read', 'practising', 'understood', and say what each one means in one line when I tap it. Say 'Not checked yet' instead of 'you have not shown'."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked for where I could see which parts I know and which I should study, among the tabs and the left menu.",
+      "what_happened": "The tabs say 'Your map', 'Your skills', 'For you', 'Contents 202'. The left menu says 'Your page', 'Notes', 'Your knowledge', 'How you read', 'Where we reach you', and there is a 'Your week' card on the page itself. The course names are cut off ('DS403 — Python the Generat…', 'Checks — DS403 — Python the…').",
+      "problem": "'Your map', 'Your skills', 'Your knowledge', 'Your page' and 'Your week' all sound like 'what I know', so I have to open each one and remember what was in it. I do not trust a name when two names could mean the same thing. 'Where we reach you' also makes me wonder what the app does with my contact details.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Give every place a name that says what is inside (for example 'Progress by topic', 'Skills list', 'My notes'), drop the repeated 'Your', and add a short grey line under each menu item."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I read the homework card to find out what I have to do by Friday.",
+      "what_happened": "The orange card says 'Homework 1 — data manipulation on sessions 1–4 — due Day 5', under a header 'Day 1 · Mon 19 Oct'. Elsewhere the page says 'Week 1', the quiz screen says '§1' and 'SECTION 2', and the missed-parts card says 'parts'.",
+      "problem": "I count Day 1 and Day 5 as days, but 'sessions 1–4' is said to be done by Day 5, and I do not know if a session is a day, a lesson or something else. Day, session, week, section (§) and part all appear and I take each one literally, so I am not sure what I should have finished by Friday.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Pick one word for each unit and keep it everywhere. Write the homework line as 'covers Days 1–4 · due Fri 23 Oct, 09:00'."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I picked a time in 'Quick knowledge sync' (5, 10 or 20 min) and looked at the first card, 'Week 1: your own brain'.",
+      "what_happened": "The 10 min button is selected. The card shows 'Simpler · 2 n…', cut off at the edge, and the rest of the card is hidden behind the question bar.",
+      "problem": "'Sync' means synchronising data to me, and 'your own brain' is an idiom I have to translate slowly. I cannot tell if 'Simpler' is a label for this card or a button that makes it easier, and I cannot read the minutes. I do not know what I am meant to do with this box.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Rename it to something literal like 'Quick review: pick how much time you have', show 'Simpler version · 2 min' in full, and say in one line what happens when I choose 5, 10 or 20 minutes."
+    }
+  ]
+}

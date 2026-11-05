@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I opened Day 1 looking for the 5-minute check and scrolled past the cards at the top to find it.",
+      "what_happened": "The title \"Day 1 · Mon 19 Oct · Setup and tooling\" shows twice (the bar and the green card), the deadline shows twice (the orange \"Due Fri, Oct 23\" card and the \"Your deadlines\" card), and \"Quick knowledge sync\" with the 5 min / 10 min / 20 min chips only starts at the bottom edge, with 10 min already selected.",
+      "problem": "Three cards say things I already know before I reach the one thing I came for. On one hand between classes I run out of patience, and I am not sure whether tapping 5 min changes the list or starts something.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Put the check first on the day's page as one big button, \"5-minute check\", and fold the repeated title and deadline into a single line at the top."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I tapped the round white arrow button with the green number (48 here, 29 on the first screen) because it looked like \"jump to the latest\".",
+      "what_happened": "I cannot tell what the number counts. It differs from screen to screen (29, 48) and from the \"21 parts\" in the card. The button also sits on top of the text, covering \"2 min\" on the first screen and the end of \"The exam: tasks like the homework, as an interview\" here.",
+      "problem": "A badge I do not understand next to a card that says 21 makes me distrust both numbers, and it hides text I am trying to read.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Label it \"29 new parts below\" (or remove the number) and move it so it never sits on top of the card text."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I answered the fill-in-the-blank cards (\"Three whiteboard interviews\", \"Why data\") and read the result under each.",
+      "what_happened": "After my wrong answer it only says, in small grey text, \"You answered “certainly not this” — not quite.\" There is a pale outlined \"Try again\" pill and the right answer is not shown. The card titles (\"Three whiteboard interviews\", \"Why data\") do not describe what the question asks.",
+      "problem": "I skim grey text, so I barely notice that I was wrong. I have no idea what the right answer was, so \"Try again\" turns into guessing. Between classes I would just close it.",
+      "severity": 3,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Show wrong answers in a bigger, clearly coloured line, with a \"Show me the answer\" option and a one-line reason beside \"Try again\"."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I looked for the test and tapped the big green button first, which is \"Ask the library\".",
+      "what_happened": "The real test entry is \"Test this section\", a small underlined text link under the heading \"SECTION 2 · NOTEBOOKS YOU CAN TRUST\", right next to the round arrow button. The only strong coloured button on the screen is \"Ask the library\".",
+      "problem": "The thing I came for looks like a footnote while the pinned button looks like the main action. I also cannot tell whether it tests Section 2 or the Section 1 I just finished, or how long it takes.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Make \"Test this section\" a proper button that says how long it takes (for example \"Test section 2 · 5 min\") and make \"Ask the library\" the quieter control."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I opened \"What you missed on Day 2\" to catch up and picked something to tap.",
+      "what_happened": "A card says \"21 parts were taught while you were away\" and lists all 21 as underlined links in two cramped columns. The wrapped lines make the bullets hard to match to titles (\"Type hints are not enforced\" has its bullet below its own text). The names are technical (\"*args and **kwargs\", \"Decorators\", \"Generators\", \"dtypes\").",
+      "problem": "It is a wall of blue underlined text. I know no programming, I cannot tell which parts matter or how long they take, and I do not know what to tap first, so I leave.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the three parts that matter with a big \"Start here\" button and the time each takes, and hide the other 18 behind \"Show all 21\"."
+    },
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I read the line above the text box, then glanced at \"About: Tidy data ×\" and typed a question.",
+      "what_happened": "I never chose \"Tidy data\", and the \"About\" chip changes from screen to screen (\"A notebook's state follows run order\" on the test screen, \"Tidy data\" here). The panel's grey line also says \"Just you and the library\" on the first screen but \"your teachers can read it\" on the others. The \"Ask the library\" button looks pale and switched off, with a tiny ▾ at its edge.",
+      "problem": "I do not know which topic my question goes to, I cannot tell whether my teacher sees it, and I cannot tell whether the button works. I would not ask anything I did not want my teacher to read.",
+      "severity": 2,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Say the same privacy line everywhere, make the topic chip say \"Asking about: Tidy data\" with a bigger ×, and give the button its full colour once I start typing."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked at \"Your week\" to see what to do next. (This is the laptop screen, and I only use my phone.)",
+      "what_happened": "There is a row of small grey pills, \"172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent\", then three cards with lines like \"taught today · 3 later parts build on it\" and \"you have not shown what it builds on\". None of them looks like a button, and the text is tiny.",
+      "problem": "\"Not met yet\", \"worked on\" and \"fluent\" are not words I use for my own studying, and \"172 not met yet\" feels like a failure score. I cannot tell whether the cards open something or what \"build on it\" means for me today.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Say it plainly: \"Next up, 3 things, 6 min in all\", with a big \"Start\" on the first card, and drop the five count pills or put them behind a \"See details\" link."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "On my phone I looked for \"Your week\" and the checks in the bottom bar with six icons.",
+      "what_happened": "The bar has a house, books, a bell, a person, a speech bubble with a question mark and \"•••\", with no words. \"Your week\" and \"Checks\" only appear with names on the laptop's left menu, as \"Your page\", \"Your knowledge\", \"Where we reach you\" and \"Checks — DS403 — Python the...\" (cut off).",
+      "problem": "I have to guess between the person icon and the ••• icon. The speech bubble could be the library, the class chat or the checks. I am standing in a corridor and I do not want to open each one.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put a one-word label under each bottom icon (Today, Checks, Alerts, Me) and keep \"Checks\" as its own tab."
+    }
+  ]
+}

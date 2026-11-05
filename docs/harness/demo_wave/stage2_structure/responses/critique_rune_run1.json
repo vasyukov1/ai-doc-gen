@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.04",
+      "what_i_tried": "I open the course and look for the one thing I came for: what is due and when.",
+      "what_happened": "The day opens with the announcement, then every part as its own post, a test after each section, and the homework 'pinned with its deadline' somewhere in that stream. The whole thing is one column that runs top to bottom, written for a phone.",
+      "problem": "Homework is one item among a long run of posts. I have to scroll and skim a feed to find a deadline, and I do not know how far down it sits. I will not read announcements or section posts to get one date. I would give up and ask a classmate.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Put one 'Due' strip at the very top of the course: the homework title, the deadline and a Send button. The announcement and the part posts go below it, and I can ignore them."
+    },
+    {
+      "screen": "US.C.87.04 / US.C.87.05",
+      "what_i_tried": "I see the homework and ask myself which parts I must know to do it, and I look for a link from the homework to those parts.",
+      "what_happened": "The structure has a pinned homework, a teacher's question, and a 'Your N minutes' list where each item comes 'with why'. Nowhere does it say that a homework item lists the parts it needs, or that 'Your N minutes' is built from the homework.",
+      "problem": "My goal is 'what is due, and what I must know for it, nothing else'. The second half has no home. I would have to read the homework text, guess which of the many parts it means, and look them up one by one. That is exactly the digging I will not do.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Under each homework item show 'You need:' with the 2-4 parts as one-tap links, each opening with Check me ready. Anything outside that list stays collapsed."
+    },
+    {
+      "screen": "US.C.87.05",
+      "what_i_tried": "I have three minutes on the train, so I open the course and set the budget to the smallest value.",
+      "what_happened": "The first screen shows 'Your N minutes', each item with its reason, and the budget switches between 5, 10 and 20 minutes. Nothing says the list starts with what is due, or that I can ask for only that.",
+      "problem": "There is no choice for my real situation. The smallest budget is already more than I have. Each item carries a 'why' that I will skip, and I do not trust a list I did not see being filled by the deadline. A recommended list that ignores a due homework is worse than no list.",
+      "severity": 2,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add an 'Only what is due' option next to 5 / 10 / 20, and always put due items first in the list. Show the 'why' as a short tag, not a sentence."
+    },
+    {
+      "screen": "US.C.87.04 (situation: 'on a teaching day')",
+      "what_i_tried": "On a Wednesday with no session, I open the course on my laptop to check what is still due from last week.",
+      "what_happened": "US.C.87.04 is written for a teaching day: before the session, after it, in the evening. US.C.87.05 covers a learner short of time. No situation covers an ordinary day between sessions, or one place that lists all homework and deadlines across sessions.",
+      "problem": "The brief says I can 'see your homework and deadlines', but the structure only puts them inside a day's feed. If last week's homework is on last week's day, I have to remember which day it was on and scroll back to it. A deadline I forget is the one I miss.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Add a situation and a screen: 'What is due', one list across the whole course, sorted by deadline, with sent / not sent next to each. Make it the first tab."
+    },
+    {
+      "screen": "UA.US.C.87.04.01",
+      "what_i_tried": "I open a post and want the short, technical version with code, because I know Python and skip basics.",
+      "what_happened": "I tap *Read more*, and it opens 'at the suited level'. Then I use Simpler · Core · Deeper and *In code* to change it. The structure does not say what 'suited' means for me or where I can see it.",
+      "problem": "That is two taps for each post, and I may be starting from a level that someone else (the system) chose for me. With dozens of posts I will do this dozens of times. I do not see why it picked what it picked, so I cannot tell if I am missing something.",
+      "severity": 2,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show the current level as a small label on every post. Let me pick 'Core + In code' once for the whole course and have it stay."
+    },
+    {
+      "screen": "UA.US.C.87.04.02 / US.C.87.08",
+      "what_i_tried": "I tap *Unclear* on a post by mistake (I expect it to work like a reaction in Slack), and I give a wrong answer to *Check me* with a thumb slip.",
+      "what_happened": "*Unclear* makes the post open more simply, and 'the teacher sees it'. US.C.87.08 lists ways back for remarks, corrections, invitations, observations, verdicts and double taps. It has nothing for taking back an *Unclear*, a test answer, or a 'What did you learn?' entry.",
+      "problem": "In Slack or GitHub I can click a reaction off again. Here an accidental tap tells my teacher I did not understand something I did, and I cannot see how to remove it. A wrong tap on a test may also count against me.",
+      "severity": 2,
+      "heuristic": "User control and freedom",
+      "suggestion": "Make *Unclear* a toggle that I can tap again to withdraw, with a short 'Undone' toast. Let me re-answer a *Check me* question, and add these cases to the list in US.C.87.08."
+    },
+    {
+      "screen": "US.C.82.02",
+      "what_i_tried": "I want to say once that I know Python well, so that the basics are skipped, and I look for where to do that.",
+      "what_happened": "The path is to read a row such as 'Your familiarity with ml reads as 0.7 out of 1', click *Correct this*, type a number, and save. This is done topic by topic. The undo is a control called 'Let this go back to being inferred'.",
+      "problem": "I do not think in 0.7 out of 1, and I will not walk through a list of topics to fix them one by one. The undo wording is long and unclear to me. I would not use this screen, so the system keeps its wrong guess about me and keeps giving me basics.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Offer plain choices per area ('I know this well / a bit / not yet') in one list, and a 'Skip basics' switch for the whole course. Name the undo 'Reset'."
+    },
+    {
+      "screen": "US.C.70.11",
+      "what_i_tried": "I have a question about a term in a card, so I open the card's discussion and type it in the box, like in any chat.",
+      "what_happened": "The panel starts with a notice sentence ('Just you and the library — unless you ask an expert to check this card, which shares it.'). Under it are the YOU and LIBRARY turns, and a composer whose button says **Ask**. When I switch tabs, the same composer's button becomes **Comment**, and a comment is public and attributed.",
+      "problem": "I skip the notice, and the box looks the same in both tabs; only a single word on the button changes. In Slack, one box means one audience. I could post a half-formed question to the expert thread under my name, or think a comment is private. Also, the course's first screen (US.C.87.05.04) lets me ask the library a different way, with the answer in the feed, so there are two ways to ask with different results.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Make the two composers look different, with a placeholder that says 'Private: only the library sees this' or 'Public: everyone sees your name', and a different colour. Ask for a confirm on the first public comment, instead of relying on the notice."
+    }
+  ]
+}

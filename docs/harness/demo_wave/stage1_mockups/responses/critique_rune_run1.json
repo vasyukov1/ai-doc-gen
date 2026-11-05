@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the first screen for anything that says what is due and when, so I could open it and skip the rest.",
+      "what_happened": "I see four cards with no deadline on any of them: a bold post about chunk map retention, a block of raw fields from someone called nour, a note from twin-ada, and a post about graph storage. The bottom bar has six icons with no words and number badges (11, 8, 8, 4), and I ignore badges. Nothing says which icon is homework.",
+      "problem": "I opened the app to find what is due, and the first screen can't tell me. I have to guess which unlabeled icon, or which tab on another screen, holds homework, and I give up fast when I have to hunt.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Pin a one-line strip at the top of the stream, such as 'Due: Sharding sheet, Fri 18:00 - open', that goes straight to the homework. Put text labels under the bottom icons."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I opened the course page and looked for the list of what I have to know, and I skipped the text above it.",
+      "what_happened": "The first half of the screen holds a description paragraph, 'Kept by the infra community', 'Revision r14', '12 elements in 4 chapters', a KEEPERS row with avatars, and another paragraph about how the kernel is checked and scored. The first real definition, 'A shard', starts at the bottom and the second is cut off.",
+      "problem": "None of the header block helps me finish the homework, and it pushes the content below the fold on a phone. Words like 'kernel', 'elements' and 'keepers' are the app's own terms, so I can't tell what I'm looking at without reading the paragraph, and I won't read it.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Collapse the description, revision and keepers into a single line with an expand arrow, and drop the explanatory paragraph or tuck it behind a small '?'. The first definitions should be visible without scrolling."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I looked for the Homework tab on the course page, since the 'Your map' screen has one.",
+      "what_happened": "This row shows 'Content kernel 12', 'Experts', 'Rooms' and a clipped 'From this ke...', with a sliver of another pill cut off on the far left. On 'Your map' the row is different: Stream, Your map, Homework, Your skills, 'For...'. Homework is not visible here at all.",
+      "problem": "The tab row changes between screens and scrolls sideways, so I can't tell whether Homework is one swipe away or doesn't exist here. I don't expect to swipe a row of tabs to find the one I need, and the clipped labels look broken.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one tab row on every course screen with the same order, starting with Homework, and make sure the labels fit without sideways scrolling, for example by shortening them or moving the secondary ones into a 'More' menu."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I tried to scroll the list of definitions, and I expected the text box at the bottom to be a plain place to type.",
+      "what_happened": "A panel headed 'Ask the library' sits permanently at the bottom with the line '- Just you and the library, about Sharding and data placement.', then a 'Write something...' box and a big pale-green 'Ask the library' button with a small split arrow. The same panel is on 'Your map', and the stream has a similar box without the heading. The panel takes about a fifth of the screen, and the button looks disabled.",
+      "problem": "It shrinks the content I actually read, and the label appears twice, as heading and as button. The split arrow could be something like 'post to the group' or 'send privately', and I can't tell. In the stream, 'Write something...' could be a message to the whole class, and I assumed it works like Slack.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Collapse the panel into a single 'Ask the library' button or a one-line field that expands when tapped. Drop the duplicate label, and either remove the split arrow or label it with its options, such as 'Ask privately / Post to class'."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I tapped the 'Everyone' dropdown at the top, expecting a filter like in Slack, such as 'only what is due' or 'only mine'.",
+      "what_happened": "The dropdown says 'Everyone' and stays the same at the top of all three screens, including 'Your map', which is about my own progress.",
+      "problem": "I can't tell what it filters, whether it is who I'm talking to, who sees what I write, or whose progress I see. On a personal screen 'Everyone' contradicts the title, so I don't trust what I'm looking at. It's also the first thing on every screen, so it adds one more thing I have to decide about.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Give it a visible label such as 'Showing: Everyone', and remove it from personal screens like 'Your map', where it doesn't apply."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scanned the stream cards for the ones that concern me and skipped the long text.",
+      "what_happened": "The second card is a block of raw fields from someone named nour: 'worked: the sharding exercise sheet', 'finished: 3 of 5', 'askedFor: an easier sheet', plus a timestamp. It has the same weight as the teacher's posts and the twin's note.",
+      "problem": "It reads like a debug dump with raw field names. I can't tell whether it is mine, someone else's progress, or information for me, and if it is another student's data I'd be uneasy seeing it. It makes the stream look noisy.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show it as a plain sentence, for example 'Nour finished 3 of 5 on the sharding sheet', or hide other students' activity from the stream unless I turn it on."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I saw 'I understand everything here' right under the 'What a shard is' section and went to tap it to skip the three pieces, which I already know from other systems.",
+      "what_happened": "The button looks like a small pill and sits next to the section title. Nothing on the screen says what happens after I tap it, whether the three pieces turn 'learned', or whether I can take it back. The text above says the map is 'from your own answers, not a score', which doesn't match a button that marks things as understood.",
+      "problem": "One tap could mark a whole section as learned, and I can't see an undo. I might hit it by accident, or tap it and then not trust the 'learned' count.",
+      "severity": 2,
+      "heuristic": "User control and freedom",
+      "suggestion": "After the tap, show a short toast like '3 pieces marked learned - Undo'. Show the effect in the button label, for example 'Mark all 3 as learned'."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I tried to read the shard definition quickly from its card, and then I tried 'Reply' to see what it does.",
+      "what_happened": "Each card shows its title, a 'not yet' pill and one line cut off with '...' ('A shard is one horizontal slice of a collectio...'), with an underlined 'Reply' link with a chat icon below. The text says 'Open a piece to read it', so reading needs a tap. A sticky white block with 'What a shard is' sits above the counts and looks empty.",
+      "problem": "I can't read even a one-sentence definition without opening it. 'Reply' sounds like answering a thread in Slack, and I don't know whether it is for answering a quiz question or for writing to the teacher. The 'not yet' pill says nothing about what I'm supposed to do next.",
+      "severity": 2,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Let the cards expand in place to show the whole definition with a one-tap self-check. Rename 'Reply' to what it does, such as 'Test myself', and make the 'not yet' pill say what is missing."
+    }
+  ]
+}

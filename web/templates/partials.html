@@ -51,6 +51,26 @@
 </footer>
 {{- end}}
 
+{{define "pdf-viewer" -}}
+<dialog class="pdf-viewer" data-pdf-viewer aria-labelledby="pdf-viewer-title">
+  <div class="pdf-viewer__head">
+    <h2 class="pdf-viewer__title" id="pdf-viewer-title">Document preview</h2>
+    <div class="pdf-viewer__actions">
+      <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/pdf">Download</a>
+      <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/pdf?view=1" target="_blank" rel="noopener">Open in new tab</a>
+      <button class="icon-button" type="button" data-pdf-close aria-label="Close preview">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="pdf-viewer__body">
+    <iframe class="pdf-viewer__frame" data-pdf-frame title="PDF preview"></iframe>
+  </div>
+</dialog>
+{{- end}}
+
 {{define "scripts" -}}
 <script src="/assets/app.js" defer></script>
 {{- end}}

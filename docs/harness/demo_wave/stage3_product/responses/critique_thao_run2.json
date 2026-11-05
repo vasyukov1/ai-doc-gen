@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage3_what_you_missed.jpg",
+      "what_i_tried": "I started to read the 21 parts of the day I missed from the top of the “What you missed on Day 2” list, one after another.",
+      "what_happened": "The 21 titles are underlined links in two narrow columns with bullets, and long titles wrap onto a second line with no bullet (for example “The audience table / Keep the two tables / distinct”, “Type hints are not / enforced”), and the round “48” arrow button sits on top of the last titles (“The exam: tasks like the homework, as an interview”, “The course project: one…”).",
+      "problem": "I cannot tell where one part ends and the next begins, so I do not know if “Keep the two tables distinct” is one part or a continuation of “The audience table”; I also do not know in which order to read the columns, and I cannot read the end of the last titles. I read slowly in English, so every guess costs me.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show the parts in one column, in the order they were taught, one part per row (numbered 1 to 21, each title on its own row without cutting it), with the scroll button moved so it does not cover any title."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I read my answers to “Three whiteboard interviews” and “Why data” in Section 1 and then wanted to ask the library about the one I got wrong.",
+      "what_happened": "Under the text box the line “About: A notebook's state follows run order ×” is pinned, which is a part of Section 2 that I am not looking at; on the Day 2 list screen it says “About: Tidy data ×” and I cannot find “Tidy data” in the titles I can see.",
+      "problem": "I open many things at once and lose which one I am answering, and this tells me the library thinks I am asking about something else; if I type “I do not understand this”, I would get an answer about a part I never meant, and I would not know it until I read the answer. The small × is the only way to change it.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Make the “About” chip follow the part I opened or answered last, show its full name with a clear “change” action, and when I press the box on a test result, fill it with that exact question."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I looked at the question box at the bottom to see if I could ask something I do not understand without anybody seeing it.",
+      "what_happened": "On this screen the box says “Just you and the library, about DS403 — Python the Generative Way”, but on the next three screens the same box says “The library answers from the course; your teachers can read it.”",
+      "problem": "The two sentences say opposite things about who sees my question, and I take labels literally; I do not know which one is true, so I would not ask anything that sounds like I am failing, which was my whole reason to come.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one sentence everywhere, in plain words, that says exactly who can read my question (for example “Your teachers can read your questions, but they are not marked”), and if there is a private mode, let me pick it before I send."
+    },
+    {
+      "screen": "stage3_section_test.jpg",
+      "what_i_tried": "I read the feedback on my two test answers to understand what I got wrong in “Why data”.",
+      "what_happened": "The first says “You answered ‘questions’ — that's it.” and the second says “You answered ‘certainly not this’ — not quite.” with only a “Try again” button; neither shows the correct word or any reason.",
+      "problem": "“that's it” can mean “correct” or “that is all”, and I do not know the idiom for sure; “certainly not this” looks like a label from the system, not an answer I would type, so I do not trust that it reflects what I did. “Not quite” does not tell me what is missing, so I can only guess again.",
+      "severity": 2,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Write “Correct” or “Not correct”, then “Your answer: …”, then “The course says: …” with one short sentence of why and a link to the part that explains it."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I read the row of numbers at the top of “Your week” to know how much of the course I have already covered.",
+      "what_happened": "It shows “172 not met yet · 25 met · 2 worked on · 3 understood · 0 fluent”, with no explanation of any of the five words.",
+      "problem": "I take it literally: “met” could mean I read it, I was tested on it, or that I met a requirement; “172 not met yet” sounds like I am failing 172 things, and I do not know who decides when something is “understood” or “fluent” (me, a test, or the teacher). If one word means two things I stop trusting the numbers.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write each count as a plain phrase with the rule inside it (for example “172 parts you have not opened yet”, “3 parts you answered correctly in a test”) and show what each word means when I hover or press it."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I looked at “Three to look at next” and wanted to open “Data-backed personas” because I did not understand why it was there.",
+      "what_happened": "The card says “taught today · you have not shown what it builds on” without naming what it builds on, the three cards do not look like buttons, and nothing says why these three were chosen out of 202.",
+      "problem": "I cannot tell which earlier part I am missing, so I have to search the contents list from memory; the sentence also sounds like I am being told off for not proving something, and I do not know how to “show” it.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Name the earlier part in the card (“Builds on: One dtype per array — test yourself first”) with a button that opens it, and add one line saying why this card is on the list."
+    },
+    {
+      "screen": "stage3_your_week_laptop.jpg",
+      "what_i_tried": "I wanted to write a few lines about the day I missed, including what I did not understand, in the “What did you learn?” box.",
+      "what_happened": "The box asks for “what you can now do or explain, and what is still unclear”, says “Your teacher reads it; it is not marked”, and has Today / Last 3 days / This week tabs and a Save button, with “today 12:00” at the top right.",
+      "problem": "I would be writing my confusion for my teacher to read, and “not marked” does not tell me if it is remembered or compared with other students, so I would write only the safe half; the tabs do not tell me which period my text is saved into, and I cannot tell if “today 12:00” is a deadline or the time the card was made (I study after 22:00).",
+      "severity": 3,
+      "heuristic": "User control and freedom",
+      "suggestion": "Let me choose “Only me” or “Share with my teacher” before Save, show after Save the period it went into with a way to edit or delete it, and replace “today 12:00” with a clear label such as “Posted today at 12:00”."
+    },
+    {
+      "screen": "stage3_day_one.jpg",
+      "what_i_tried": "I checked when Homework 1 is due so I can plan my evenings.",
+      "what_happened": "The same homework appears twice in different words: “Due Fri, Oct 23, 09:00 AM (in 4 days) Homework 1 — data manipulation on sessions 1–4 — due Day 5” and “Your deadlines: Homework 1 in 4 days · project planning in 11 days · project in 18 days”, under a Day 1 title that is shown twice (the header and the green card).",
+      "problem": "I have to work out that “Day 5” is Friday and that “in 4 days” at 09:00 means only three of my evenings; the repetition makes me wonder whether these are two different deadlines, and I read the same lines several times in English.",
+      "severity": 1,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Show each deadline once, with the date and the time left in hours or evenings (for example “Fri 23 Oct, 09:00 — 3 evenings left”), and drop the repeated Day 1 title."
+    }
+  ]
+}

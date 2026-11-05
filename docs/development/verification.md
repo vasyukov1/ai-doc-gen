@@ -215,3 +215,12 @@ Read-only diagnosis of the local database for job `135a6e7f-96d5-49e6-9239-dece2
 - A headless Chrome manual smoke against the rebuilt local website confirmed: missing academic specification opens its collapsed panel and blocks submission; technical overview allows an absent specification; empty title metadata shows continue-with-TODO feedback. An intercepted HTTP 400 response was shown inline, preserving the title and selected ZIP and leaving the URL unchanged. No browser JavaScript errors occurred. This check used a simulated server error and no provider key.
 - Independent review caught a URL-encoded form regression and repeated recursive list rendering; both were corrected. URL-encoded forms retain their encoding, and list/table children are rendered once.
 - Local Compose image and services rebuilt; readiness checked. Existing jobs, section bodies and PDFs were not rewritten. Rebuilding an existing PDF improves formatting; a fresh job is needed to correct prose previously derived from assistant metadata. Live model content quality was not benchmarked in this correction.
+
+## 2026-11-05 — In-site PDF preview
+
+Manual checks only; no automated test suite was added. `go build ./...`, `npm --prefix web run typecheck`, `npm --prefix web run build` and `git diff --check` passed; the Vite output was rebuilt into `web/static/app.css` and `web/static/app.js`.
+
+- The artifact route now accepts `?view=1` and serves the PDF with `Content-Disposition: inline`; the plain link keeps `attachment`. `Cache-Control: private, no-store` and `X-Content-Type-Options: nosniff` are unchanged. The inline header itself was not exercised over HTTP with a completed job, because that requires an owner session with a compiled artifact.
+- A temporary render check confirmed that both `job.html` and `document.html` contain the `View` link (`?view=1`), the `pdf-viewer` dialog, the iframe and the close control. The temporary checker was removed afterwards.
+- The dialog was not opened in a browser during this check. Keyboard behaviour (Esc, focus return), backdrop clicks, the no-JavaScript new-tab fallback and PDF framing in each browser remain unverified.
+- The site interface stays English: the new control is labelled `View`.

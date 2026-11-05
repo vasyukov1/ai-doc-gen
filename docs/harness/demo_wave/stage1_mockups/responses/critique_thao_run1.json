@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scrolled the feed from the top to find the part of the day I missed, and read the second card, the grey one from \"nour\".",
+      "what_happened": "The card shows what looks like raw field names: \"worked: the sharding exercise sheet  finished: 3 of 5\" and \"askedFor: an easier sheet\", with a classmate's name and a time.",
+      "problem": "It reads like debug output, not like something written for me, and \"askedFor\" is one squashed word that I have to decode. It also shows me that another student asked for an easier sheet, so I immediately think my own \"I do not understand\" could appear like this in front of everyone, and I would stop using the app for questions.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write these cards as a plain sentence (\"Nour finished 3 of 5 exercises\"), and do not show what one student asked for to other students at all, or show it without a name."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I read the \"twin-ada\" card and tried to understand the little badges under each card (\"0 experts · 1 twin\", \"! 3 experts · 1 twin\", \"Not yet checked\").",
+      "what_happened": "The card talks to me (\"You have opened the placement chapter three times ... without finishing it\") and is signed \"twin-ada\"; the badges mix a check mark, an exclamation mark, a dashed circle, a target-like circle and coloured initials, with no explanation.",
+      "problem": "I do not know what a \"twin\" is (a person? a bot? a copy of Ada?), what an \"expert\" has done to a card (checked it? wrote it?), or whether \"!\" is a warning about my work or about the card. The same words appear with different symbols, so I cannot trust any of them. The card also tells me how often I got stuck, which feels like being watched.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Replace \"twin\" and \"experts\" with plain words, such as \"checked by 3 teachers\" and \"suggested by your study assistant\", and give each symbol one meaning, with a one-line legend I can open from the badge."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the \"Everyone\" box at the top and at the sentence under \"Ask the library\" on the other two screens, to learn who would see what I write.",
+      "what_happened": "The top of every screen says \"Everyone\" in a drop-down, while the bottom of the course and map screens says \"Just you and the library\"; on the stream screen the bottom has no such sentence at all.",
+      "problem": "I take labels literally. \"Everyone\" next to a place where I type means that everyone sees it, and one screen later \"Just you\" says the opposite. I cannot tell whether \"Everyone\" is a filter for what I read or the audience for what I write, so I do not dare to type the thing I did not understand.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Give the drop-down a label that says what it does (for example \"Show cards from: Everyone\") and keep it separate from the writing box, which always carries its own visible line about who can see the text."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I clicked into \"Write something...\" to type a question about the compound-key sentence, next to the pale \"Ask the library\" button with the small arrow.",
+      "what_happened": "The box has no line saying who reads my text; the button is pale green like a disabled control and has a \"▼\" part whose options I cannot see; the box sits right over the last card so that card is cut off.",
+      "problem": "\"Write something\" in a feed headed \"Everyone\" could be a post to the whole class. I would not know if I am sending it to the library or to the class before I press, and I cannot tell whether the pale button is disabled or just waiting for text. I would rather not type anything than send it to the wrong place.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "Show a fixed line above the box on the stream screen (\"Only you and the library will see this\"), make the button look active when it can be pressed, and put the other send options as visible words, not behind \"▼\"."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I read the top of the course page, then the tabs, to understand what \"Content kernel 12\" holds and whether it is the day I missed.",
+      "what_happened": "I see \"Kept by the infra community\", \"Revision r14\", \"12 elements in 4 chapters\", \"KEEPERS\", a tab called \"Content kernel\" and the sentence \"There is no score for the kernel as a whole — three confirmed definitions say nothing about a contested caveat.\"",
+      "problem": "These are terse labels and idioms that I read slowly in English: kernel, keepers, element, revision r14, \"contested caveat\". I do not know if \"element\" is the same thing as the \"pieces\" on the map screen, or why a missing score is explained with a sentence that I have to translate twice. I read carefully, so I lose time on words that should be obvious.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use the course's own words (\"Course content\", \"pieces\", \"maintained by ...\"), keep one word for one thing across screens, and rewrite the explanation sentence in short plain English without \"contested caveat\"."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I looked at the bottom bar to go to my homework and to the place where my questions would be, and tried to scroll the tab row (Content kernel, Experts, Rooms, \"From this ke...\").",
+      "what_happened": "The bottom bar has six icons with no words and number badges (11, 8, 8, 4) that mean nothing to me; the tab row is cut off at both edges, so \"From this ke...\" is unreadable and there is a hidden tab on the left; the course page also has its own \"Stream\" tab while the bottom bar has a stream icon.",
+      "problem": "I open many things at once and lose which one I was answering, and with icon-only navigation I cannot tell the question-mark icon from the chat-bubble icon. I do not know if the badges are things I must do, or just counts. There seem to be two ways to reach the stream, so I am not sure where I am.",
+      "severity": 2,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put a short word under each bottom icon, say what each number counts (for example \"8 new\"), and show the tabs in a way that the full list is visible, with a clear marker for the current screen."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I read the summary \"0 learned · 0 worked on · 12 not yet\" and the grey \"not yet\" tags on each piece to see where I am in the day.",
+      "what_happened": "Every piece says \"not yet\", the summary has three states, and the explanation says \"From your own answers, not a score... your correction wins and stays marked as yours. Fold the sections you are done with; the map remembers.\"",
+      "problem": "\"not yet\" could mean not read, not understood, not tested, or not checked, and the stream screen used \"Not yet checked\" for something else, so one label seems to mean two things. \"worked on\" is vague. I read the explanation three times and still do not know what my \"correction\" is or what is being corrected.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Name the three states with full phrases (\"not read yet\", \"read, not tested\", \"tested and understood\"), and replace the paragraph with two short sentences and one example of a correction."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked for a way to say that \"A shard\" is unclear to me, and found \"Reply\" under each piece and \"I understand everything here\" under the section title.",
+      "what_happened": "Each piece has a \"Reply\" link with a speech bubble, and the section has one pill \"I understand everything here\"; there is no matching \"I do not understand\" control and no sentence about who sees a reply.",
+      "problem": "\"Reply\" suggests I am answering a message from someone, and I do not see a message. I would not guess that this is where I say \"unclear\". The only clearly worded button is the one that says I understand everything, and I do not see how to undo it for all 3 pieces; I fear that not pressing it, or pressing the other thing, shows the teacher that I am failing.",
+      "severity": 3,
+      "heuristic": "User control and freedom",
+      "suggestion": "Change \"Reply\" to \"I am not sure about this\" with a small line \"Only you and the library see this\", and give \"I understand everything here\" a visible \"Undo\" after I press it."
+    }
+  ]
+}

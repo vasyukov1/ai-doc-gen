@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I started to read the stream from the top to find the day I missed, and I read the small grey card from \"nour\" and the card from \"twin-ada\".",
+      "what_happened": "The nour card shows \"worked: the sharding exercise sheet  finished: 3 of 5  askedFor: an easier sheet\" with her name and a time, written like a database record. The twin-ada card tells me I opened a chapter three times \"without finishing it\".",
+      "problem": "I now think that if I press anything unclear, a card like this will appear for me and everybody (and the teacher) will read \"askedFor: an easier sheet\". Nour's struggle is on display. Also the card says the app counts how many times I open a chapter. This is exactly what I am afraid of, so I would probably not ask at all.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Do not show other students' struggles with their names. Write cards in normal sentences, not field names like askedFor. Say clearly on a card whether it is only for me."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I wanted to write my question in the box \"Write something...\" at the bottom, and first I looked at the \"Everyone\" box at the top.",
+      "what_happened": "The top shows \"Everyone\" with an arrow, the box says \"Write something...\", and the pale green button says \"Ask the library\" with a small arrow beside it. Nothing on this screen says who will see what I write.",
+      "problem": "\"Everyone\" is the first word on the screen, so I read it literally: what I write goes to everyone. \"Write something\" does not sound like asking the library, and the little arrow hides other choices I cannot see. On the course screen there is a line \"Just you and the library\", but here there is none. So the same box feels private in one place and public in another. I stop and do not write.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Under the box, always say in one plain line who sees the text (\"Only you and the library\" or \"All students\"). Name the \"Everyone\" box (for example \"Show posts from: Everyone\") and show the choices behind the arrow with words."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the small coloured labels under each post to decide how much I can trust the claim (\"Not yet checked\", \"0 experts · 1 twin\", \"! 3 experts · 1 twin\").",
+      "what_happened": "I see different small icons (empty circle, circle with dot, exclamation mark) and round initials that overlap each other (AC, BL, AT, LI cut off). The same \"experts · twin\" labels are also on the elements in the course screen, but there with a tick.",
+      "problem": "I check claims, so this matters to me. I do not know what a \"twin\" is (a person? a bot? a copy of me?), what \"checked\" means, or why 0 experts is shown with a calm icon but 3 experts with an exclamation mark. The overlapping initials I cannot read. I cannot tell if the first post (\"Not yet checked\") is safe to learn from.",
+      "severity": 3,
+      "heuristic": "Help and documentation",
+      "suggestion": "Explain the labels on tap (\"twin = an AI assistant that checked this\", \"experts = people who confirmed it\"). Use one clear set of words with a short legend, and show the avatars without overlap."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the bottom bar to go from the stream to the course and then to my own map.",
+      "what_happened": "The bottom bar has six icons without any words and with numbers on them (11, 8, 8, 4); two icons both show 8. On stage1_your_map.jpg none of the icons is highlighted, and at the top there is a tab called \"Stream\" while the bar also has a stream icon.",
+      "problem": "I take things literally, and here there is nothing to take. I do not know what the 8 is (8 new? 8 unread? 8 to do?) and I cannot tell the two 8s apart. On my map screen I do not know where I am in the app. And \"Stream\" tab and the stream icon look like the same thing, but I do not know if they are. Late at night I do not want to guess.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put a short word under each icon (Course, Stream, Me, ...), explain the numbers (\"8 new\"), always highlight where I am, and use one name for the stream in only one place."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I wanted to read what I missed, so I looked at the heading \"Sharding and data placement\", the tab \"Content kernel 12\", and the line \"12 elements in 4 chapters\".",
+      "what_happened": "The course calls the content a \"kernel\" made of \"elements\" in \"chapters\". The map screen calls the same things \"pieces\" in \"sections\" (\"3 pieces\", \"12 not yet\").",
+      "problem": "In data science \"kernel\" means a Jupyter kernel or a kernel function, so I first think this is code. And I count: elements or pieces? chapters or sections? If I cannot be sure that two words mean one thing, I start to doubt the numbers (12 here, 12 there, 4 chapters but I see only a section of 3).",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one set of ordinary words everywhere (for example \"parts\" and \"chapters\") and replace \"kernel\" with \"Course content\" or \"What to read\"."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I tried to find the day I missed, the one with my teacher's post, and to read it in order.",
+      "what_happened": "The course screen is organised by topic (\"What a shard is\", \"3\") with no days. The stream has posts of 11, 14, 18 and 24 August in one list, mixed with nour's record and a note for me, and no day headings. Some tabs are cut at the edges (\"From this ke...\" and one before \"Content kernel\").",
+      "problem": "My goal is to read the day I missed properly. I cannot say \"show me yesterday\". I must scroll through other students' records and hidden tabs and guess by date, and I do not know which parts are new to me. It costs me many minutes of my 60-90.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Add a clear \"Catch up\" place that lists the parts by day (\"Yesterday: 4 new parts\"), with the unread ones marked, and keep other students' activity out of that list."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I read the text under \"0 learned · 0 worked on · 12 not yet\" to understand what this map is for and what I am supposed to do on it.",
+      "what_happened": "The text says \"From your own answers, not a score. Open a piece to read it, see what its level rests on and correct it: your correction wins and stays marked as yours. Fold the sections you are done with; the map remembers.\" Every piece has a grey \"not yet\" label.",
+      "problem": "Too many idioms and short phrases for slow reading in English: \"what its level rests on\", \"your correction wins\", \"fold\", \"the map remembers\". Which level? Correct what? I have not answered anything yet, so \"from your own answers\" does not fit. And \"not yet\" on all 12 pieces looks like a failing mark, even if the text says it is not a score.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Write two or three short, literal sentences (\"This shows what you have learned. Tap a part to read it. If the app is wrong about you, change it.\") and use a neutral label like \"not started\" instead of \"not yet\"."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I looked for a way to say that \"A shard\" is unclear to me, without anybody thinking I failed, and I saw \"Reply\" under each piece and the button \"I understand everything here\".",
+      "what_happened": "\"Reply\" has a speech bubble but I do not see what I reply to. The \"Ask the library\" panel at the bottom stays open and says \"about Sharding and data placement\", the whole topic, not the piece. The single button \"I understand everything here\" sits above the three pieces, before I have read any.",
+      "problem": "I open several things at once, so I will press Reply on \"The shard key\" and then lose which piece my text belongs to, because the panel at the bottom is about the whole topic. I also do not know if Reply goes to the library only, to the teacher, or to the group. There is no plain \"this is unclear\" choice, and one slip on \"I understand everything here\" would mark all three as learned, which is not true.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "When I press Reply, show the title of the piece inside the panel (\"Asking about: A shard\") and say who sees it. Add a private \"This is unclear\" action, and ask for confirmation, with an undo, before \"I understand everything here\"."
+    }
+  ]
+}

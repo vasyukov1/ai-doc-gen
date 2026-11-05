@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I looked at the bottom bar for whatever opens my homework and deadlines, and had no idea which of the six icons that is.",
+      "what_happened": "The bar has six icons with no words, and four of them carry green number badges (11, 8, 4, 8). The only hint of where I am is the pale green highlight on the second icon.",
+      "problem": "I came for one thing, what is due. I would have to tap icons one by one to learn what each does. I ignore badges, so the numbers tell me nothing. On a phone on the train I would give up after two wrong taps.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Put a short word under each icon (Stream, Homework, Ask, ...), and show a due-soon count only on the Homework item."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scanned the first screen of the Stream for the next deadline.",
+      "what_happened": "The top of the stream is a news-style card about chunk map retention, then a classmate's status, then a message from twin-ada about a chapter I supposedly keep stopping at, then a card about graph storage. The newest item is dated 2026-08-24. Nothing says what is due or when.",
+      "problem": "This reads like a team activity feed, not a course timeline. Everything is the same weight, so I have to read each card to find out whether it matters to me. None of it answers my question.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Pin a one-line strip at the top of the stream, such as \"Due: sharding exercise sheet, Fri 18:00, needs: A shard, The shard key\", with a link to the homework. Let the rest of the feed scroll below it."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I tried to read the card from \"nour\" to see whether it is something I have to act on.",
+      "what_happened": "It shows raw field names in bold: \"worked: the sharding exercise sheet  finished: 3 of 5  askedFor: an easier sheet\". There is no sentence and no button.",
+      "problem": "It looks like a debug dump or a log line, so I do not trust it. I also cannot tell why a classmate's status is in my feed, or whether it is meant for me.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Show it as a plain sentence (\"Nour finished 3 of 5 on the sharding exercise sheet and asked for an easier one\"), or leave it out of my stream unless it affects me."
+    },
+    {
+      "screen": "stage1_stream.jpg",
+      "what_i_tried": "I scrolled down the stream to read the fourth card, about graph storage.",
+      "what_happened": "The \"Ask the library\" composer is fixed at the bottom and takes about a quarter of the screen. The graph storage card is cut off in the middle of its timestamp and badges, and the feed behind it is squeezed. The big green button, with a ▾ half beside it, looks disabled because it is pale.",
+      "problem": "I lose a quarter of a phone screen to a box I did not come to use, and the content I am reading is clipped behind it. I also cannot tell if the button works or what the ▾ opens. I would guess it behaves like GitHub's split button, which is a guess.",
+      "severity": 2,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Collapse the composer to a single \"Ask the library\" icon or bar until I tap it. Keep the feed full height."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I opened the course and looked for the things I must know for the homework.",
+      "what_happened": "The first screen is a header: a title, a three-line description, \"Kept by the infra community\", \"Revision r14 · Sep 9, 2026\", \"12 elements in 4 chapters\" and a KEEPERS row. Under the tab chips there is another paragraph (\"Every element is checked on its own. There is no score for the kernel as a whole...\"). The first real element, \"A shard\", appears only after that.",
+      "problem": "That is two paragraphs and a block of metadata that I skip, and I still have to scroll past them. I do not care who keeps it or which revision it is. The definition I need sits at the fold.",
+      "severity": 3,
+      "heuristic": "Aesthetic and minimalist design",
+      "suggestion": "Cut the header to the title and one line of metadata, and move the explanatory paragraph behind a small \"?\" link. Have the first element visible without scrolling."
+    },
+    {
+      "screen": "stage1_course.jpg",
+      "what_i_tried": "I looked for \"Homework\" among the chips under the course title. It was one tap away on the other screen, so I expected it here too.",
+      "what_happened": "This chip row reads \"Content kernel 12 · Experts · Rooms · From this ke...\", with a clipped chip on the left and a cut-off label on the right. The \"Your map\" screen has a different row: \"Stream · Your map · Homework · Your skills · Fo...\". Stream is also in the bottom bar. Homework does not appear in this row at all.",
+      "problem": "The same place in the layout holds different tabs on different screens, and both rows run off the edge. So I cannot tell if Homework is anywhere on this screen or only appears after I switch to \"Your map\". It also means I would have to remember where each tab lives.",
+      "severity": 3,
+      "heuristic": "Consistency and standards",
+      "suggestion": "Use one tab row for the course, in the same order on every screen: Stream, Course, Your map, Homework. Keep it short enough to fit the screen width without scrolling."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I wanted to check myself on \"A shard\", so I looked for a quick test or check button on the piece. The only action I could see was \"Reply\".",
+      "what_happened": "Each piece shows its title, a text cut off with \"…\", a grey \"not yet\" tag and an underlined \"💬 Reply\". The page text says \"Open a piece to read it, see what its level rests on and correct it\".",
+      "problem": "Where I come from, Reply means answering in a thread, as in Slack. Here I cannot tell if it starts a test, corrects the level, or messages someone. There is no obvious way to go from \"not yet\" to \"learned\". The definitions are cut off, so I cannot even see what I need to know without opening each one.",
+      "severity": 3,
+      "heuristic": "Flexibility and efficiency of use",
+      "suggestion": "Replace \"Reply\" with a clear one-tap action such as \"Check me\", which opens a one-question test on that piece. Show the full definition, or its first sentence, instead of cutting it off at the first line."
+    },
+    {
+      "screen": "stage1_your_map.jpg",
+      "what_i_tried": "I would tap \"I understand everything here\", as I would \"Mark all as viewed\" on GitHub, to clear the three \"not yet\" tags in that section and get to what I really need.",
+      "what_happened": "The pill sits under the section title with no hint of what it will change, and I see no confirmation or undo next to it. The page text says the map is \"from your own answers, not a score\", which does not match a button that lets me declare it myself.",
+      "problem": "One tap could set three pieces to learned when I have not been checked on any of them. If I misjudge, my map shows a wrong picture and I do not know how to undo it. That is a risk for me, since I tend to move fast and skip the text.",
+      "severity": 2,
+      "heuristic": "Error prevention",
+      "suggestion": "Make the button say what it does, such as \"Mark these 3 as known (without a check)\". Show a short Undo bar for a few seconds after the tap, and keep those pieces visibly marked as \"claimed\" rather than \"learned\"."
+    }
+  ]
+}

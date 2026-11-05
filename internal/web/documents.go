@@ -218,9 +218,15 @@ func (h *Handler) downloadArtifact(w http.ResponseWriter, r *http.Request) {
 	if kind == "typst" {
 		name, contentType = "typst-source.zip", "application/zip"
 	}
+	// The in-site preview frames the PDF, so that request asks for inline
+	// rendering. Downloads keep the attachment disposition.
+	disposition := "attachment"
+	if kind == "pdf" && r.URL.Query().Get("view") == "1" {
+		disposition = "inline"
+	}
 	w.Header().Set("Cache-Control", "private, no-store")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Content-Type", contentType)
-	w.Header().Set("Content-Disposition", `attachment; filename="`+name+`"`)
+	w.Header().Set("Content-Disposition", disposition+`; filename="`+name+`"`)
 	http.ServeFile(w, r, artifact.Path)
 }

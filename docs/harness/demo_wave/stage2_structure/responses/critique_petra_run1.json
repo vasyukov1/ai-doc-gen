@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "screen": "US.C.87.06 (A teacher runs the class) and US.C.87.04 (A student's course day)",
+      "what_i_tried": "I looked for the situation where, the evening before, I open tomorrow's session and see exactly what my students will see on their phones.",
+      "what_happened": "US.C.87.06 lists five things for me (keep the register, ask one student a question, read homework, set levels and rules, split a syllabus) and none of them is a look at tomorrow as a student; the student's day (US.C.87.04) is written only from the student's side.",
+      "problem": "My whole evening is this check, and I would have to guess: I cannot tell what a student will see tomorrow or whether the manager and the student course show the same thing, so I would not trust anything I looked at.",
+      "severity": 4,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Add a teacher situation 'Preview tomorrow as my students will see it': the announcement, the parts, the tests, the pinned homework and my pinned question for a chosen day, in the same screen the student has, with a bar that says 'Preview, students see this on <date> at <time>'."
+    },
+    {
+      "screen": "US.C.87.06 (UA.US.C.87.06.03) and the title 'C.87 07 who is on a course'",
+      "what_i_tried": "I looked for the place that tells me who in my class is behind.",
+      "what_happened": "I can read each student's homework one by one and mark item by item; the only other thing is a situation titled 'who is on a course', whose content is not shown and which sounds like a list of members, not of progress.",
+      "problem": "Opening every student's homework to find who has not sent anything takes far more than my 30 minutes with a full class, and 'who is on a course' does not tell me it will answer 'who is behind'.",
+      "severity": 3,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Give me one class overview for a chosen day: every student, with 'homework sent / not sent / late', tests done and the *Unclear* taps, sorted so those who are behind are at the top, and name that situation 'Who is behind' in my words."
+    },
+    {
+      "screen": "Section 1 (the brief: what a recipient is shown is decided from everything the product knows about them) and US.C.87.04",
+      "what_i_tried": "I tried to take the screen I see on my phone as the student view and assume every student sees the same posts.",
+      "what_happened": "The structure says each student gets a personalised stream, with Simpler · Core · Deeper levels, their own *Your 10 minutes*, and a moderator who can configure part of the model; nothing says what a teacher sees, or how to see one student's view or the class default.",
+      "problem": "That is exactly my mistake: I will take my preview for what everybody sees. If two students see different things I cannot tell which one my screen is, and I lose trust.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "On any student-view screen I open, show a fixed label such as 'You see: the class default, Core level' with a switch to 'as <student name>' or 'as Simpler / Deeper', and say plainly what is the same for everybody and what is personal."
+    },
+    {
+      "screen": "US.C.87.06 and US.C.87.08.05 (teacher's panes in the manager)",
+      "what_i_tried": "I tried to act on a student's homework and extend a deadline, without being sure which class and which day was open.",
+      "what_happened": "The text names the actions (mark item by item, extend a deadline with a reason, withdraw an extension or a mark) but never says that the pane shows which course, which class and which session day I am in, nor whom an extension applies to.",
+      "problem": "I forget which class or day I am looking at, so I could extend a deadline or give a mark in the wrong place and only find out when a student writes to me.",
+      "severity": 3,
+      "heuristic": "Recognition rather than recall",
+      "suggestion": "Keep the course, the class and the day in a header that never scrolls away, and make every confirm line say it back: 'Extend the deadline of Session 9 homework for Anna K. in DS402, class B, to Friday?'."
+    },
+    {
+      "screen": "US.C.87.04 (UA.04.02 *Unclear*, UA.04.03 *Check me*, UA.04.09 *Ask about this*) and US.C.70.11",
+      "what_i_tried": "I tried the student view on my phone and tapped *Check me* and *Unclear* on a post to see what a student gets.",
+      "what_happened": "These buttons write things: a test answer, an *Unclear* that 'the teacher sees', a question to the library with a chat that is behaviour; nothing says what happens when the person tapping is the teacher.",
+      "problem": "I could add false *Unclear* taps or answers to my own class's data, or have my own questions on my teacher record, by only testing the screen, and I would not know.",
+      "severity": 3,
+      "heuristic": "Error prevention",
+      "suggestion": "When I am looking as a teacher, make the student controls try-outs: they work, they say 'Preview: nothing here is saved or counted', and they leave no trace in the class's *Unclear*, tests or history."
+    },
+    {
+      "screen": "US.C.87.08 (UA.US.C.87.08.02, 08.05 and 08.09)",
+      "what_i_tried": "I tried to see how I take back something I changed by accident, and where I find what happened.",
+      "what_happened": "A change to a library correction becomes marked *edited* or *withdrawn* in the student's thread; recovering what a correction replaced is described as `GET /kernels/{k}/actions`; nothing covers undoing an edit to a part, the day's announcement or something published for tomorrow.",
+      "problem": "My slip is shown to students as 'edited' or 'withdrawn', and the way back is a web address meant for developers, so I would not use it. For the content I prepare most, no undo is described.",
+      "severity": 2,
+      "heuristic": "Help users recognize, diagnose, and recover from errors",
+      "suggestion": "Add a button 'What changed on this course' in my pane, a list by date and person with 'Restore this version' next to every edit of a part or announcement, and a draft state where my changes are not seen by students until I press Publish."
+    },
+    {
+      "screen": "TS.C.87.04.01 (a release event, so an undated piece still reaches its readers), C.89 'greenlight a send window'",
+      "what_i_tried": "I tried to find out if a part I wrote for tomorrow will actually reach my students, and when.",
+      "what_happened": "The spec says a piece published without a deadline 'raises nothing and reaches nobody', until a release event is added, and speaks of 'the next window' and 'the one-window rule'; no situation shows me whether my part is a draft, published or already sent.",
+      "problem": "A part can look finished to me and not reach any student, and I would find that out in the morning from the class; I cannot see published versus sent.",
+      "severity": 3,
+      "heuristic": "Visibility of system status",
+      "suggestion": "Show on each part and on the day a plain status line: 'Draft', 'Published, appears in the students' course', 'Sent to Telegram / Slack on <date>, <time>', and warn me in the evening if something for tomorrow has no release."
+    },
+    {
+      "screen": "US.C.87.06 (UA.06.01, UA.06.05) and Section 1 (the knowledge-manager interface: .md, canvas and notebook files)",
+      "what_i_tried": "I tried to follow the words used for my side: 'the manager', 'keep the register (taught, present, room checks)', 'split a syllabus into parts', files in .md, canvas and notebook.",
+      "what_happened": "The words come from the system (kernel, register, intels, typed document) and 'room checks' does not tell me what I record; I know the content, not these terms.",
+      "problem": "I have to learn a vocabulary from the engineers' interface before I can prepare a session, and I will not know if 'register' is my attendance list or something else.",
+      "severity": 2,
+      "heuristic": "Match between system and the real world",
+      "suggestion": "Use teacher words on my screens: 'Attendance', 'Today's session', 'Students' homework', 'Course parts', and explain 'room checks' in one line where it appears."
+    }
+  ]
+}
