@@ -36,7 +36,7 @@ func ExtractEvidence(ctx context.Context, inventory domain.Inventory, descriptio
 		evidence.Facts = append(evidence.Facts, domain.Fact{ID: fmt.Sprintf("fact-%04d", len(evidence.Facts)+1), Kind: kind, Value: value, Provenance: provenance, Path: path, StartLine: line, EndLine: line})
 	}
 	for _, file := range files {
-		if !file.Selected {
+		if !file.Selected || agentMetadata(file.Path) {
 			continue
 		}
 		if err := ctx.Err(); err != nil {

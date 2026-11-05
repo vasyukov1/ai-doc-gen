@@ -6,6 +6,7 @@ import (
 )
 
 var excludedDirectories = map[string]bool{
+	".claude": true, ".codex": true, ".agents": true, ".cursor": true, ".codegraph": true,
 	".git": true, ".idea": true, ".next": true, ".venv": true,
 	"__pycache__": true, "build": true, "coverage": true, "dist": true,
 	"node_modules": true, "target": true, "vendor": true,
@@ -26,6 +27,7 @@ var archiveExtensions = map[string]bool{
 
 // Lock files and repository metadata describe tooling, not the product.
 var noiseNames = map[string]bool{
+	"agents.md": true, "claude.md": true,
 	".dockerignore": true, ".editorconfig": true, ".gitattributes": true,
 	".gitignore": true, ".gitmodules": true, "cargo.lock": true,
 	"composer.lock": true, "gemfile.lock": true, "go.sum": true,

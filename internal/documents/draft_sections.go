@@ -20,7 +20,7 @@ type sectionOutput struct {
 	Missing   []string               `json:"missing_information"`
 }
 
-const DraftVersion = "chapters-2"
+const DraftVersion = "chapters-3"
 
 func clipText(value string, limit int) string {
 	value = strings.Map(func(r rune) rune {

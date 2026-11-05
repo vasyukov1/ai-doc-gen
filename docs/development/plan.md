@@ -137,3 +137,7 @@ Use the supplied FKN layout for all five academic variants. Keep the technical o
 ### Additional document profiles — SRS and arc42
 
 Add independently selectable `srs` and `arc42` profiles with bilingual structure, profile/section-specific generation instructions, neutral PDF layout, private reproducible bundles and red manual TODOs. SRS uses an independently authored requirements structure informed by ISO/IEC/IEEE 29148:2018, not copied normative text or a conformity certificate. arc42 preserves its twelve sections and is not renamed ISO/IEC/IEEE 42010. Use seven and six semantic request groups respectively to leave room for discovery/repair within the existing persisted budget. Preserve the FKN profiles and existing jobs. Acceptance: build, manual bilingual render and website generation checks, grouped provider-fixture inspection, visual TODO/profile verification. No final automated testing milestone is started.
+
+### Milestone 9 corrective acceptance — response formatting and form feedback
+
+Normalize Markdown section bodies into trusted Typst structures without executing generated code. Keep internal evidence separate from external bibliography, exclude assistant metadata from source analysis, and show required-input/submit errors within the form. Preserve saved text and user edits. Validate Russian/English PDF rendering, unsafe markup, source filtering and browser form retention manually; do not start the deferred automated testing milestone.

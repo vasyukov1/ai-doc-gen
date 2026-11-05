@@ -68,7 +68,15 @@ func safeText(s string) bool {
 	return true
 }
 
+type richTable struct {
+	Caption []RichNode     `json:"caption"`
+	Columns [][]RichNode   `json:"columns"`
+	Rows    [][][]RichNode `json:"rows"`
+}
+
 type renderSection struct {
+	RichTables []richTable            `json:"rich_tables"`
+	Blocks     []RichNode             `json:"blocks"`
 	Tables     []domain.DocumentTable `json:"tables"`
 	Level      int                    `json:"level"`
 	Heading    string                 `json:"heading"`
@@ -246,38 +254,49 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		}
 		data.Sections = append(data.Sections, item)
 	}
-	if len(evidence) > 0 {
-		facts := map[string]domain.Fact{}
-		for _, f := range evidence[0].Facts {
-			facts[f.ID] = f
+	refs := bibliography(evidence, job.Language)
+	hasReferences := false
+	for i := range data.Sections {
+		item := &data.Sections[i]
+		isReferences := false
+		for _, h := range p.Headings {
+			if h.Title(job.Language) == item.Heading && strings.HasSuffix(h.EN, "References") {
+				isReferences = true
+			}
 		}
-		notes := []string{}
-		seen := map[string]bool{}
-		for _, s := range sections {
-			for _, id := range s.Citations {
-				if seen[id] {
-					continue
-				}
-				seen[id] = true
-				if f, ok := facts[id]; ok {
-					location := sourceLabel(f)
-					if f.Path == "" {
-						location = "User-supplied input"
-						if job.Language == "ru" {
-							location = "Данные пользователя"
-						}
-					}
-					notes = append(notes, id+" — "+location)
+		if isReferences {
+			hasReferences = true
+			// Preserve explicit user edits to the bibliography.
+			for _, h := range p.Headings {
+				if h.Title(job.Language) == item.Heading && indexed[h.ID].Origin != "user" && !indexed[h.ID].Edited {
+					item.Body = refs
+					item.Missing = []string{}
+					item.Tables = nil
 				}
 			}
 		}
-		if len(notes) > 0 {
-			title := "Source references"
-			if job.Language == "ru" {
-				title = "Источники сведений"
+		item.Blocks = markdownBlocks(item.Body)
+		for _, table := range item.Tables {
+			rich := richTable{Caption: markdownBlocks(table.Caption), Columns: [][]RichNode{}, Rows: [][][]RichNode{}}
+			for _, column := range table.Columns {
+				rich.Columns = append(rich.Columns, markdownBlocks(column))
 			}
-			data.Sections = append(data.Sections, renderSection{Level: 1, Heading: title, Body: strings.Join(notes, "\n"), Missing: []string{}, Unnumbered: true})
+			for _, row := range table.Rows {
+				cells := [][]RichNode{}
+				for _, cell := range row {
+					cells = append(cells, markdownBlocks(cell))
+				}
+				rich.Rows = append(rich.Rows, cells)
+			}
+			item.RichTables = append(item.RichTables, rich)
 		}
+	}
+	if !hasReferences {
+		title := "Technology documentation"
+		if job.Language == "ru" {
+			title = "Документация используемых технологий"
+		}
+		data.Sections = append(data.Sections, renderSection{Level: 1, Heading: title, Body: refs, Blocks: markdownBlocks(refs), Missing: []string{}, Unnumbered: true})
 	}
 	if err = fs.WalkDir(templates.Assets, "v1", func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -316,7 +335,7 @@ func Render(ctx context.Context, destination string, job domain.Job, input domai
 		}
 	}
 	command := "typst compile --root . --font-path fonts --ignore-system-fonts --ignore-embedded-fonts --creation-timestamp 0 main.typ document.pdf"
-	readme := fmt.Sprintf("# Editable document bundle\n\nRequires Typst %s. Edit document.json (text is always literal), or the trusted main.typ template, then run:\n\n%s\n\nFonts and their license are bundled. Profile version: %s. Only trusted local templates are compiled by the application. Do not compile arbitrary uploaded Typst.\n", templates.TypstVersion, command, p.Version)
+	readme := fmt.Sprintf("# Editable document bundle\n\nRequires Typst %s. Edit document.json (rendered text is in sections[].blocks and rich_tables; remove those keys to use literal body and tables), or the trusted main.typ template, then run:\n\n%s\n\nFonts and their license are bundled. Profile version: %s. Only trusted local templates are compiled by the application. Do not compile arbitrary uploaded Typst.\n", templates.TypstVersion, command, p.Version)
 	if err = os.WriteFile(filepath.Join(root, "README.md"), []byte(readme), 0600); err != nil {
 		return nil, err
 	}

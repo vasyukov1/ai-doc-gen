@@ -28,7 +28,7 @@
             <p>One submission is enough. You can edit every section afterwards.</p>
           </div>
 
-          <form action="/jobs" method="post" enctype="multipart/form-data" data-busy>
+          <form action="/jobs" method="post" enctype="multipart/form-data" data-busy data-create-document>
             <div class="field">
               <label for="repo">GitHub repository</label>
               <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
@@ -103,9 +103,9 @@
             </details>
 
             <details class="group">
-              <summary>Technical specification <span class="optional">Optional</span></summary>
+              <summary>Technical specification <span class="required" data-spec-required>Required for academic documents</span></summary>
               <div class="details-body">
-                <p class="form-note">Recommended for academic documents. Paste text or attach a UTF-8 .txt or .md file.</p>
+                <p class="form-note">Required for academic documents; optional for SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file.</p>
                 <div class="field">
                   <label for="specification">Specification text</label>
                   <textarea id="specification" name="specification" rows="6" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>
@@ -113,7 +113,7 @@
                 <label class="dropzone" for="specification_file">
                   <input class="sr-only" id="specification_file" name="specification_file" type="file" accept=".txt,.md,text/plain,text/markdown" data-file-input>
                   <span class="dropzone__title" data-file-name>Attach a .txt or .md file</span>
-                  <span class="dropzone__hint">optional</span>
+                  <span class="dropzone__hint">Alternative to specification text</span>
                 </label>
               </div>
             </details>

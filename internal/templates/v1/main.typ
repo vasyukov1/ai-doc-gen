@@ -1,3 +1,4 @@
+#import "rich.typ": rich
 #import "fkn.typ": render-fkn
 #let d = json("document.json")
 #let l = d.labels
@@ -15,8 +16,14 @@
 #let body = [
 #for s in d.sections {
  heading(level: s.level, numbering: if s.unnumbered {none} else {"1.1.1"}, plain(s.heading))
- if s.body != "" { for paragraph in s.body.split("\n\n") { plain(paragraph); parbreak() } }
- if s.at("tables", default: none) != none { for t in s.tables {
+ if s.at("blocks", default: none) != none { rich(s.blocks, plain) } else if s.body != "" { for paragraph in s.body.split("\n\n") { plain(paragraph); parbreak() } }
+ if s.at("rich_tables", default: none) != none { for t in s.rich_tables {
+  if t.caption.len() > 0 { block(strong(rich(t.caption, plain))) }
+  table(columns: t.columns.len(), inset: 5pt,
+    table.header(..t.columns.map(x => strong(rich(x, plain)))),
+    ..t.rows.map(row => row.map(x => rich(x, plain))).flatten())
+  parbreak()
+ } } else if s.at("tables", default: none) != none { for t in s.tables {
   if t.caption != "" { block(text(weight: "bold", plain(t.caption))) }
   table(columns: t.columns.len(), inset: 5pt,
     table.header(..t.columns.map(x => text(weight: "bold", plain(x)))),

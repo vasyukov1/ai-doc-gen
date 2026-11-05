@@ -14,7 +14,7 @@ import (
 	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 )
 
-const AnalysisVersion = "source-context-2"
+const AnalysisVersion = "source-context-3"
 
 // sourceFacts keeps whole declarations and paragraphs within explicit bounds.
 func sourceFacts(path string, data []byte) []domain.Fact {

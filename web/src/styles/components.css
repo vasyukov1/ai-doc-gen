@@ -677,3 +677,6 @@ details.group > summary:hover::after {
   font-size: var(--text-xs);
   border-top: 1px solid var(--line);
 }
+
+.form-feedback { border: 1px solid #c62828; padding: 1rem; margin-block: 1rem; border-radius: .5rem; overflow-wrap: anywhere; }
+.form-feedback[hidden] { display: none; }
