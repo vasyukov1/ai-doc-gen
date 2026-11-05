@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"html/template"
 	"log"
 	"net/http"
 	"net/url"
@@ -124,6 +123,6 @@ func (h *Handler) listJobs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Cache-Control", "private, no-store")
-	page := template.Must(template.New("jobs").Parse(`<!doctype html><html><head><title>My jobs</title><link rel="stylesheet" href="/assets/style.css"></head><body><main><h1>My jobs</h1><p><a href="/">Submit a project</a></p><p>Jobs belong to this browser's private session. Losing or clearing the cookie permanently loses access. No recovery by job ID is available. New jobs expire after the configured retention period (default seven days); expiry includes source, drafts, credentials and downloads.</p>{{range .}}<p><a href="/jobs/{{.ID}}">{{.ID}}</a> · {{.Status}} · {{.ProfileID}} · expires {{.ExpiresAt}}</p>{{else}}<p>No retained jobs for this browser.</p>{{end}}</main></body></html>`))
-	_ = page.Execute(w, jobs)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	_ = h.jobsPage.Execute(w, jobs)
 }

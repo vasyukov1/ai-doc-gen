@@ -5,3 +5,4 @@ artifacts
 bin
 tmp
 docs
+web/node_modules

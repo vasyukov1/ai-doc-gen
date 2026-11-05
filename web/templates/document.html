@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>{{.Title}} — Doc Gen</title>
+  {{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <a class="back" href="/jobs/{{.Job.ID}}">← Document status</a>
+
+    <header class="page-head">
+      <p class="eyebrow">Document input</p>
+      <h1>{{.Title}}</h1>
+      <p class="lead">These values came from your submission and can be changed here. Empty title fields are marked as TODOs.</p>
+      <div class="link-row">
+        <a href="/jobs/{{.Job.ID}}">Status</a>
+        <a href="/jobs/{{.Job.ID}}/sections">Sections</a>
+        <a href="/jobs/{{.Job.ID}}/evidence">Evidence</a>
+      </div>
+    </header>
+
+    <form class="spec-form card" method="post" enctype="multipart/form-data" action="/jobs/{{.Job.ID}}/document" data-busy>
+      <div class="card__body">
+        <fieldset {{if not .Editable}}disabled{{end}}>
+          <h2>Title page</h2>
+          <div class="metadata-grid">
+            {{range .Fields}}
+            <div class="field">
+              <label for="meta-{{.Key}}">{{.Label}}</label>
+              {{if or (eq .Key "organization") (eq .Key "supervisor_position") (eq .Key "approver_position") (eq .Key "author")}}
+              <textarea id="meta-{{.Key}}" name="metadata.{{.Key}}" rows="3" maxlength="600" data-autogrow {{if not .Value}}class="manual-todo" placeholder="TODO: {{.Label}}"{{end}}>{{.Value}}</textarea>
+              {{else}}
+              <input id="meta-{{.Key}}" {{if not .Value}}class="manual-todo" placeholder="TODO: {{.Label}}"{{end}} name="metadata.{{.Key}}" value="{{.Value}}" maxlength="600" {{if eq .Key "project"}}required{{end}}>
+              {{end}}
+            </div>
+            {{end}}
+          </div>
+
+          <h2>Technical specification</h2>
+          <p class="form-note">Choose one source: the text below, the structured fields, or a UTF-8 .txt/.md file up to 64,000 bytes. The text is rendered literally, never as Typst code.</p>
+          <div class="field">
+            <label for="specification">Specification text</label>
+            <textarea id="specification" name="specification" rows="10" maxlength="64000" data-autogrow>{{.Input.Specification}}</textarea>
+          </div>
+
+          <label class="dropzone" for="specification_file">
+            <input class="sr-only" id="specification_file" name="specification_file" type="file" accept=".txt,.md,text/plain,text/markdown" data-file-input>
+            <span class="dropzone__title" data-file-name>Attach a .txt or .md file</span>
+            <span class="dropzone__hint">optional</span>
+          </label>
+
+          <details class="group">
+            <summary>Structured specification</summary>
+            <div class="details-body">
+              <div class="field"><label for="spec-purpose">Purpose</label><textarea id="spec-purpose" name="spec.purpose" rows="3" data-autogrow></textarea></div>
+              <div class="field"><label for="spec-functions">Required functions</label><textarea id="spec-functions" name="spec.functions" rows="4" data-autogrow></textarea></div>
+              <div class="field"><label for="spec-constraints">Constraints</label><textarea id="spec-constraints" name="spec.constraints" rows="3" data-autogrow></textarea></div>
+              <div class="field"><label for="spec-acceptance">Acceptance criteria</label><textarea id="spec-acceptance" name="spec.acceptance" rows="4" data-autogrow></textarea></div>
+            </div>
+          </details>
+
+          <div><button class="button" type="submit" data-busy-label="Saving…">Save input</button></div>
+        </fieldset>
+      </div>
+    </form>
+
+    {{if and .Job.FreeDraft .Editable}}
+    <section class="card">
+      <div class="card__body stack">
+        <h2>Unfinished sections</h2>
+        <p class="form-note">Run another pass over the sections that are still outline placeholders. Saved prose is kept.</p>
+        <form method="post" action="/jobs/{{.Job.ID}}/generation/continue" data-busy>
+          <button class="button button--quiet" type="submit" data-busy-label="Starting…">Continue unfinished sections</button>
+        </form>
+      </div>
+    </section>
+    {{end}}
+
+    {{if .CanRender}}
+    <form class="card" method="post" enctype="multipart/form-data" action="/jobs/{{.Job.ID}}/document" data-busy>
+      <div class="card__body stack">
+        <h2>Compile</h2>
+        <input type="hidden" name="action" value="render">
+        <label class="checkbox">
+          <input type="checkbox" name="reviewed" value="yes" required>
+          I reviewed every section, the input, and the missing-evidence warnings.
+        </label>
+        <div><button class="button" type="submit" data-busy-label="Compiling…">Compile Typst and PDF</button></div>
+      </div>
+    </form>
+    {{end}}
+
+    {{if eq .Job.Status "completed"}}
+    <section class="card">
+      <div class="card__body stack">
+        <h2>Downloads</h2>
+        <div class="downloads">
+          <a class="button" href="/jobs/{{.Job.ID}}/artifacts/pdf">{{if eq .Job.Content.Outcome "outline"}}Outline PDF{{else}}Draft PDF{{end}}</a>
+          <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/typst">Typst source</a>
+        </div>
+        <p class="form-note">Downloads are private to this browser and expire with the document. After editing, review and rebuild to get fresh artifacts.</p>
+      </div>
+    </section>
+    {{end}}
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

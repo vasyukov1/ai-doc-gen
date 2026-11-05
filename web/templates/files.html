@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Project files — Doc Gen</title>
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <a class="back" href="/jobs/{{.Job.ID}}">← Document status</a>
+
+    <header class="page-head">
+      <p class="eyebrow">Source</p>
+      <h1>Project files</h1>
+      <p class="lead">Text files are selected automatically. Excluded files keep the reason, so you can see exactly what was used.</p>
+      {{if .Inventory.Source.RepositoryURL}}
+      <p class="form-note">{{.Inventory.Source.RepositoryURL}}{{with .Inventory.Source.CommitSHA}} · <code>{{.}}</code>{{end}}</p>
+      {{end}}
+    </header>
+
+    {{if .NoEligible}}
+    <p class="callout callout--error">No selectable text files were found. Review the exclusions and submit another project.</p>
+    {{else if not .Editable}}
+    <p class="callout">The automatic selection is saved. Evidence review is next.</p>
+    {{end}}
+
+    <form method="post" action="/jobs/{{.Job.ID}}/files" {{if .Editable}}data-busy{{end}}>
+      <div class="file-list">
+        {{range .Inventory.Files}}
+        <label class="file-row{{if not .Eligible}} excluded{{end}}">
+          <input type="checkbox" name="file" value="{{.Path}}" {{if .Selected}}checked{{end}} {{if or (not .Eligible) (not $.Editable)}}disabled{{end}}>
+          <span class="file-path">{{.Path}}</span>
+          <span class="file-reason">{{.ReasonCode}}</span>
+          <span class="file-size">{{.SizeBytes}} B</span>
+        </label>
+        {{else}}
+        <p class="empty">The file inventory is empty.</p>
+        {{end}}
+      </div>
+
+      {{if .Editable}}
+      <div class="sticky-actions">
+        <button class="button" type="submit" data-busy-label="Saving…">Save selection</button>
+      </div>
+      {{end}}
+    </form>
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

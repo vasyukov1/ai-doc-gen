@@ -1,9 +1,0 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Project evidence</title><link rel="stylesheet" href="/assets/style.css"></head>
-<body><main class="container job-main"><a href="/jobs/{{.Job.ID}}">← Job status</a><div class="job-panel"><h1>Project evidence</h1><p><a href="/jobs/{{.Job.ID}}/document">Document input and PDF / Typst rendering</a></p>
-<p>Evidence is extracted and accepted automatically, so this page is read-only. It exists to show which facts ground the generated text.</p>
-<p>These are literal declarations and excerpts, not verified runtime behavior. Only selected files were inspected. Records contain at most 1000 extracted facts. Go and package.json manifests are parsed into at most 500 facts each. Manifest values over 4000 bytes are omitted. JSON facts cite the complete source file. Other files show at most 20 declarations or nonempty excerpt lines; lines longer than 300 bytes are omitted.</p>
-<p>Extractor version {{.Evidence.Version}} · {{len .Evidence.Selection}} selected files</p>
-{{range .Evidence.Facts}}<article id="{{.ID}}" class="job-message"><strong>{{.Kind}}</strong><p style="white-space:pre-wrap;overflow-wrap:anywhere">{{.Value}}</p><small>Attribution: {{.Provenance}}{{if .Path}} · {{.Path}}{{if .StartLine}}:{{.StartLine}}–{{.EndLine}}{{else}} (file inventory){{end}}{{end}}</small>
-{{with index $.Evidence.Corrections .ID}}<p>User correction: {{.}}</p>{{end}}</article>{{end}}
-</div></main></body></html>

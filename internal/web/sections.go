@@ -2,7 +2,6 @@ package web
 
 import (
 	"errors"
-	"html/template"
 	"net/http"
 	"strings"
 
@@ -25,12 +24,7 @@ func (h *Handler) sectionsView(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, 200, sections)
 		return
 	}
-	page, err := template.ParseFS(assets, "static/sections.html")
-	if err != nil {
-		http.Error(w, "Page unavailable.", 500)
-		return
-	}
-	_ = page.Execute(w, struct {
+	_ = h.sectionsPage.Execute(w, struct {
 		Job      domain.Job
 		Sections []domain.Section
 		Editable bool

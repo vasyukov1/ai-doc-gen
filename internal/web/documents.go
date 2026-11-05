@@ -3,7 +3,6 @@ package web
 import (
 	"database/sql"
 	"errors"
-	"html/template"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -48,12 +47,7 @@ func (h *Handler) documentView(w http.ResponseWriter, r *http.Request) {
 		}
 		fields = append(fields, metadataField{key, labels[n], value})
 	}
-	page, err := template.ParseFS(assets, "static/document.html")
-	if err != nil {
-		http.Error(w, "Page unavailable.", 500)
-		return
-	}
-	_ = page.Execute(w, struct {
+	_ = h.documentPage.Execute(w, struct {
 		Job                                   domain.Job
 		Input                                 domain.DocumentInput
 		Title                                 string

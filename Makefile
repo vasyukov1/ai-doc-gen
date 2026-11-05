@@ -5,7 +5,7 @@ DATABASE_URL ?= postgres://ai_doc_gen:local_dev_only@127.0.0.1:$(PG_PORT)/ai_doc
 
 export PG_PORT HTTP_PORT DATABASE_URL
 
-.PHONY: run build test down mocks db-generate
+.PHONY: run build ui test down mocks db-generate
 
 run:
 	@docker info >/dev/null 2>&1 || { echo "Docker is not running. Start it first, for example: colima start"; exit 1; }
@@ -16,6 +16,9 @@ run:
 build:
 	@mkdir -p bin
 	go build -o bin/ai-doc-gen ./cmd/ai-doc-gen
+
+ui:
+	cd web && npm install --no-audit --no-fund && npm run build
 
 test:
 	go test ./...

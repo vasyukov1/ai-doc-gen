@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Documents — Doc Gen</title>
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <header class="page-head">
+      <p class="eyebrow">This browser</p>
+      <h1>Documents</h1>
+      <p class="lead">Documents belong to this browser’s private session. Clearing cookies removes access, and expired documents are deleted automatically.</p>
+    </header>
+
+    {{if .}}
+    <div class="job-list">
+      {{range .}}
+      <a class="job-row" href="/jobs/{{.ID}}">
+        <span class="job-row__id">{{.ID}}</span>
+        <span class="pill {{with statusClass .Status}}pill--{{.}}{{end}}">{{statusLabel .Status}}</span>
+        <span class="job-row__meta">{{profileName .ProfileID}}{{with .ExpiresAt}} · expires {{.Format "02 Jan 2006"}}{{end}}</span>
+      </a>
+      {{end}}
+    </div>
+    {{else}}
+    <div class="card">
+      <p class="empty">Nothing here yet. <a href="/">Start a document</a>.</p>
+    </div>
+    {{end}}
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

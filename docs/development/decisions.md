@@ -137,3 +137,9 @@ References checked on 2026-11-05:
 - https://www.iso.org/standard/74393.html — ISO/IEC/IEEE 42010:2022 architecture description.
 - https://arc42.org/overview/ — twelve sections.
 - https://arc42.org/license/ — template attribution and adaptation terms.
+
+## 2026-11-05 — Build the browser interface from `web`
+
+The interface lives in `web/` so presentation assets stay outside the Go delivery package. `web/templates` holds the Go page templates, `web/src` the TypeScript and CSS sources, and `web/static` the Vite output. The `web` Go package embeds the templates and built assets; `internal/web` only routes requests and renders pages. This keeps a single binary, allows `go build ./...` without Node installed, and still gives the frontend normal tooling. Rebuild with `make ui` and commit the refreshed `static/app.css` and `static/app.js` with their sources.
+
+Light and dark themes are resolved from one token set with CSS `light-dark()`: the system preference is the default and the header menu stores an explicit choice. Pages work without JavaScript; scripts add theme selection, file-name previews, auto-growing textareas, and submit feedback.

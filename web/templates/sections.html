@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Sections — Doc Gen</title>
+  {{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <a class="back" href="/jobs/{{.Job.ID}}">← Document status</a>
+
+    <header class="page-head">
+      <p class="eyebrow">Draft</p>
+      <div class="page-head__row">
+        <h1>Sections</h1>
+        <span class="pill {{with statusClass .Job.Status}}pill--{{.}}{{end}}">{{statusLabel .Job.Status}}</span>
+      </div>
+      <p class="lead">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections ready. Edit anything here, then review and compile on the input page.</p>
+      {{if .Job.LatestMessage}}<p class="form-note">{{.Job.LatestMessage}}</p>{{end}}
+    </header>
+
+    {{if and (not .Job.FreeDraft) (eq .Job.Status "failed") (ne .Job.ErrorCode "render_failed")}}
+    <section class="card">
+      <div class="card__body">
+        <form class="stack" method="post" action="/jobs/{{.Job.ID}}/generation/retry" data-busy>
+          <div class="field">
+            <label for="api-key">Replacement OpenRouter API key</label>
+            <input id="api-key" type="password" name="api_key" autocomplete="off" required minlength="8" maxlength="1000">
+          </div>
+          <p class="form-note">Retrying keeps the selected model and every saved section, including your edits.</p>
+          <div><button class="button button--quiet" type="submit">Retry remaining sections</button></div>
+        </form>
+      </div>
+    </section>
+    {{end}}
+
+    {{if .Job.FreeDraft}}
+    <details class="group group--flush">
+      <summary>Generation details</summary>
+      <div class="details-body job-details">
+        <p>Content outcome: {{.Job.Content.Outcome}} · {{.Job.Content.Unresolved}} unresolved gaps</p>
+        {{if .Job.GenerationReason}}<p>{{.Job.GenerationReason}}</p>{{end}}
+        <p>Model attempts: {{.Job.GenerationAttempts}} of 12{{with .Job.GenerationDeadline}} · deadline {{.Format "02 Jan 15:04 MST"}}{{end}}</p>
+      </div>
+    </details>
+    {{end}}
+
+    <div class="sections">
+      {{range .Sections}}
+      <article class="card section-card">
+        <div class="card__body">
+          <div class="section-card__head">
+            <h2>{{.Heading}}</h2>
+            {{if .Edited}}<span class="pill">Edited</span>{{end}}
+          </div>
+
+          <div class="section-card__meta">
+            <span>{{if .Origin}}{{.Origin}}{{else}}legacy draft{{end}}</span>
+            {{if .Provider}}<span>{{.Provider}} / {{.Model}}</span>{{end}}
+            {{if .Citations}}<span class="citations">References: {{range .Citations}}<a href="/jobs/{{$.Job.ID}}/evidence#{{.}}">[{{.}}]</a>{{end}}</span>{{end}}
+          </div>
+
+          {{range .Missing}}<p class="todo">TODO: {{.}}</p>{{end}}
+
+          <form method="post" action="/jobs/{{$.Job.ID}}/sections/{{.ID}}">
+            <textarea name="body" rows="14" data-autogrow aria-label="Section text" {{if not $.Editable}}readonly{{end}}>{{.Body}}</textarea>
+            {{if .Tables}}<p class="form-note">Saving replaces this section as plain text and removes its generated tables.</p>{{end}}
+            {{if .Missing}}
+            <label class="checkbox">
+              <input type="checkbox" name="resolve_missing" value="yes" {{if not $.Editable}}disabled{{end}}>
+              Missing information is filled in — clear this section’s TODOs.
+            </label>
+            {{end}}
+            <div class="button-row">
+              <button class="button button--quiet" type="submit" name="action" value="save" {{if not $.Editable}}disabled{{end}}>Save edit</button>
+              <button class="button button--quiet" type="submit" name="action" value="regenerate" {{if not $.Editable}}disabled{{end}}>Regenerate</button>
+            </div>
+          </form>
+        </div>
+      </article>
+      {{else}}
+      <div class="card">
+        <p class="empty">No sections yet. They appear here while the draft is being written.</p>
+      </div>
+      {{end}}
+    </div>
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

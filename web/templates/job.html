@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Document status — Doc Gen</title>
+  {{if .Refresh}}<meta http-equiv="refresh" content="3">{{end}}
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <a class="back" href="/jobs">← All documents</a>
+
+    <header class="page-head">
+      <p class="eyebrow">Document</p>
+      <div class="page-head__row">
+        <h1>{{profileName .Job.ProfileID}}</h1>
+        <span class="pill {{if .Job.RecoveryPending}}pill--warn{{else}}{{with statusClass .Job.Status}}pill--{{.}}{{end}}{{end}}">
+          {{if .Job.RecoveryPending}}Recovering{{else}}{{statusLabel .Job.Status}}{{end}}
+        </span>
+      </div>
+      {{if .Job.LatestMessage}}<p class="lead">{{.Job.LatestMessage}}</p>{{end}}
+    </header>
+
+    <div class="job-grid">
+      <div class="stack-lg">
+        <section class="card">
+          <div class="card__body stack">
+            <div class="status-line">
+              <span class="status-line__count">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections</span>
+              <span class="status-line__count">{{pct .Job.CompletedSections .Job.TotalSections}}%</span>
+            </div>
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct .Job.CompletedSections .Job.TotalSections}}">
+              <div class="progress__fill" style="--progress: {{pct .Job.CompletedSections .Job.TotalSections}}%"></div>
+            </div>
+
+            {{if .Job.RequiredAction}}<p class="callout callout--warn">Action needed: {{.Job.RequiredAction}}</p>{{end}}
+            {{if .Job.ErrorMessage}}<p class="callout callout--error">{{.Job.ErrorMessage}}</p>{{end}}
+            {{if .Job.NextRetryAt}}<p class="callout">Next retry: {{.Job.NextRetryAt.Format "02 Jan 2006 15:04 MST"}}</p>{{end}}
+
+            {{$stage := stageIndex .Job.Stage .Job.Status}}
+            <div class="steps">
+              <div class="step {{if gt $stage 1}}step--done{{else if eq $stage 1}}step--current{{end}}">Submitted</div>
+              <div class="step {{if gt $stage 2}}step--done{{else if eq $stage 2}}step--current{{end}}">Reading files</div>
+              <div class="step {{if gt $stage 3}}step--done{{else if eq $stage 3}}step--current{{end}}">Drafting</div>
+              <div class="step {{if gt $stage 4}}step--done{{else if eq $stage 4}}step--current{{end}}">Rendering</div>
+              <div class="step {{if ge $stage 5}}step--current{{end}}">Ready</div>
+            </div>
+          </div>
+        </section>
+
+        {{if eq .Job.Status "completed"}}
+        <section class="card">
+          <div class="card__body stack">
+            <h2>Downloads</h2>
+            <div class="downloads">
+              <a class="button" href="/jobs/{{.Job.ID}}/artifacts/pdf">{{if eq .Job.Content.Outcome "outline"}}Outline PDF{{else}}Draft PDF{{end}}</a>
+              <a class="button button--quiet" href="/jobs/{{.Job.ID}}/artifacts/typst">Typst source</a>
+            </div>
+          </div>
+        </section>
+        {{end}}
+
+        <section class="card">
+          <div class="card__body stack">
+            <h2>Document pages</h2>
+            <div class="link-row">
+              <a href="/jobs/{{.Job.ID}}/document">Input and rendering</a>
+              <a href="/jobs/{{.Job.ID}}/sections">Sections</a>
+              <a href="/jobs/{{.Job.ID}}/evidence">Evidence</a>
+              {{if or (eq .Job.Stage "selecting_files") (eq .Job.Stage "analyzing") (eq .Job.Stage "generating") (eq .Job.Stage "rendering")}}<a href="/jobs/{{.Job.ID}}/files">Selected files</a>{{end}}
+            </div>
+          </div>
+        </section>
+
+        {{if .Job.FreeDraft}}
+        <section class="card">
+          <div class="card__body">
+            <details class="group group--flush">
+              <summary>Generation details</summary>
+              <div class="details-body job-details">
+                <p>Content outcome: {{.Job.Content.Outcome}} · {{.Job.Content.Unresolved}} unresolved gaps</p>
+                {{if .Job.GenerationReason}}<p>{{.Job.GenerationReason}}</p>{{end}}
+                <p>Model attempts: {{.Job.GenerationAttempts}} of 12{{with .Job.GenerationDeadline}} · deadline {{.Format "02 Jan 15:04 MST"}}{{end}}</p>
+                <p>{{.Job.CompletedSections}} available sections, {{.Job.ModelSections}} improved by a model. The rest are outline placeholders or your edits. Completed means the PDF compiled, not that the content was verified.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+        {{end}}
+      </div>
+
+      <aside class="stack">
+        <section class="card">
+          <div class="card__body">
+            <dl class="meta-list">
+              <div><dt>Document</dt><dd>{{profileName .Job.ProfileID}}</dd></div>
+              <div><dt>Language</dt><dd>{{if eq .Job.Language "ru"}}Russian{{else}}English{{end}}</dd></div>
+              <div><dt>Updated</dt><dd>{{.Job.UpdatedAt.Format "02 Jan 2006 15:04"}}</dd></div>
+              {{with .Job.ExpiresAt}}<div><dt>Expires</dt><dd>{{.Format "02 Jan 2006"}}</dd></div>{{end}}
+            </dl>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__body stack">
+            <form class="stack" method="post" action="/jobs/{{.Job.ID}}/lifecycle">
+              {{if or (eq .Job.Status "queued") (eq .Job.Status "running") (eq .Job.Status "retry_wait") (eq .Job.Status "needs_input") (eq .Job.Status "ready_for_review")}}
+              <button class="button button--quiet" type="submit" name="action" value="cancel">Cancel processing</button>
+              {{end}}
+              {{if or (eq .Job.Status "failed") (eq .Job.Status "cancelled") (eq .Job.Status "retry_wait")}}
+              <button class="button button--quiet" type="submit" name="action" value="retry">Retry saved stage</button>
+              {{end}}
+              <button class="button button--danger" type="submit" name="action" value="delete" data-confirm="Permanently delete this document and all its data?">Delete document</button>
+            </form>
+            <p class="form-note">Deleting hides the document immediately and purges its data shortly after.</p>
+          </div>
+        </section>
+
+        <p class="form-note">Job ID <code>{{.Job.ID}}</code></p>
+      </aside>
+    </div>
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

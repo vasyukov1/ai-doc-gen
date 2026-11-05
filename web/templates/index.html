@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Doc Gen — documentation from your code</title>
+  <meta name="description" content="Create editable project documentation from source code.">
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main>
+    <div class="shell hero">
+      <div class="hero__copy">
+        <p class="eyebrow">Documentation from source</p>
+        <h1>Write the document. We’ll read the code.</h1>
+        <p class="hero__lead">Point us at a repository or an archive. We read the source, draft each section, and hand back a PDF with the editable Typst source behind it.</p>
+        <ul class="facts">
+          <li>Grounded in the files you provide</li>
+          <li>PDF and editable source</li>
+          <li>Everything stays in this browser session</li>
+        </ul>
+      </div>
+
+      <section class="card form-card" aria-labelledby="form-title">
+        <div class="card__body">
+          <div class="card__head">
+            <h2 id="form-title">New document</h2>
+            <p>One submission is enough. You can edit every section afterwards.</p>
+          </div>
+
+          <form action="/jobs" method="post" enctype="multipart/form-data" data-busy>
+            <div class="field">
+              <label for="repo">GitHub repository</label>
+              <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
+            </div>
+
+            <div class="divider"><span>or</span></div>
+
+            <label class="dropzone" for="archive">
+              <input class="sr-only" id="archive" name="archive" type="file" accept=".zip,application/zip" data-file-input>
+              <span class="dropzone__title" data-file-name>Drop a .zip here</span>
+              <span class="dropzone__hint">or click to choose · up to 20 MiB</span>
+            </label>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="profile">Document type</label>
+                <select id="profile" name="profile_id">
+                  <option value="tz">Technical specification</option>
+                  <option value="pz">Explanatory note</option>
+                  <option value="ro">Operator’s manual</option>
+                  <option value="pmi">Test plan and methodology</option>
+                  <option value="pmi-team">Test plan and methodology (team)</option>
+                  <option value="srs">SRS — software requirements</option>
+                  <option value="arc42">arc42 — architecture documentation</option>
+                  <option value="technical-overview">Technical project overview</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="language">Language</label>
+                <select id="language" name="language">
+                  <option value="en">English</option>
+                  <option value="ru">Русский</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="project">Project title <span class="required">Required</span></label>
+              <input id="project" name="metadata.project" type="text" maxlength="600" required>
+            </div>
+
+            <div class="field">
+              <label for="description">Short description <span class="optional">Optional</span></label>
+              <textarea id="description" name="description" rows="3" placeholder="What should the document focus on?"></textarea>
+            </div>
+
+            <details class="group">
+              <summary>Title page details <span class="optional">Optional</span></summary>
+              <div class="details-body">
+                <div class="form-row">
+                  <div class="field"><label for="organization">Organization</label><input id="organization" name="metadata.organization" type="text" maxlength="600"></div>
+                  <div class="field"><label for="faculty">Faculty</label><input id="faculty" name="metadata.faculty" type="text" maxlength="600"></div>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label for="program">Program</label><input id="program" name="metadata.program" type="text" maxlength="600"></div>
+                  <div class="field"><label for="group">Group</label><input id="group" name="metadata.group" type="text" maxlength="600"></div>
+                </div>
+                <div class="field"><label for="author">Author or team members</label><input id="author" name="metadata.author" type="text" maxlength="600"></div>
+                <div class="form-row">
+                  <div class="field"><label for="supervisor">Supervisor</label><input id="supervisor" name="metadata.supervisor" type="text" maxlength="600"></div>
+                  <div class="field"><label for="supervisor_position">Supervisor position</label><input id="supervisor_position" name="metadata.supervisor_position" type="text" maxlength="600"></div>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label for="approver">Approver</label><input id="approver" name="metadata.approver" type="text" maxlength="600"></div>
+                  <div class="field"><label for="approver_position">Approver position</label><input id="approver_position" name="metadata.approver_position" type="text" maxlength="600"></div>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label for="year">Year</label><input id="year" name="metadata.year" type="text" maxlength="600"></div>
+                  <div class="field"><label for="code">Project code</label><input id="code" name="metadata.code" type="text" maxlength="600"></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="group">
+              <summary>Technical specification <span class="optional">Optional</span></summary>
+              <div class="details-body">
+                <p class="form-note">Recommended for academic documents. Paste text or attach a UTF-8 .txt or .md file.</p>
+                <div class="field">
+                  <label for="specification">Specification text</label>
+                  <textarea id="specification" name="specification" rows="6" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>
+                </div>
+                <label class="dropzone" for="specification_file">
+                  <input class="sr-only" id="specification_file" name="specification_file" type="file" accept=".txt,.md,text/plain,text/markdown" data-file-input>
+                  <span class="dropzone__title" data-file-name>Attach a .txt or .md file</span>
+                  <span class="dropzone__hint">optional</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="group">
+              <summary>Model keys <span class="optional">Optional</span></summary>
+              <div class="details-body">
+                <p class="form-note">A source-linked draft is generated without keys. Connect free-tier models to improve it. Keys are encrypted on this server.</p>
+                <input type="hidden" name="generation_mode" value="free">
+
+                <div class="providers">
+                  <fieldset class="provider">
+                    <legend>Gemini</legend>
+                    <div class="field"><label for="gemini_key">API key</label><input id="gemini_key" name="gemini_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" maxlength="150"></div>
+                    <label class="checkbox"><input type="checkbox" name="gemini_free" value="yes"> This project has no billing enabled.</label>
+                    <details>
+                      <summary>Account rate limits</summary>
+                      <div class="form-grid details-body">
+                        <div class="field"><span>Requests per minute</span><input name="gemini_rpm" type="number" value="5" min="1" max="60"></div>
+                        <div class="field"><span>Tokens per minute</span><input name="gemini_tpm" type="number" value="15000" min="4000" max="100000"></div>
+                      </div>
+                    </details>
+                  </fieldset>
+
+                  <fieldset class="provider">
+                    <legend>Groq</legend>
+                    <div class="field"><label for="groq_key">API key</label><input id="groq_key" name="groq_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="groq_model">Model ID</label><input id="groq_model" name="groq_model" maxlength="150"></div>
+                    <label class="checkbox"><input type="checkbox" name="groq_free" value="yes"> My Groq account uses the free plan.</label>
+                    <details>
+                      <summary>Account rate limits</summary>
+                      <div class="form-grid details-body">
+                        <div class="field"><span>Requests per minute</span><input name="groq_rpm" type="number" value="5" min="1" max="60"></div>
+                        <div class="field"><span>Tokens per minute</span><input name="groq_tpm" type="number" value="15000" min="4000" max="100000"></div>
+                      </div>
+                    </details>
+                  </fieldset>
+
+                  <fieldset class="provider">
+                    <legend>OpenRouter</legend>
+                    <div class="field"><label for="openrouter_key">API key</label><input id="openrouter_key" name="openrouter_key" type="password" autocomplete="off" maxlength="1000"></div>
+                    <div class="field"><label for="openrouter_model">Model ID</label><input id="openrouter_model" name="openrouter_model" maxlength="150"></div>
+                    <label class="checkbox"><input type="checkbox" name="openrouter_free" value="yes"> Only use models with zero pricing.</label>
+                    <details>
+                      <summary>Account rate limits</summary>
+                      <div class="form-grid details-body">
+                        <div class="field"><span>Requests per minute</span><input name="openrouter_rpm" type="number" value="5" min="1" max="60"></div>
+                        <div class="field"><span>Tokens per minute</span><input name="openrouter_tpm" type="number" value="15000" min="4000" max="100000"></div>
+                      </div>
+                    </details>
+                  </fieldset>
+                </div>
+              </div>
+            </details>
+
+            <button class="button button--wide" type="submit" data-busy-label="Creating…">Create document</button>
+            <p class="form-note">Up to 20 MiB. The draft starts immediately and appears on the document page.</p>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

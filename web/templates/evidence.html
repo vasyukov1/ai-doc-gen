@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Evidence — Doc Gen</title>
+  {{template "head" .}}
+</head>
+<body>
+  {{template "header" .}}
+
+  <main class="shell">
+    <a class="back" href="/jobs/{{.Job.ID}}">← Document status</a>
+
+    <header class="page-head">
+      <p class="eyebrow">Source</p>
+      <h1>Evidence</h1>
+      <p class="lead">Literal declarations and excerpts from the selected files. They ground the draft but do not prove how the system behaves at runtime.</p>
+      <p class="form-note">Extractor v{{.Evidence.Version}} · {{len .Evidence.Selection}} selected files</p>
+    </header>
+
+    <div class="evidence-list">
+      {{range .Evidence.Facts}}
+      <article class="fact" id="{{.ID}}">
+        <span class="pill">{{.Kind}}</span>
+        <p class="fact__value">{{.Value}}</p>
+        <p class="fact__meta">{{.Provenance}}{{if .Path}} · {{.Path}}{{if .StartLine}}:{{.StartLine}}–{{.EndLine}}{{else}} (file inventory){{end}}{{end}}</p>
+        {{with index $.Evidence.Corrections .ID}}<p class="fact__correction">Your correction: {{.}}</p>{{end}}
+      </article>
+      {{else}}
+      <p class="empty">No evidence has been recorded yet.</p>
+      {{end}}
+    </div>
+  </main>
+
+  {{template "footer" .}}
+  {{template "scripts" .}}
+</body>
+</html>

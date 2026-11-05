@@ -1,55 +1,65 @@
 package web
 
 import (
-	"embed"
 	"fmt"
 	"html/template"
 	"io/fs"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/vasyukov1/ai-doc-gen/internal/storage"
+	webassets "github.com/vasyukov1/ai-doc-gen/web"
 )
-
-//go:embed static/*
-var assets embed.FS
 
 type Handler struct {
 	jobs          *storage.Repository
 	uploadDir     string
+	indexPage     *template.Template
 	jobPage       *template.Template
+	jobsPage      *template.Template
 	filePage      *template.Template
 	evidencePage  *template.Template
+	documentPage  *template.Template
+	sectionsPage  *template.Template
 	encryptionKey string
 	retention     time.Duration
 }
 
 func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration) (http.Handler, error) {
-	static, err := fs.Sub(assets, "static")
+	static, err := fs.Sub(webassets.FS, "static")
 	if err != nil {
 		return nil, fmt.Errorf("load static assets: %w", err)
 	}
 
-	jobPage, err := template.ParseFS(assets, "static/job.html")
-	if err != nil {
-		return nil, fmt.Errorf("load job page: %w", err)
-	}
-	filePage, err := template.ParseFS(assets, "static/files.html")
-	if err != nil {
-		return nil, fmt.Errorf("load file page: %w", err)
-	}
-
-	evidencePage, err := template.ParseFS(assets, "static/evidence.html")
-	if err != nil {
-		return nil, fmt.Errorf("load evidence page: %w", err)
+	pages := make(map[string]*template.Template, 7)
+	for _, name := range []string{"index.html", "job.html", "jobs.html", "files.html", "evidence.html", "document.html", "sections.html"} {
+		page, err := webassets.Page(name)
+		if err != nil {
+			return nil, fmt.Errorf("load %s: %w", name, err)
+		}
+		pages[name] = page
 	}
 
-	handler := &Handler{jobs: jobs, uploadDir: uploadDir, jobPage: jobPage, filePage: filePage, evidencePage: evidencePage, encryptionKey: encryptionKey, retention: retention}
+	handler := &Handler{
+		jobs:          jobs,
+		uploadDir:     uploadDir,
+		indexPage:     pages["index.html"],
+		jobPage:       pages["job.html"],
+		jobsPage:      pages["jobs.html"],
+		filePage:      pages["files.html"],
+		evidencePage:  pages["evidence.html"],
+		documentPage:  pages["document.html"],
+		sectionsPage:  pages["sections.html"],
+		encryptionKey: encryptionKey,
+		retention:     retention,
+	}
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /healthz", handler.health)
 	mux.HandleFunc("GET /readyz", handler.ready)
-	mux.Handle("GET /assets/", http.StripPrefix("/assets/", http.FileServer(http.FS(static))))
+	assetServer := http.StripPrefix("/assets/", http.FileServer(http.FS(static)))
+	mux.Handle("GET /assets/", noCache(assetServer))
 	mux.HandleFunc("POST /jobs", handler.createJob)
 	mux.HandleFunc("POST /jobs/{id}/lifecycle", handler.lifecycle)
 	mux.HandleFunc("GET /jobs", handler.listJobs)
@@ -74,6 +84,14 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 	return handler.authorize(mux), nil
 }
 
+// noCache revalidates embedded assets, whose fixed names change with every build.
+func noCache(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache")
+		next.ServeHTTP(w, r)
+	})
+}
+
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	_, _ = w.Write([]byte("ok\n"))
@@ -95,12 +113,8 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page, err := assets.ReadFile("static/index.html")
-	if err != nil {
-		http.Error(w, "page unavailable", http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_, _ = w.Write(page)
+	if err := h.indexPage.Execute(w, nil); err != nil {
+		log.Printf("render home: %v", err)
+	}
 }
