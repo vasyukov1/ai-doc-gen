@@ -118,7 +118,7 @@ Milestone 7 adds browser ownership, private downloads, completed-document editin
 
 9.2. Improve compact groups of at most four sections using optional Gemini, Groq and OpenRouter connections. Keep independent section validation, caching, editing and regeneration. Limit output to 2,400 tokens per group.
 
-9.3. Persist a 240-second model deadline and a maximum of 12 API attempts, including catalog checks. Coordinate concurrency, conservative RPM/TPM reservations and cooldowns through PostgreSQL. Fall back to saved baseline text when providers cannot help.
+9.3. Persist a model deadline and an API-attempt limit scaled by profile chapter count (`12 + 2 × chapters` attempts, `240s + 45s × chapters`), including catalog checks. Coordinate concurrency, conservative RPM/TPM reservations and cooldowns through PostgreSQL. Fall back to saved baseline text when providers cannot help.
 
 9.4. Compile the saved draft into PDF and reproducible Typst, marking baseline/mixed content and improvement limitations. Completed means artifacts were compiled, not that claims were verified.
 

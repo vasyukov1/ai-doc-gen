@@ -38,6 +38,7 @@ func extractArchive(ctx context.Context, archivePath, workDir, profile string) (
 	}
 
 	files := make([]domain.SourceFile, 0, len(entries))
+	seen := make(map[string]bool, len(entries))
 	for _, entry := range entries {
 		if err := ctx.Err(); err != nil {
 			return nil, err
@@ -47,6 +48,22 @@ func extractArchive(ctx context.Context, archivePath, workDir, profile string) (
 		if entry.FileInfo().IsDir() || name == "" {
 			continue
 		}
+		key := strings.ToLower(name)
+		if entry.Mode()&os.ModeSymlink != 0 || !entry.Mode().IsRegular() {
+			files = append(files, domain.SourceFile{
+				Path: name, SizeBytes: int64(entry.UncompressedSize64),
+				ReasonCode: "unsafe_entry", Eligible: false, Selected: false,
+			})
+			continue
+		}
+		if seen[key] {
+			files = append(files, domain.SourceFile{
+				Path: name, SizeBytes: int64(entry.UncompressedSize64),
+				ReasonCode: "duplicate_path", Eligible: false, Selected: false,
+			})
+			continue
+		}
+		seen[key] = true
 
 		reason, eligible, selected := classifyFile(name, profile, entry.UncompressedSize64)
 		file := domain.SourceFile{
@@ -101,11 +118,10 @@ func inspectEntries(entries []*zip.File) ([]*zip.File, string, error) {
 		if err := validateEntryPath(name); err != nil {
 			return nil, "", err
 		}
+		// Links, special files and duplicate names are excluded from the
+		// inventory instead of rejecting the whole project.
 		if entry.Mode()&os.ModeSymlink != 0 || (!entry.FileInfo().IsDir() && !entry.Mode().IsRegular()) {
-			return nil, "", invalidSource("unsafe_entry", "The archive contains a link or special file.")
-		}
-		if seen[strings.ToLower(name)] {
-			return nil, "", invalidSource("duplicate_path", "The archive contains duplicate paths.")
+			continue
 		}
 		seen[strings.ToLower(name)] = true
 
@@ -132,7 +148,7 @@ func inspectEntries(entries []*zip.File) ([]*zip.File, string, error) {
 		parent := path.Dir(name)
 		for parent != "." {
 			if regular[parent] {
-				return nil, "", invalidSource("unsafe_path", "The archive contains conflicting paths.")
+				return nil, "", invalidSource("unsafe_path", "The archive contains conflicting paths at "+clipText(name, 200)+".")
 			}
 			parent = path.Dir(parent)
 		}
@@ -150,10 +166,24 @@ func validateEntryPath(name string) error {
 		strings.ContainsAny(name, "\\\x00") || strings.HasPrefix(name, "/") ||
 		path.Clean(name) != name || strings.HasPrefix(name, "../") || name == ".." ||
 		strings.Contains(name, ":") || strings.Count(name, "/") >= maxPathDepth {
-		return invalidSource("unsafe_path", "The archive contains an unsafe path.")
+		return invalidSource("unsafe_path", "The archive contains an unsafe path: "+clipText(name, 200)+".")
 	}
 
 	return nil
+}
+
+// ValidateArchive checks the central directory without unpacking files, so an
+// upload can be rejected with the exact reason before a job is created.
+func ValidateArchive(path string) error {
+	archive, err := zip.OpenReader(path)
+	if err != nil {
+		return invalidSource("invalid_archive", "The ZIP archive could not be opened.")
+	}
+	defer archive.Close()
+
+	_, _, err = inspectEntries(archive.File)
+
+	return err
 }
 
 func extractTextFile(ctx context.Context, entry *zip.File, destination string) (string, bool, error) {

@@ -122,6 +122,28 @@ Data still enters through literal JSON/text, never executable model or uploaded 
 
 The editor can clear a section's missing-information warnings only through an explicit checked “missing information is filled in” action on save. Ordinary saves retain warnings; other sections and stored artifacts are unchanged until an explicit rebuild. Signature/date TODOs are deliberate paper-signing placeholders. Blank archival/change-registration cells remain form cells rather than invented change records. Previously downloaded bundles retain their own layout and remain reproducible.
 
+## 2026-11-05 — Markdown contract for model output
+
+The generation prompt now names the supported Markdown subset — paragraphs separated by blank lines, `**bold**`, `*emphasis*`, lists with `-` or `1.` indented by two spaces, `>` quotes, inline code, `[text](https://…)` links and GFM pipe tables — and forbids Typst commands, math and raw HTML. The chapter prompt version moves to `chapters-4`, so previously cached model sections are not reused with the old contract.
+
+Model bodies pass through `normalizeMarkdown` before validation: a Typst directive at the start of a line (`#set`, `#figure(`, `#text(`, `#link(` and similar) is escaped to literal text, and an unterminated code fence is closed so it cannot swallow later paragraphs. Unclosed inline emphasis or brackets stay literal text because the parser never drops content. Rendering stays allowlisted: `rich.typ` receives leaf text as Typst strings, so no model output can become executable Typst even when the text contains `#`, `$`, `[` or `@`.
+
+## 2026-11-05 — Profile-scaled generation budget
+
+The fixed 12-admission and 240-second model budget could not cover long profiles: late chapters never received a call. The budget now scales with the number of chapters a profile produces: `12 + 2 × chapters` admissions and `240s + 45s × chapters` of model time, overridable with `DRAFT_BASE_ATTEMPTS`, `DRAFT_ATTEMPTS_PER_CHAPTER`, `DRAFT_BASE_SECONDS` and `DRAFT_SECONDS_PER_CHAPTER`. The worker writes the profile deadline once before the first call; a run with recorded attempts keeps its stored deadline, so a restart cannot renew the budget.
+
+Scheduling is coverage first. Each pass gives every unfinished chapter at most one call, so a repair on the first chapter cannot starve the rest of the document; at most three passes per budget are made. After the deadline the worker grants up to two bounded continuation passes of 90 seconds for chapters that still have baseline text, preserves every accepted section, and extends the admission limit only for those remaining chapters. This supersedes the earlier statement that no automatic continuation runs after the deadline; the explicit "Continue" action still renews the full profile budget.
+
+Generation details now report the covered chapter count, the used and allowed model calls, and the providers disabled during the run with their error codes.
+
+## 2026-11-05 — Submission friction, archive tolerance and paper signatures
+
+The first submission form asked for more decisions than the task needs. One source now excludes the other: choosing a ZIP clears the repository field and typing a repository clears the chosen ZIP, so the request is never blocked by two sources at once. The user selects the document language; only an explicit earlier choice is restored locally, and it is never inferred from the browser. The previous profile is remembered the same way, the year defaults to the current year and stays editable in the project fields, and the project title is derived from the repository or archive name when the field is empty. The technical specification remains required for academic profiles; the remaining metadata stays optional with visible red TODOs.
+
+Archive intake no longer rejects a whole project because of one entry. Symlinks, special files and duplicate names are excluded from the inventory with explicit reason codes. Only unsafe paths and file/directory conflicts fail, and the message names the offending entry. The upload request inspects the ZIP central directory before creating a job, so the user receives that reason immediately instead of after a failed job. GitHub archives follow the same rules in the worker.
+
+Signature and signing-date fields are paper placeholders: they render as blank lines, not as missing data, because they are filled by hand after the draft is approved.
+
 ## 2026-11-05 — Provider rejections and outline documents
 
 A technical-overview run finished as `completed` while every section stayed a baseline placeholder. Persisted diagnostics showed Groq returning HTTP 400 `json_validate_failed` ("Failed to generate JSON") for the chapter call. The worker classified every unknown rejection as a permanent configuration error, disabled the only connected provider, and never retried, although the 12-admission budget was almost untouched.

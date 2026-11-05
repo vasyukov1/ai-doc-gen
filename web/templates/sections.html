@@ -49,7 +49,7 @@
       <div class="details-body job-details">
         <p>Content outcome: {{.Job.Content.Outcome}} · {{.Job.Content.Unresolved}} unresolved gaps</p>
         {{if .Job.GenerationReason}}<p>{{.Job.GenerationReason}}</p>{{end}}
-        <p>Model attempts: {{.Job.GenerationAttempts}} of 12{{with .Job.GenerationDeadline}} · deadline {{.Format "02 Jan 15:04 MST"}}{{end}}</p>
+        <p>Model attempts: {{.Job.GenerationAttempts}} of {{if .Job.GenerationAttemptLimit}}{{.Job.GenerationAttemptLimit}}{{else}}12{{end}}{{with .Job.GenerationDeadline}} · deadline {{.Format "02 Jan 15:04 MST"}}{{end}}</p>
       </div>
     </details>
     {{end}}

@@ -17,7 +17,8 @@ var ErrDraftBudget = errors.New("draft budget exhausted")
 func draftID(id string) postgres.StringExpression { return postgres.CAST(postgres.Text(id)).AS_UUID() }
 
 // ReserveDraftCall serializes admission across workers and records a crash-safe attempt.
-func (q *Queue) ReserveDraftCall(ctx context.Context, id, owner, scope string, c domain.Connection, tokens int, sections []string) (int64, time.Duration, error) {
+// The caller supplies the attempt limit because it scales with the document profile.
+func (q *Queue) ReserveDraftCall(ctx context.Context, id, owner, scope string, c domain.Connection, tokens int, sections []string, attemptLimit int) (int64, time.Duration, error) {
 	tx, err := q.db.BeginTx(ctx, nil)
 	if err != nil {
 		return 0, 0, err
@@ -38,7 +39,10 @@ func (q *Queue) ReserveDraftCall(ctx context.Context, id, owner, scope string, c
 		return 0, 0, err
 	}
 	now := time.Now()
-	if !now.Before(deadline) || attempts >= 12 {
+	if attemptLimit < 1 {
+		attemptLimit = 1
+	}
+	if !now.Before(deadline) || attempts >= attemptLimit {
 		return 0, 0, ErrDraftBudget
 	}
 	counts := map[string]int{}
@@ -128,6 +132,44 @@ func (q *Queue) ReserveDraftCall(ctx context.Context, id, owner, scope string, c
 		return 0, 0, err
 	}
 	return callID, 0, tx.Commit()
+}
+
+// StartDraftBudget applies the profile budget before the first model call. A
+// run with recorded attempts keeps its stored deadline, so a worker restart
+// cannot extend the budget indefinitely.
+func (q *Queue) StartDraftBudget(ctx context.Context, id, owner string, duration time.Duration) error {
+	return q.setDraftDeadline(ctx, id, owner, duration, true)
+}
+
+// ExtendDraftDeadline grants one automatic continuation pass after the deadline.
+func (q *Queue) ExtendDraftDeadline(ctx context.Context, id, owner string, duration time.Duration) error {
+	return q.setDraftDeadline(ctx, id, owner, duration, false)
+}
+
+func (q *Queue) setDraftDeadline(ctx context.Context, id, owner string, duration time.Duration, onlyFresh bool) error {
+	tx, err := q.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err = checkOwner(ctx, tx, id, owner); err != nil {
+		return err
+	}
+	runs := table.JobDraftRuns
+	query, args := runs.SELECT(runs.Attempts).WHERE(runs.JobID.EQ(draftID(id))).FOR(postgres.UPDATE()).Sql()
+	var attempts int
+	if err = tx.QueryRowContext(ctx, query, args...).Scan(&attempts); err != nil {
+		return err
+	}
+	if onlyFresh && attempts > 0 {
+		return tx.Commit()
+	}
+	query, args = runs.UPDATE(runs.Deadline).SET(postgres.TimestampzT(time.Now().Add(duration))).WHERE(runs.JobID.EQ(draftID(id))).Sql()
+	if _, err = tx.ExecContext(ctx, query, args...); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (q *Queue) FinishDraftCall(ctx context.Context, id, owner, scope string, callID int64, usage domain.Usage, code string, duration, cooldown time.Duration) error {

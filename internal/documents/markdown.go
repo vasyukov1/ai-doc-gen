@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"html"
 	"net/url"
+	"regexp"
+	"strings"
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
@@ -114,6 +116,21 @@ func markdownBlocks(value string) []RichNode {
 		result = append(result, convert(n, 0))
 	}
 	return result
+}
+
+// typstDirective recognizes a Typst command a model may emit by mistake.
+var typstDirective = regexp.MustCompile(`(?m)^(\s*)#(set|show|let|import|include|figure|table|text|heading|link|strong|emph|quote|box|block|align|grid|page|place|raw|linebreak|parbreak)\b`)
+
+// normalizeMarkdown keeps model prose inside the supported Markdown subset.
+// Typst directives become literal text instead of document structure, and an
+// unterminated code fence is closed so it cannot swallow the following text.
+func normalizeMarkdown(value string) string {
+	value = typstDirective.ReplaceAllString(value, "$1\\#$2")
+	if strings.Count(value, "```")%2 == 1 {
+		value += "\n```"
+	}
+
+	return value
 }
 
 // Use CommonMark's text decoder, then discard HTML escaping before JSON encoding.

@@ -8,15 +8,41 @@ function reveal(element: HTMLElement): void {
   }
 }
 
+const PROFILE_KEY = "docgen.profile";
+const LANGUAGE_KEY = "docgen.language";
+
+function stored(key: string): string {
+  try {
+    return localStorage.getItem(key) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function remember(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Private browsing may refuse storage; the choice still works for this page.
+  }
+}
+
 function initFileInputs(): void {
   for (const input of document.querySelectorAll<HTMLInputElement>("[data-file-input]")) {
     const zone = input.closest<HTMLElement>(".dropzone");
     const title = zone?.querySelector<HTMLElement>("[data-file-name]");
     const empty = title?.textContent ?? "";
+    const form = input.form;
+    const repo = form?.elements.namedItem("github_url") as HTMLInputElement | null;
     const clear = document.createElement("button");
     clear.type = "button"; clear.className = "button button--quiet"; clear.textContent = "Remove file / Убрать файл"; clear.hidden = !input.files?.length;
     zone?.after(clear);
-    clear.addEventListener("click", () => { input.value = ""; input.dispatchEvent(new Event("change", {bubbles:true})); input.focus(); });
+    const reset = (focus: boolean): void => {
+      input.value = "";
+      input.dispatchEvent(new Event("change", {bubbles: true}));
+      if (focus) input.focus();
+    };
+    clear.addEventListener("click", () => reset(true));
     zone?.addEventListener("dragover", event => { event.preventDefault(); });
     zone?.addEventListener("drop", event => {
       event.preventDefault();
@@ -26,8 +52,72 @@ function initFileInputs(): void {
       clear.hidden = !input.files?.length;
       zone?.classList.toggle("is-set", Boolean(input.files?.length));
       if (title) title.textContent = input.files?.[0]?.name ?? empty;
+      // One source per submission: a chosen archive replaces a typed repository.
+      if (input.name === "archive" && input.files?.length && repo?.value) {
+        repo.value = "";
+        repo.dispatchEvent(new Event("input", {bubbles: true}));
+      }
     });
+    if (input.name === "archive" && repo) {
+      // Typing a repository replaces a chosen archive instead of blocking submit.
+      repo.addEventListener("input", () => {
+        if (repo.value.trim() && input.files?.length) reset(false);
+      });
+    }
   }
+}
+
+// Fewer decisions on first visit: reuse the previous profile and language,
+// follow the browser language, and derive the project title from the source.
+function initCreateDefaults(): void {
+  const form = document.querySelector<HTMLFormElement>("form[data-create-document]");
+  if (!form) {
+    return;
+  }
+
+  const profile = form.elements.namedItem("profile_id") as HTMLSelectElement | null;
+  const language = form.elements.namedItem("language") as HTMLSelectElement | null;
+  const repo = form.elements.namedItem("github_url") as HTMLInputElement | null;
+  const archive = form.elements.namedItem("archive") as HTMLInputElement | null;
+  const project = form.elements.namedItem("metadata.project") as HTMLInputElement | null;
+  const year = form.elements.namedItem("metadata.year") as HTMLInputElement | null;
+
+  if (profile) {
+    const saved = stored(PROFILE_KEY);
+    if (saved && Array.from(profile.options).some(option => option.value === saved)) {
+      profile.value = saved;
+      profile.dispatchEvent(new Event("change", {bubbles: true}));
+    }
+    profile.addEventListener("change", () => remember(PROFILE_KEY, profile.value));
+  }
+
+  if (language) {
+    // The user chooses the language; only their own earlier choice is restored.
+    const saved = stored(LANGUAGE_KEY);
+    if (saved === "en" || saved === "ru") {
+      language.value = saved;
+      language.dispatchEvent(new Event("change", {bubbles: true}));
+    }
+    language.addEventListener("change", () => remember(LANGUAGE_KEY, language.value));
+  }
+
+  if (year && !year.value.trim()) {
+    year.value = String(new Date().getFullYear());
+  }
+
+  const suggest = (): void => {
+    if (!project || project.value.trim()) {
+      return;
+    }
+    const name = repo?.value.trim()
+      ? repo.value.trim().replace(/\/+$/, "").split("/").pop() ?? ""
+      : (archive?.files?.[0]?.name ?? "").replace(/\.zip$/i, "");
+    if (name) {
+      project.value = name.replace(/[-_]+/g, " ").trim();
+    }
+  };
+  repo?.addEventListener("input", suggest);
+  archive?.addEventListener("change", suggest);
 }
 
 const dirtyForms = new Set<HTMLFormElement>();
@@ -204,6 +294,7 @@ function initConfirmations(): void {
 
 export function initForms(): void {
   initProfileGuidance();
+  initCreateDefaults();
   initFileInputs();
   initBusyForms();
   initConfirmations();

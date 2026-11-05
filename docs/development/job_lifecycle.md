@@ -49,7 +49,7 @@ New jobs expose `expires_at` and default to seven days from creation. Worker cle
 
 ## Milestone 9 free draft runs
 
-New submissions store an encrypted connection list (possibly empty) and a 240-second deadline atomically with the job. Existing jobs without that record keep their legacy behavior. All baseline sections are saved during `running/generating` before any model request. `completed_sections` counts available sections, while `model_sections` counts model-improved sections. Both are visible before compilation.
+New submissions store an encrypted connection list (possibly empty) and an initial deadline atomically with the job; the worker replaces it with the profile-scaled budget before the first model call. Existing jobs without that record keep their legacy behavior. All baseline sections are saved during `running/generating` before any model request. `completed_sections` counts available sections, while `model_sections` counts model-improved sections. Both are visible before compilation.
 
 Provider unavailability, invalid output or exhausted model budgets are soft limitations: keep the baseline, persist the reason and continue to `ready_for_review`, automatic render queue and `completed/rendered`. Source, persistence and compiler errors remain failures. Waiting for provider admission is an observable `provider_wait` event within the bounded running stage. Cancellation still revokes the lease and stops external requests; automatic restarts never renew the draft deadline or request budget.
 

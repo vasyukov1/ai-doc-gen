@@ -20,7 +20,7 @@ type sectionOutput struct {
 	Missing   []string               `json:"missing_information"`
 }
 
-const DraftVersion = "chapters-3"
+const DraftVersion = "chapters-4"
 
 func clipText(value string, limit int) string {
 	value = strings.Map(func(r rune) rune {
@@ -232,7 +232,7 @@ func validateChapterSection(raw string, plan SectionPlan, facts []domain.Fact) (
 	if err := decoder.Decode(&output); err != nil {
 		return domain.Section{}, fmt.Errorf("invalid section fields or types")
 	}
-	section := domain.Section{Tables: output.Tables, ID: output.ID, Heading: plan.Heading, Body: strings.TrimSpace(output.Body), Citations: output.Citations, Missing: output.Missing}
+	section := domain.Section{Tables: output.Tables, ID: output.ID, Heading: plan.Heading, Body: strings.TrimSpace(normalizeMarkdown(output.Body)), Citations: output.Citations, Missing: output.Missing}
 	if err := validateTables(section.Tables); err != nil {
 		return section, err
 	}

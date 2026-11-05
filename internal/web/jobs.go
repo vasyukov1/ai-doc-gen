@@ -113,6 +113,13 @@ func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
 			writeFormError(w, r, http.StatusServiceUnavailable, "Could not store the upload. Try again.")
 			return
 		}
+		// Reject unusable archives in the request with the exact path instead
+		// of failing the job later in the worker.
+		if err = documents.ValidateArchive(input.UploadPath); err != nil {
+			_ = os.Remove(input.UploadPath)
+			writeFormError(w, r, http.StatusBadRequest, err.Error())
+			return
+		}
 	}
 
 	job := domain.NewJob{
@@ -235,6 +242,9 @@ func (h *Handler) findJob(r *http.Request) (domain.Job, error) {
 	job, err := h.jobs.GetJob(r.Context(), id)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		log.Printf("get job %s: %v", id, err)
+	}
+	if err == nil {
+		job.GenerationAttemptLimit = documents.DraftBudgetFor(job.ProfileID, job.Language).Attempts
 	}
 
 	return job, err

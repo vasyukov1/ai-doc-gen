@@ -224,3 +224,26 @@ Manual checks only; no automated test suite was added. `go build ./...`, `npm --
 - A temporary render check confirmed that both `job.html` and `document.html` contain the `View` link (`?view=1`), the `pdf-viewer` dialog, the iframe and the close control. The temporary checker was removed afterwards.
 - The dialog was not opened in a browser during this check. Keyboard behaviour (Esc, focus return), backdrop clicks, the no-JavaScript new-tab fallback and PDF framing in each browser remain unverified.
 - The site interface stays English: the new control is labelled `View`.
+
+## 2026-11-05 — Phase A: submission friction and archive tolerance
+
+Manual checks only; no automated suite was added. `go build ./...`, `npm --prefix web run typecheck`, `npm --prefix web run build`, the template parse/execute check and `git diff --check` passed.
+
+- Three synthetic archives exercised the intake policy. A ZIP containing a symlink and a duplicate name now validates and yields an inventory where the first copy stays `source_file`, the second is `duplicate_path` and the link is `unsafe_entry`; both excluded entries keep their reason. A `../` entry fails with `The archive contains an unsafe path: ../evil.txt.` and a file/directory conflict fails with `... conflicting paths at dir/file.txt.`
+- The upload handler now calls the same central-directory check before creating a job and returns the reason as a form error. The HTTP path was not exercised in a browser; the check itself was verified through the package API.
+- The form now clears the other source, exposes the remove action, restores the user's earlier profile and language choices without inferring anything from the browser, fills the current year (editable) and derives a project title from the source. This was typechecked and built but not clicked through in a browser.
+- Academic and technical PDFs were not re-rendered after replacing the signature TODOs with blank lines; visual confirmation is pending.
+
+## 2026-11-05 — Phase B: profile-scaled generation budget
+
+- `go build ./...`, `go vet` on the touched packages, the template check, the frontend typecheck and `git diff --check` passed.
+- A throwaway program printed the derived budgets: TZ 9 chapters / 30 admissions / 10m45s, PZ 3 / 18 / 6m15s, RO, PMI and PMI-team 4 / 20 / 7m, technical overview 4 / 20 / 7m.
+- The new database methods ran against the local development PostgreSQL on a temporary lease: `StartDraftBudget` set the deadline to +10 minutes, `ExtendDraftDeadline` moved it to +90 seconds, and a second `StartDraftBudget` after recorded attempts left the deadline unchanged. The job row and its draft run were restored afterwards.
+- Not verified: a live end-to-end generation run, the real coverage ordering with multiple chapters and providers, automatic continuation after an actual deadline, and the effect on prose quality. The pass scheduling was only reasoned through and compiled; it needs a run with real keys or the fixture provider.
+
+## 2026-11-05 — Phase E: Markdown contract and Typst rendering
+
+- A temporary in-package check (removed afterwards) exercised the parser with bold, emphasis, nested and ordered lists, a quote, an inline code span, an http link, a GFM pipe table and the literal characters `#`, `$`, `[` and `@`. Every expected rich kind was produced and all four literal sequences survived as text.
+- The same body was rendered through the real Typst 0.15.1 pipeline for the `ro` profile in Russian and English; both runs produced a PDF above 1 KB. The Russian pages were exported as PNG and inspected visually: bold, emphasis, both list kinds, the quote, the code span, the table header and cells rendered correctly, and the literal `#`, `$`, `[` and `@` appeared as ordinary characters.
+- A body containing a raw Typst line rendered as literal prose in the PDF, confirming that model text cannot become executable Typst.
+- `normalizeMarkdown` neutralized `#set …` and closed an unterminated code fence in isolation. Its effect on a live provider response was not exercised end to end; no provider was called during this check.
