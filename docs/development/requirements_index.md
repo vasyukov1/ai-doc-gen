@@ -28,3 +28,7 @@ Each requirement has a stable id, the user action it serves and the check that s
 ## Live quality follow-up
 
 [Q1–Q5: real-model quality, retained-project reuse, Catalan, client handover and stable reading](live-quality/plan.md) · [observations and limitations](live-quality/README.md).
+
+## Architecture handoff and proposed next work
+
+[Architecture, design tradeoffs, H1 acceptance map and portable agent assignment](architecture-handoff.md). This is a proposed roadmap; no later wave or milestone 8 is authorized by the document itself.
