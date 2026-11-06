@@ -14,7 +14,7 @@ import (
 )
 
 // The bearer secret stays in an HttpOnly cookie; only its digest is persisted.
-func ownerCookie(w http.ResponseWriter, r *http.Request, create bool) (string, error) {
+func (h *Handler) ownerCookie(w http.ResponseWriter, r *http.Request, create bool) (string, error) {
 	cookie, err := r.Cookie("job_owner")
 	value := ""
 	if err == nil {
@@ -30,7 +30,7 @@ func ownerCookie(w http.ResponseWriter, r *http.Request, create bool) (string, e
 			return "", err
 		}
 		value = hex.EncodeToString(raw)
-		http.SetCookie(w, &http.Cookie{Name: "job_owner", Value: value, Path: "/", MaxAge: 365 * 24 * 3600, HttpOnly: true, Secure: r.TLS != nil, SameSite: http.SameSiteStrictMode})
+		http.SetCookie(w, &http.Cookie{Name: "job_owner", Value: value, Path: "/", MaxAge: 365 * 24 * 3600, HttpOnly: true, Secure: h.cookieSecure || r.TLS != nil, SameSite: http.SameSiteStrictMode})
 	}
 	digest := sha256.Sum256([]byte(value))
 	return hex.EncodeToString(digest[:]), nil
@@ -79,7 +79,7 @@ func (h *Handler) authorize(next http.Handler) http.Handler {
 			w.Header().Set("Cache-Control", "private, no-store")
 			w.Header().Set("Referrer-Policy", "no-referrer")
 			id := strings.Split(strings.TrimPrefix(path, "/jobs/"), "/")[0]
-			owner, err := ownerCookie(w, r, false)
+			owner, err := h.ownerCookie(w, r, false)
 			if err != nil || !platform.ValidID(id) || !h.jobs.OwnsJob(r.Context(), id, owner) {
 				http.NotFound(w, r)
 				return
@@ -113,7 +113,7 @@ func (h *Handler) lifecycle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) listJobs(w http.ResponseWriter, r *http.Request) {
-	owner, err := ownerCookie(w, r, false)
+	owner, err := h.ownerCookie(w, r, false)
 	if err != nil {
 		owner = ""
 	}

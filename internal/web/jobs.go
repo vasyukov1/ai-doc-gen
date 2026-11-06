@@ -30,7 +30,7 @@ var errArchiveTooLarge = errors.New("ZIP archive is too large")
 var errArchiveInvalid = errors.New("file is not a ZIP archive")
 
 func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
-	owner, err := ownerCookie(w, r, true)
+	owner, err := h.ownerCookie(w, r, true)
 	if err != nil {
 		http.Error(w, "Could not create private session.", 503)
 		return

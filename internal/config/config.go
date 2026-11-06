@@ -15,6 +15,7 @@ import (
 type Config struct {
 	HTTPAddr, DatabaseURL, DataDir, UploadDir, SourceDir, StateDir, GitHubToken, LLMEncryptionKey string
 	Retention                                                                                     time.Duration
+	CookieSecure                                                                                  bool
 }
 
 func Load() (Config, error) {
@@ -72,7 +73,15 @@ func Load() (Config, error) {
 		}
 	}
 
-	return Config{HTTPAddr: addr, DatabaseURL: databaseURL, DataDir: root, UploadDir: uploadDir, SourceDir: sourceDir, StateDir: stateDir, GitHubToken: os.Getenv("GITHUB_TOKEN"), LLMEncryptionKey: os.Getenv("LLM_ENCRYPTION_KEY"), Retention: time.Duration(days) * 24 * time.Hour}, nil
+	cookieSecure := false
+	if value := os.Getenv("COOKIE_SECURE"); value != "" {
+		cookieSecure, err = strconv.ParseBool(value)
+		if err != nil {
+			return Config{}, errors.New("COOKIE_SECURE must be a boolean")
+		}
+	}
+
+	return Config{CookieSecure: cookieSecure, HTTPAddr: addr, DatabaseURL: databaseURL, DataDir: root, UploadDir: uploadDir, SourceDir: sourceDir, StateDir: stateDir, GitHubToken: os.Getenv("GITHUB_TOKEN"), LLMEncryptionKey: os.Getenv("LLM_ENCRYPTION_KEY"), Retention: time.Duration(days) * 24 * time.Hour}, nil
 }
 
 // EncryptionKey returns the AES master key for saved provider credentials.

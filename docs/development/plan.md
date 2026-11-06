@@ -1,6 +1,6 @@
 # Incremental implementation plan
 
-One numbered item equals one Codex implementation request. A future agent should receive the text of one item, read `../../AGENTS.md` and this directory, implement all its subitems, and report build plus manual smoke results. Do not combine adjacent items. The initial site is local; there is no deployment request.
+One numbered item equals one Codex implementation request. A future agent should receive the text of one item, read `../../AGENTS.md` and this directory, implement all its subitems, and report build plus manual smoke results. Do not combine adjacent items. The initial milestones targeted local use. The user authorized a separate Railway deployment increment on 2026-11-06; see [deployment-plan.md](deployment-plan.md). This does not start milestone 8.
 
 > Updated 2026-11-04: the website now collects title-page metadata, the specification, the model and the provider key in the initial form. File selection, evidence acceptance, drafting and Typst rendering run automatically; the evidence page is read-only. See [decisions.md](decisions.md).
 

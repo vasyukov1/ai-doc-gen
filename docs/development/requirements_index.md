@@ -32,3 +32,7 @@ Each requirement has a stable id, the user action it serves and the check that s
 ## Architecture handoff and proposed next work
 
 [Architecture, design tradeoffs, H1 acceptance map and portable agent assignment](architecture-handoff.md). This is a proposed roadmap; no later wave or milestone 8 is authorized by the document itself.
+
+## Railway deployment increment (2026-11-06)
+
+DEP1–DEP5: [plan and checks](deployment-plan.md), [operations](deployment.md). User-selected Railway topology; Google sign-in deferred. Public deployment acceptance is pending until observed remotely.

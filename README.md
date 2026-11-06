@@ -47,3 +47,7 @@ New jobs generate a source-linked baseline even without an API key. Optionally c
 The model stage ends 240 seconds after job acceptance and admits at most 12 API calls, including model discovery. Remaining baseline text is compiled into PDF with an explicit quality label. The five-minute target is for small projects; external availability, long downloads and queued work are not guaranteed. Drafts remain editable. Regenerating one section starts a new bounded pass only for that section.
 
 Run `make run` to build and migrate the local stack (migration 9). Existing jobs retain their original generation path. See [the current design](docs/development/local_model/plan.md) and [verification results](docs/development/verification.md). Live model quality and speed must be measured using a free account; fixture runs are not model benchmarks.
+
+## Deployment
+
+See [Railway operations](docs/development/deployment.md) for the supervised web/worker image, PostgreSQL, persistent storage and HTTPS configuration. Google sign-in remains deferred; browser ownership still applies.

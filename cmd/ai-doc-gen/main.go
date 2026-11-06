@@ -88,7 +88,7 @@ func run() error {
 }
 
 func serve(ctx context.Context, cfg config.Config, jobs *storage.Repository, encryptionKey string) error {
-	handler, err := web.NewHandler(jobs, cfg.UploadDir, encryptionKey, cfg.Retention)
+	handler, err := web.NewHandler(jobs, cfg.UploadDir, encryptionKey, cfg.Retention, cfg.CookieSecure)
 	if err != nil {
 		return err
 	}

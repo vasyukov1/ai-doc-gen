@@ -25,9 +25,10 @@ type Handler struct {
 	reusePage     *template.Template
 	encryptionKey string
 	retention     time.Duration
+	cookieSecure  bool
 }
 
-func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration) (http.Handler, error) {
+func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration, cookieSecure bool) (http.Handler, error) {
 	static, err := fs.Sub(webassets.FS, "static")
 	if err != nil {
 		return nil, fmt.Errorf("load static assets: %w", err)
@@ -55,6 +56,7 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 		reusePage:     pages["reuse.html"],
 		encryptionKey: encryptionKey,
 		retention:     retention,
+		cookieSecure:  cookieSecure,
 	}
 	mux := http.NewServeMux()
 

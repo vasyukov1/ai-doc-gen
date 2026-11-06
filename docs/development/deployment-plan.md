@@ -24,8 +24,8 @@ The launcher must fail closed on migration or child failure, forward termination
 
 - [x] Inspect attached files, application lifecycle and official Railway documentation.
 - [x] Confirm target and topology; defer Google login by user choice.
-- [ ] Implement DEP1–DEP3 and deployment instructions.
-- [ ] Run go build and isolated Docker smoke checks, without automated test files.
+- [x] Implement DEP1–DEP3 and deployment instructions.
+- [x] Run go build and isolated Docker smoke checks, without automated test files.
 - [ ] Review changes, commit and push task-owned paths.
 - [ ] Configure Railway PostgreSQL and persistent application service; check actual plan limits before chargeable actions.
 - [ ] Deploy, validate HTTPS and keyless document flow, record URL and limitations.
@@ -36,7 +36,7 @@ Migration failure must prevent serving. Either child exiting must stop its sibli
 
 ## Resume point
 
-Implementation pending. Railway GitHub authorization remains on screen. Next local command: `go build ./...`. Deployment requires successful account authorization and available resources; domain purchase is not authorized. Use a Railway domain initially.
+Implementation and local verification complete. Railway GitHub authorization remains on screen. Next local command: `git status --short`. Deployment requires successful account authorization and available resources; domain purchase is not authorized. Use a Railway domain initially.
 
 ## Sources
 
@@ -44,3 +44,17 @@ Implementation pending. Railway GitHub authorization remains on screen. Next loc
 - https://docs.railway.com/volumes
 - https://docs.railway.com/builds/dockerfiles
 - https://docs.railway.com/config-as-code/reference
+
+## Manual evidence (local, 2026-11-06)
+
+- `go build ./...`: exit 0.
+- Dedicated Docker image built successfully; hosted cache mounts removed after independent review.
+- Fresh isolated PostgreSQL and application volume: migrations reached version 11; `/readyz` returned `ready`; process listing showed separate app-owned web and worker children.
+- Invalid submission set HttpOnly, Secure, SameSite=Strict owner cookie.
+- Public `hse-coursework-docs` keyless run reached `completed/rendered`, 4/4 baseline sections, 0 model sections, explicit outline outcome. Downloaded PDF has 9 pages.
+- Container restart preserved owner access and PDF download. Key file is app-owned mode 600.
+- Sending SIGTERM to the worker stopped the container with exit 1; failed database startup also exited 1 without serving.
+- Independent review found incompatible hosted Docker cache mounts and STATE_DIR key-path inconsistency. Removed cache mounts and reject directory overrides. Final image rebuild exited 0; it served readiness and the identical retained PDF. SIGTERM stopped it with exit 0. Custom STATE_DIR was rejected.
+- First two manual submission attempts used incorrect metadata field names and were rejected with an actionable 400; corrected to metadata.project.
+
+Cloud deployment and remote checks are still pending GitHub authorization. Local evidence does not establish a published site.

@@ -230,7 +230,7 @@ func (h *Handler) createReusedJob(w http.ResponseWriter, r *http.Request) {
 		h.renderReuse(w, r, data, http.StatusConflict, "The retained source could not be copied. It may be missing or changed. Try again or submit the source again.")
 		return
 	}
-	owner, err := ownerCookie(w, r, false)
+	owner, err := h.ownerCookie(w, r, false)
 	if err != nil {
 		_ = os.RemoveAll(copied.Source.WorkspacePath)
 		_ = os.Remove(source.UploadPath)
