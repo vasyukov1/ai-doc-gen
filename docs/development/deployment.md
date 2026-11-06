@@ -1,5 +1,11 @@
 # Railway operations
 
+## Current deployment
+
+Public URL: https://ai-doc-gen-production.up.railway.app
+
+Verified 2026-11-06: cloud build and readiness passed; a public repository job completed and its PDF downloaded through the owner browser. Non-owner downloads return 404. This was a keyless infrastructure check, not a live-model quality evaluation. The service tracks `codex/railway-deploy`; GitHub pushes to that branch trigger deployment. The account is on Limited Trial; no paid subscription was activated. Keep local-only jobs and provider credentials local.
+
 ## Topology
 
 Configure the service in the Railway dashboard: one Docker service runs separate Go web and worker processes under tini, with a single persistent volume at `/data`. PostgreSQL runs as a separate private Railway service. Use one application replica. The existing `Dockerfile` and Docker Compose remain the local development path. `deploy/Railway.Dockerfile` pins the same Go, Alpine and Typst versions; update both images together.

@@ -35,4 +35,4 @@ Each requirement has a stable id, the user action it serves and the check that s
 
 ## Railway deployment increment (2026-11-06)
 
-DEP1–DEP5: [plan and checks](deployment-plan.md), [operations](deployment.md). User-selected Railway topology; Google sign-in deferred. Public deployment acceptance is pending until observed remotely.
+DEP1–DEP5: [plan and checks](deployment-plan.md), [operations](deployment.md). User-selected Railway topology; Google sign-in deferred. Public deployment acceptance was observed on 2026-11-06: HTTPS, database readiness, public-repository intake, worker rendering, owner PDF download and non-owner rejection. Live LLM calls on Railway remain unverified.
