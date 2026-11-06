@@ -23,7 +23,7 @@ Keep explicit local-storage opt-in and never persist keys or uploaded files. Mov
 - [x] Implement adaptive form and reuse controls.
 - [x] Build Go/frontend and manually walk laptop/mobile flows with fictional input, without model keys.
 - [x] Independent code review, record limitations, commit and push.
-- [ ] Integrate the verified change into the deployed branch and verify the published form.
+- [x] Integrate the verified change into the deployed branch and verify the published form.
 
 This increment does not start milestone 8 or alter generation semantics. Preserve unrelated tmp_example work. Findings from walkthroughs are simulated hypotheses, not real-user measurements.
 
@@ -36,3 +36,5 @@ Per-project libraries of metadata, account sync and Google login remain outside 
 Frontend typecheck/build, Go build, Docker image build and diff whitespace checks passed. Independent static review found no important issues. Browser smoke on isolated localhost:8086 confirmed hidden academic fields are disabled, values survive profile changes, academic requirements open upfront, progressive URL typing produces the complete title, and explicit titles survive source edits. Opt-in save survived reload; Start over cleared current fields without deleting the snapshot; Restore recovered author/title/group; Forget followed by reload left text blank. At 390×844 the document scroll width equalled the viewport width, with readable controls. No provider keys or generation calls were used.
 
 Credential/file exclusion was source-reviewed; file reattachment and browser-storage failure were not exercised interactively in this increment. This is a simulated walkthrough, not measured user research.
+
+Published verification: Railway served the updated form from commit 3fdb692. The HTTPS page showed Restore and linked author guidance; the technical-overview profile hid and disabled academic inputs. Local smoke container stopped after verification.
