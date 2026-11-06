@@ -40,20 +40,6 @@
                 <button type="button" class="button button--quiet" data-profile-choice="arc42">Architecture</button>
               </div>
             </div>
-            <div class="field">
-              <label for="repo">Public GitHub repository</label>
-              <p class="form-note">Source files are processed on this server. Connected cloud models receive selected source context. Use a sanitized project if your organization does not permit this.</p>
-              <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository">
-            </div>
-
-            <div class="divider"><span>or</span></div>
-
-            <label class="dropzone" for="archive">
-              <input class="sr-only" id="archive" name="archive" type="file" accept=".zip,application/zip" data-file-input>
-              <span class="dropzone__title" data-file-name>Drop a .zip here</span>
-              <span class="dropzone__hint">or click to choose · up to 100 MiB</span>
-            </label>
-
             <div class="form-row">
               <div class="field">
                 <label for="profile">Document type</label>
@@ -82,18 +68,46 @@
             <p class="form-note">Document output: English and Russian for every profile; Catalan for technical overview, client handover, SRS and arc42. The interface remains English/Russian.</p>
             <p class="callout" data-profile-guide aria-live="polite">Technical overview: a compact explanation of the implementation for a project handover.</p>
 
+            <div class="callout" data-draft-settings hidden>
+              <label class="checkbox"><input type="checkbox" data-remember-draft> Remember this form on this device / Запомнить форму</label>
+              <p class="form-note">Saves text, repository address and model IDs in this browser. Never saves API keys or attached files. Use only on your own device; reselect files after returning. New documents still need a key; existing documents retain their server-side connection until expiry.</p>
+              <div class="link-row">
+                <button type="button" class="button button--quiet" data-restore-draft>Restore saved form / Восстановить</button>
+                <button type="button" class="button button--quiet" data-reset-draft>Start over / Заполнить заново</button>
+                <button type="button" class="button button--quiet" data-forget-draft>Forget saved form / Удалить сохранённое</button>
+              </div>
+              <p class="form-note" data-draft-feedback role="status"></p>
+            </div>
+            <div class="field">
+              <h3>Project source / Исходники проекта</h3>
+              <label for="repo">Public GitHub repository</label>
+              <p id="repo-help" class="form-note">Paste the project repository URL, or choose one ZIP below. / Вставьте ссылку на репозиторий или выберите ZIP ниже. Source files are processed on this server. Connected cloud models receive selected source context. Use a sanitized project if your organization does not permit this.</p>
+              <input id="repo" name="github_url" type="url" placeholder="https://github.com/owner/repository" aria-describedby="repo-help">
+            </div>
+
+            <div class="divider"><span>or</span></div>
+
+            <label class="dropzone" for="archive">
+              <input class="sr-only" id="archive" name="archive" type="file" accept=".zip,application/zip" data-file-input>
+              <span class="dropzone__title" data-file-name>Drop a .zip here</span>
+              <span class="dropzone__hint">or click to choose · up to 100 MiB</span>
+            </label>
+
             <div class="field">
               <label for="project">Project title <span class="required">Required</span></label>
-              <input id="project" name="metadata.project" type="text" maxlength="600" required>
+              <input id="project" name="metadata.project" type="text" maxlength="600" required aria-describedby="project-help">
+              <p id="project-help" class="form-note">The name printed on the cover. Suggested from your repository; edit it if needed. / Название на титульном листе. Подставим из ссылки — его можно изменить.</p>
             </div>
 
             <div class="field">
               <label for="description">Short description <span class="optional">Optional</span></label>
-              <textarea id="description" name="description" rows="3" placeholder="What should the document focus on?"></textarea>
+              <textarea id="description" name="description" rows="3" aria-describedby="description-help" placeholder="What should the document focus on?"></textarea>
+              <p id="description-help" class="form-note" data-description-help></p>
             </div>
 
-            <details class="group">
-              <summary>Title page details <span class="optional">Optional</span></summary>
+            <details class="group" open>
+              <summary>Cover details / Данные титульного листа</summary>
+              <p class="form-note">These details appear on the cover. Unknown values can be left blank, but the PDF will mark missing details for review. / Эти данные попадут на титульный лист. Неизвестное можно оставить пустым — в PDF появятся отметки для проверки.</p>
               <div class="details-body">
                 <div class="form-row">
                   <div class="field"><label for="organization">Organization</label><input id="organization" name="metadata.organization" type="text" maxlength="600"></div>
@@ -119,13 +133,13 @@
               </div>
             </details>
 
-            <details class="group">
-              <summary>Technical specification <span class="required" data-spec-required>Required for academic documents</span></summary>
+            <details class="group" data-spec-group>
+              <summary><span data-spec-label>Technical specification</span> <span class="required" data-spec-required>Required for academic documents</span></summary>
               <div class="details-body">
-                <p class="form-note">Required for academic documents; optional for client handover, SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file. PDF and Typst imports are not supported: copy their readable text into the field below. / Из PDF или Typst скопируйте текст ТЗ в поле ниже.</p>
+                <p class="form-note" data-spec-help id="spec-help">Required for academic documents; optional for client handover, SRS, arc42 and technical overview. Paste text or attach a UTF-8 .txt or .md file. PDF and Typst imports are not supported: copy their readable text into the field below. / Из PDF или Typst скопируйте текст ТЗ в поле ниже.</p>
                 <div class="field">
                   <label for="specification">Specification text</label>
-                  <textarea id="specification" name="specification" rows="6" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>
+                  <textarea id="specification" name="specification" rows="6" aria-describedby="spec-help" placeholder="Purpose, required functions, constraints, acceptance criteria"></textarea>
                 </div>
                 <label class="dropzone" for="specification_file">
                   <input class="sr-only" id="specification_file" name="specification_file" type="file" accept=".txt,.md,text/plain,text/markdown" data-file-input>
@@ -204,12 +218,6 @@
               </div>
             </details>
 
-            <div class="callout" data-draft-settings hidden>
-              <label class="checkbox"><input type="checkbox" data-remember-draft> Remember this form on this device / Запомнить форму</label>
-              <p class="form-note">Saves text, repository address and model IDs in this browser. Never saves API keys or attached files. Use only on your own device; reselect files after returning. New documents still need a key; existing documents retain their server-side connection until expiry.</p>
-              <button type="button" class="button button--quiet" data-forget-draft>Forget saved form</button>
-              <p class="form-note" data-draft-feedback role="status"></p>
-            </div>
             <button class="button button--wide" type="submit" data-busy-label="Creating…">Create document</button>
             <p class="form-note">Files are uploaded to and processed on this server. With a model key, selected source context is also sent to that provider. Access is tied to this browser; clearing its cookies loses access. The expiry date is shown on each document.</p>
           </form>

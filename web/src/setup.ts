@@ -17,9 +17,15 @@ export function initSetup(): void {
   form.querySelector<HTMLElement>("[data-purpose-shortcuts]")!.hidden = false;
 
   const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY);
-    if (raw) {
+  let restoring = false;
+  const restore = () => {
+    restoring = true;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) {
+        feedback.textContent = "No saved form on this device. / Сохранённых данных нет.";
+        return;
+      }
       const values: unknown = JSON.parse(raw);
       if (!values || typeof values !== "object" || Array.isArray(values)) throw Error("Invalid draft");
       for (const [name, value] of Object.entries(values)) {
@@ -29,15 +35,19 @@ export function initSetup(): void {
         element.value = value;
         element.dispatchEvent(new Event("change", { bubbles: true }));
       }
+      form.dispatchEvent(new Event("change", { bubbles: true }));
       remember.checked = true;
-      feedback.textContent = "Saved form restored. Reselect attached files and enter a key to generate prose.";
+      feedback.textContent = "Saved text restored; you can edit every field. Files and keys stay unchanged. / Текст восстановлен, его можно изменить. Файлы и ключи не восстанавливаются.";
+    } catch {
+      feedback.textContent = "Saved form could not be restored. / Не удалось восстановить форму. Можно заполнить её заново.";
+    } finally {
+      restoring = false;
     }
-  } catch {
-    feedback.textContent = "Saved form could not be restored. You can still create a document.";
-  }
+  };
+  try { if (localStorage.getItem(DRAFT_KEY)) restore(); } catch { feedback.textContent = "Browser storage is unavailable. / Хранилище браузера недоступно."; }
 
   const save = () => {
-    if (!remember.checked) return;
+    if (!remember.checked || restoring) return;
     const values: Record<string, string> = {};
     for (const name of allowed) {
       const element = field(name);
@@ -61,6 +71,24 @@ export function initSetup(): void {
   };
   remember.addEventListener("change", () => remember.checked ? save() : forget());
   form.querySelector("[data-forget-draft]")!.addEventListener("click", forget);
+  form.querySelector("[data-restore-draft]")!.addEventListener("click", restore);
+  form.querySelector("[data-reset-draft]")!.addEventListener("click", () => {
+    remember.checked = false;
+    form.reset();
+    remember.checked = false;
+    for (const name of allowed) {
+      const element = field(name);
+      if (element && !(element instanceof HTMLSelectElement) && !name.endsWith("_model")) element.value = "";
+    }
+    field("metadata.year")!.value = String(new Date().getFullYear());
+    form.querySelectorAll<HTMLInputElement>("input[type=password], input[type=file]").forEach(input => { input.value = ""; });
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input[name], select[name], textarea[name]").forEach(input => {
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    form.querySelectorAll<HTMLElement>(".form-feedback").forEach(box => { box.hidden = true; });
+    feedback.textContent = "Current inputs cleared. Saved text remains available through Restore. / Поля очищены. Сохранённый текст можно восстановить кнопкой выше.";
+    field("profile_id")!.focus();
+  });
   form.addEventListener("input", save);
   form.addEventListener("change", save);
 
@@ -92,6 +120,7 @@ export function initSetup(): void {
       if (custom) input.focus();
     };
     picker.addEventListener("change", () => { update(); save(); });
+    input.addEventListener("change", () => { picker.value = input.value === preset ? preset : "custom"; input.hidden = picker.value !== "custom"; });
     input.hidden = picker.value !== "custom";
   });
 }

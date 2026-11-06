@@ -1,4 +1,4 @@
-import { initProfileGuidance } from "./profile";
+import { initProfileGuidance, initAdaptiveInputs } from "./profile";
 
 function reveal(element: HTMLElement): void {
   let parent = element.parentElement;
@@ -105,15 +105,17 @@ function initCreateDefaults(): void {
     year.value = String(new Date().getFullYear());
   }
 
+  let suggestedTitle = "";
   const suggest = (): void => {
-    if (!project || project.value.trim()) {
+    if (!project || (project.value.trim() && project.value !== suggestedTitle)) {
       return;
     }
     const name = repo?.value.trim()
       ? repo.value.trim().replace(/\/+$/, "").split("/").pop() ?? ""
       : (archive?.files?.[0]?.name ?? "").replace(/\.zip$/i, "");
     if (name) {
-      project.value = name.replace(/[-_]+/g, " ").trim();
+      suggestedTitle = name.replace(/[-_]+/g, " ").trim();
+      project.value = suggestedTitle;
     }
   };
   repo?.addEventListener("input", suggest);
@@ -200,7 +202,7 @@ function initBusyForms(): void {
       if (sending || !form.reportValidity()) return;
       if (create && !approved) {
         const names = ["author", "year", ...(academic() ? ["group", "supervisor", "supervisor_position", "approver", "approver_position", "code"] : ["organization"])];
-        const missing = names.filter(n => !field("metadata." + n)?.value.trim());
+        const missing = names.filter(n => { const input = field("metadata." + n); return input && !input.disabled && !input.value.trim(); });
         if (missing.length) {
           box.replaceChildren();
           const note = document.createElement("p");
@@ -295,6 +297,7 @@ function initConfirmations(): void {
 export function initForms(): void {
   initProfileGuidance();
   initCreateDefaults();
+  initAdaptiveInputs();
   initFileInputs();
   initBusyForms();
   initConfirmations();
