@@ -36,7 +36,7 @@ Migration failure must prevent serving. Either child exiting must stop its sibli
 
 ## Resume point
 
-Implementation and local verification complete. Railway GitHub authorization remains on screen. Next local command: `git status --short`. Deployment requires successful account authorization and available resources; domain purchase is not authorized. Use a Railway domain initially.
+Implementation and local verification complete. Railway authorization is complete; the cloud project and PostgreSQL exist, application configuration is staged. Next local command: `git status --short`. Deployment requires successful account authorization and available resources; domain purchase is not authorized. Use a Railway domain initially.
 
 ## Sources
 
@@ -57,4 +57,4 @@ Implementation and local verification complete. Railway GitHub authorization rem
 - Independent review found incompatible hosted Docker cache mounts and STATE_DIR key-path inconsistency. Removed cache mounts and reject directory overrides. Final image rebuild exited 0; it served readiness and the identical retained PDF. SIGTERM stopped it with exit 0. Custom STATE_DIR was rejected.
 - First two manual submission attempts used incorrect metadata field names and were rejected with an actionable 400; corrected to metadata.project.
 
-Cloud deployment and remote checks are still pending GitHub authorization. Local evidence does not establish a published site.
+Cloud deployment and remote checks remain pending. The connected service uses dashboard settings because new services cannot enable deprecated config-as-code. Local evidence does not establish a published site.

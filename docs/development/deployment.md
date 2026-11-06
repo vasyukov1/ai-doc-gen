@@ -2,14 +2,14 @@
 
 ## Topology
 
-Deploy the repository using `railway.toml`: one Docker service runs separate Go web and worker processes under tini, with a single persistent volume at `/data`. PostgreSQL runs as a separate private Railway service. Use one application replica. The existing `Dockerfile` and Docker Compose remain the local development path. `deploy/Railway.Dockerfile` pins the same Go, Alpine and Typst versions; update both images together.
+Configure the service in the Railway dashboard: one Docker service runs separate Go web and worker processes under tini, with a single persistent volume at `/data`. PostgreSQL runs as a separate private Railway service. Use one application replica. The existing `Dockerfile` and Docker Compose remain the local development path. `deploy/Railway.Dockerfile` pins the same Go, Alpine and Typst versions; update both images together.
 
 The attached Streamlit tutorial supplies platform concepts only. No Python demo or Streamlit authentication has been imported. Google login is deferred by user choice. Documents remain owned by their browser cookie: losing that cookie loses access. This initial deployment is not the final security/testing milestone.
 
 ## Service setup
 
 1. Create a Railway project and PostgreSQL service. Do not expose PostgreSQL publicly.
-2. Connect `vasyukov1/ai-doc-gen` at the reviewed deployment revision. Root is `/`. Railway reads `railway.toml` and builds `deploy/Railway.Dockerfile`; leave the start-command override empty.
+2. Connect `vasyukov1/ai-doc-gen` at the reviewed deployment revision. Root is `/`. Select Dockerfile builder and set Dockerfile Path to `deploy/Railway.Dockerfile`. Set healthcheck to `/readyz`, restart policy to On Failure with 10 retries, and leave the start-command override empty. New Railway services cannot opt into the deprecated config-as-code format; no railway.toml is required.
 3. Attach a persistent volume to the application at `/data`. Keep one replica and disable sleeping/serverless behavior because the worker must run without HTTP traffic.
 4. Set `DATABASE_URL` to Railway's reference to the PostgreSQL private connection URL, normally `${{Postgres.DATABASE_URL}}` (use the actual service name).
 5. Set `DATA_DIR=/data`, `COOKIE_SECURE=true`, `RETENTION_DAYS=7`. Leave `UPLOAD_DIR`, `SOURCE_DIR` and `STATE_DIR` unset: the launcher rejects overrides to keep key initialization and volume ownership consistent. Railway supplies `PORT`. The launcher maps it to `HTTP_ADDR` unless explicitly set.
