@@ -45,3 +45,7 @@ The stricter schema binds citations to the actual fitted source pack and section
 ### Live schema compatibility correction — 2026-11-09
 
 Production attempt 241b7239-2733-4a7c-87b8-e3f0cc7e56ae was rejected before drafting (HTTP 400). A minimal real Gemini probe reproduced the rejection with nested table array bounds and succeeded with those bounds removed, preserving section/citation enums. Remove nested array bounds from the provider schema; keep exact IDs, prompt limits and existing server-side table validation. This corrects SP3 rather than adding scope. Mock transport acceptance alone was insufficient evidence of provider compatibility. Private probe reports preserve both results.
+
+### Single table representation
+
+The corrected-schema raw run still duplicated pz-22 tables and rejected pz-15 for row width mismatch. SP3 now requests Markdown-only tables in body and omits the structured tables property from new model response schemas; legacy stored tables remain supported. Validate with real section regeneration and inspect the resulting PDF. This supersedes the earlier schema table-bound approach.

@@ -273,3 +273,7 @@ Schema reference checked: https://ai.google.dev/gemini-api/docs/generate-content
 ### 2026-11-09: Keep table bounds in validation, not constrained decoding
 
 A real Gemini 3.5 Flash-Lite request rejected the nested bounded table schema with HTTP 400; the same minimal schema without array bounds succeeded. Retain scoped identifier enums, enforce table dimensions in existing decoded-output validation, and describe limits in the prompt. Provider-specific schema compilation is an additional acceptance boundary beyond Go or transport smoke checks.
+
+### 2026-11-09: One table representation in new model output
+
+The production retry still duplicated a table in Markdown and structured fields, and a different section was rejected for unequal structured row widths. New chapter responses use Markdown tables in body only; the constrained schema no longer requests a second tables field. Existing stored structured tables, their validation, and rendering remain supported. The prompt/cache version advances to chapters-10. This reduces competing representations and allows table edits in the existing prose editor. It does not correct unsupported comparison claims; source review remains necessary.
