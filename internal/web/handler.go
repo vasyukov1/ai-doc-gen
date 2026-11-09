@@ -13,22 +13,23 @@ import (
 )
 
 type Handler struct {
-	jobs          *storage.Repository
-	uploadDir     string
-	indexPage     *template.Template
-	jobPage       *template.Template
-	jobsPage      *template.Template
-	filePage      *template.Template
-	evidencePage  *template.Template
-	documentPage  *template.Template
-	sectionsPage  *template.Template
-	reusePage     *template.Template
-	encryptionKey string
-	retention     time.Duration
-	cookieSecure  bool
+	jobs              *storage.Repository
+	uploadDir         string
+	indexPage         *template.Template
+	jobPage           *template.Template
+	jobsPage          *template.Template
+	filePage          *template.Template
+	evidencePage      *template.Template
+	documentPage      *template.Template
+	sectionsPage      *template.Template
+	reusePage         *template.Template
+	encryptionKey     string
+	retention         time.Duration
+	cookieSecure      bool
+	localModelEnabled bool
 }
 
-func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration, cookieSecure bool) (http.Handler, error) {
+func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, retention time.Duration, cookieSecure, localModelEnabled bool) (http.Handler, error) {
 	static, err := fs.Sub(webassets.FS, "static")
 	if err != nil {
 		return nil, fmt.Errorf("load static assets: %w", err)
@@ -44,19 +45,20 @@ func NewHandler(jobs *storage.Repository, uploadDir, encryptionKey string, reten
 	}
 
 	handler := &Handler{
-		jobs:          jobs,
-		uploadDir:     uploadDir,
-		indexPage:     pages["index.html"],
-		jobPage:       pages["job.html"],
-		jobsPage:      pages["jobs.html"],
-		filePage:      pages["files.html"],
-		evidencePage:  pages["evidence.html"],
-		documentPage:  pages["document.html"],
-		sectionsPage:  pages["sections.html"],
-		reusePage:     pages["reuse.html"],
-		encryptionKey: encryptionKey,
-		retention:     retention,
-		cookieSecure:  cookieSecure,
+		jobs:              jobs,
+		uploadDir:         uploadDir,
+		indexPage:         pages["index.html"],
+		jobPage:           pages["job.html"],
+		jobsPage:          pages["jobs.html"],
+		filePage:          pages["files.html"],
+		evidencePage:      pages["evidence.html"],
+		documentPage:      pages["document.html"],
+		sectionsPage:      pages["sections.html"],
+		reusePage:         pages["reuse.html"],
+		encryptionKey:     encryptionKey,
+		retention:         retention,
+		cookieSecure:      cookieSecure,
+		localModelEnabled: localModelEnabled,
 	}
 	mux := http.NewServeMux()
 
@@ -120,7 +122,7 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := h.indexPage.Execute(w, nil); err != nil {
+	if err := h.indexPage.Execute(w, struct{ LocalModelEnabled bool }{h.localModelEnabled}); err != nil {
 		log.Printf("render home: %v", err)
 	}
 }

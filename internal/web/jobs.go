@@ -83,9 +83,29 @@ func (h *Handler) createJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	connections, err := connectionsFromForm(r)
-	if err != nil {
-		writeFormError(w, r, 400, err.Error())
+	var connections []domain.Connection
+	if r.FormValue("generation_intent") != "outline" {
+		connections, err = connectionsFromForm(r)
+		if err != nil {
+			writeFormError(w, r, 400, err.Error())
+			return
+		}
+	}
+	if r.FormValue("local_enabled") == "yes" && !h.localModelEnabled {
+		writeFormError(w, r, 400, "Local inference is not configured on this server. Choose a hosted provider.")
+		return
+	}
+	switch r.FormValue("generation_intent") {
+	case "prose":
+		if len(connections) == 0 {
+			writeFormError(w, r, 400, "Connect a model to generate text, or explicitly choose Outline only. / Подключите модель или выберите только структуру.")
+			return
+		}
+	case "outline":
+		connections = nil
+	case "": // Preserve existing API clients that predate the explicit intent control.
+	default:
+		writeFormError(w, r, 400, "Choose document text or outline.")
 		return
 	}
 	// The current form always uses the free draft pipeline. Legacy stored jobs keep their adapter.

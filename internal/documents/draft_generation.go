@@ -283,6 +283,15 @@ func (w *Worker) buildDraft(ctx context.Context, claim *pgqueue.Claim, evidence 
 							}
 							if p, ok := adapter.(*ChatProvider); ok {
 								p.MaxTokens = outputTokens
+								p.SectionIDs = ids
+								p.CitationIDs = nil
+								seen := map[string]bool{}
+								for _, fact := range append(append([]domain.Fact{}, fitted.Sources...), fitted.Brief.Context...) {
+									if !seen[fact.ID] {
+										p.CitationIDs = append(p.CitationIDs, fact.ID)
+										seen[fact.ID] = true
+									}
+								}
 							}
 							reservedTokens := estimateTokens(prompt) + outputTokens + 128
 							limited := connection

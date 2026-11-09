@@ -7,6 +7,8 @@ type JobSnapshot = {
   status: string;
   total_sections: number;
   model_sections: number;
+  free_draft: boolean;
+  content: { available: number; baseline: number };
   recovery_pending: boolean;
 };
 
@@ -110,14 +112,14 @@ export function initJobPolling(): void {
 
     setText('[data-field="message"]', job.latest_message);
 
-    const done = job.completed_sections;
+    const done = job.free_draft ? Math.max(0, job.content.available - job.content.baseline) : job.completed_sections;
     const total = job.total_sections;
-    const percent = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
+    const percent = total > 0 ? Math.min(100, Math.floor((done / total) * 100)) : 0;
 
-    setText('[data-field="count"]', `${done} of ${total} sections available`);
+    setText('[data-field="count"]', `${done} of ${total} sections drafted / разделов с текстом`);
     setText('[data-field="percent"]', total > 0 ? `${percent}%` : "Planning sections");
     setText('[data-field="model-count"]', `${job.model_sections ?? 0} improved by a model.`);
-    setText('[data-field="assembly-note"]', `${done} of ${total} sections available`);
+    setText('[data-field="assembly-note"]', `${done} of ${total} sections drafted / разделов с текстом`);
 
     const bar = document.querySelector<HTMLElement>('[data-field="progress"]');
     if (bar) {

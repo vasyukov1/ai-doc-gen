@@ -33,3 +33,11 @@ Approach: correct the existing form/status/prompt contracts rather than build a 
 UX findings are hypotheses, not user population measurements. Model sections and words measure coverage, not truth. Provider-reported token usage is not total billing. Separate raw output from editorial delivery; preserve failed attempts in the evidence report. Unknown approvals, runtime measurements and benchmarks remain explicit limitations. Do not claim general superiority to coding agents.
 
 Resume: inspect production job e1126a09-85f3-432a-859c-e29eed88b7bf in the owned browser, then audit its saved sections. Command for source status: `git status --short`.
+
+## Resume verification — 2026-11-09
+
+The interrupted baseline completed with 14 model leaves, 3 baselines and 17 recorded gap entries. The report recorded 35,032 input and 8,417 output tokens across 10 calls including discovery/failures. These are observed provider reports, not billed totals. Baseline PDF and raw sections/report were retained privately. Source audit found repeated introduction, unsupported document-type/standards wording, a fallback bundling path described as the whole algorithm, unnecessary completion requests and duplicated table representations.
+
+The independent reviewer found an accidental diagnostics JSON-tag regression in the new schema delta. It was corrected before deployment; a disposable HTTP transport smoke confirmed `json_schema` remains a boolean, scoped enums reach the payload and table limits match the validator. Go build, TypeScript checking/build and Docker build passed. Local browser checks confirmed missing-key prose blocking, explicit outline disabling keys, no unconfigured local option, and model preset restoration after reload. No automated suites were added.
+
+The stricter schema binds citations to the actual fitted source pack and section IDs to the requested leaves. This prevents malformed identifiers, not factual hallucinations. Fresh model acceptance remains to be checked on production.

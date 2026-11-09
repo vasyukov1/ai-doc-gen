@@ -40,14 +40,14 @@
         <section class="card">
           <div class="card__body stack">
             <div class="status-line">
-              <span class="status-line__count" data-field="count">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections available</span>
-              <span class="status-line__count" data-field="percent">{{pct .Job.CompletedSections .Job.TotalSections}}%</span>
+              <span class="status-line__count" data-field="count">{{writtenSections .Job}} of {{.Job.TotalSections}} sections drafted / разделов с текстом</span>
+              <span class="status-line__count" data-field="percent">{{pct (writtenSections .Job) .Job.TotalSections}}%</span>
             </div>
-            <p class="form-note">Availability of sections, not a content-quality score. <span data-field="model-count">{{.Job.ModelSections}} improved by a model.</span></p>
+            <p class="form-note">Drafted text, excluding outlines; this is not a content-quality score. <span data-field="model-count">{{.Job.ModelSections}} improved by a model.</span></p>
             <p><a class="button button--quiet" href="/jobs/{{.Job.ID}}/sections">Read available sections / Открыть промежуточный текст</a></p>
             <p class="form-note">Sections are saved as generation proceeds. You can read them before the PDF is compiled.</p>
-            <div class="progress" aria-label="Section availability" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct .Job.CompletedSections .Job.TotalSections}}" data-field="progress">
-              <div class="progress__fill" style="--progress: {{pct .Job.CompletedSections .Job.TotalSections}}%"></div>
+            <div class="progress" aria-label="Sections with drafted text" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct (writtenSections .Job) .Job.TotalSections}}" data-field="progress">
+              <div class="progress__fill" style="--progress: {{pct (writtenSections .Job) .Job.TotalSections}}%"></div>
             </div>
 
             {{if .Job.RequiredAction}}<p class="callout callout--warn">Action needed: {{.Job.RequiredAction}}</p>{{end}}
@@ -125,8 +125,8 @@
           <div class="card__body">
             <h2>{{if eq .Job.Status "completed"}}PDF compiled{{else}}Draft in progress{{end}}</h2>
             <span class="assembly-palette" aria-hidden="true"></span>
-            <canvas class="assembly-canvas" data-assembly data-status="{{.Job.Status}}" data-stage="{{.Job.Stage}}" data-completed="{{.Job.CompletedSections}}" data-total="{{.Job.TotalSections}}" aria-hidden="true"></canvas>
-            <p class="form-note" data-field="assembly-note">{{.Job.CompletedSections}} of {{.Job.TotalSections}} sections</p>
+            <canvas class="assembly-canvas" data-assembly data-status="{{.Job.Status}}" data-stage="{{.Job.Stage}}" data-completed="{{writtenSections .Job}}" data-total="{{.Job.TotalSections}}" aria-hidden="true"></canvas>
+            <p class="form-note" data-field="assembly-note">{{writtenSections .Job}} of {{.Job.TotalSections}} sections drafted</p>
           </div>
         </section>
         {{end}}

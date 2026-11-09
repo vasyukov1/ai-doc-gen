@@ -23,7 +23,7 @@ export function initUsage(): void {
       const output = calls.reduce((sum, call) => sum + call.output_tokens, 0);
       const models = [...new Set(calls.map(call => `${call.provider} / ${call.model}`))];
       summary.textContent = calls.length
-        ? `${input.toLocaleString()} input tokens · ${output.toLocaleString()} output tokens · ${calls.length} recorded calls (including discovery and failures). ${models.join(", ")}. Snapshot refreshed now.${calls.length === 100 ? " Showing the first 100 calls only; totals may be incomplete." : ""}`
+        ? `${input.toLocaleString()} input tokens · ${output.toLocaleString()} output tokens · ${calls.length} recorded calls (including discovery and failures). ${models.join(", ")}. Snapshot at ${new Date().toLocaleTimeString()}; refresh for current usage.${calls.length === 100 ? " Showing the first 100 calls only; totals may be incomplete." : ""}`
         : "No provider calls recorded yet. No model-generated prose has been measured in this report.";
     } catch {
       summary.textContent = "Usage could not be refreshed; totals are unavailable. Retry or open the generation report.";

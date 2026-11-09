@@ -31,6 +31,7 @@ services:
     pull_policy: never
     command: serve
     environment:
+      LOCAL_LLM_ENDPOINT: ${LOCAL_LLM_ENDPOINT:-http://ollama:11434/v1/chat/completions}
       DATABASE_URL: postgres://ai_doc_gen:local_dev_only@postgres:5432/ai_doc_gen?sslmode=disable
       LLM_ENCRYPTION_KEY: ${LLM_ENCRYPTION_KEY:-}
       DATA_DIR: /data

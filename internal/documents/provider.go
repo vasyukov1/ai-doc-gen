@@ -56,6 +56,8 @@ type CallDiagnostics struct {
 
 type ChatProvider struct {
 	Schema      bool
+	SectionIDs  []string
+	CitationIDs []string
 	Diagnostics CallDiagnostics
 	Endpoint    string
 	Model       string
@@ -95,7 +97,7 @@ func (p *ChatProvider) Generate(ctx context.Context, prompt string) (string, dom
 		payloadData["extra_body"] = map[string]any{"google": map[string]any{"thinking_config": map[string]any{"thinking_budget": 512}}}
 	}
 	if p.Schema {
-		payloadData["response_format"] = chapterResponseFormat()
+		payloadData["response_format"] = chapterResponseFormat(p.SectionIDs, p.CitationIDs)
 	}
 	if p.FreeOnly {
 		payloadData["provider"] = map[string]any{"max_price": map[string]int{"prompt": 0, "completion": 0}, "require_parameters": true}

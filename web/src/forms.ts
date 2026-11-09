@@ -161,6 +161,19 @@ function initBusyForms(): void {
     let sending = false;
     const academic = () => ["tz", "pz", "ro", "pmi", "pmi-team"].includes(field("profile_id")?.value ?? form.dataset.profile ?? "");
     const update = () => {
+      const intent = field("generation_intent") as HTMLSelectElement | null;
+      if (intent) {
+        const prose = intent.value === "prose";
+        const fields = form.querySelector<HTMLElement>("[data-provider-fields]");
+        fields?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select").forEach(input => { input.disabled = !prose; });
+        if (fields) fields.hidden = !prose;
+        const connected = ["gemini", "groq", "openrouter"].some(provider => field(`${provider}_key`)?.value.trim())
+          || (field("local_enabled") as HTMLInputElement | null)?.checked;
+        intent.setCustomValidity(prose && !connected ? "Подключите модель ниже или выберите «Только структура». / Connect a model below or choose Outline only." : "");
+        const badge = form.querySelector<HTMLElement>("[data-model-required]");
+        if (badge) badge.textContent = prose ? "Required for text / Нужна для текста" : "Not used for an outline / Для структуры не нужна";
+        if (prose) form.querySelector<HTMLDetailsElement>("[data-generation-model]")!.open = true;
+      }
       const spec = field("specification");
       const file = field("specification_file") as HTMLInputElement | null;
       const structuredValues = ["purpose", "functions", "constraints", "acceptance"].map(n => field("spec." + n)?.value.trim() ?? "");

@@ -21,7 +21,7 @@ type sectionOutput struct {
 	Missing   []string               `json:"missing_information"`
 }
 
-const DraftVersion = "chapters-8"
+const DraftVersion = "chapters-9"
 
 func clipText(value string, limit int) string {
 	if limit <= 0 {

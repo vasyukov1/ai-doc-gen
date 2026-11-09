@@ -258,3 +258,14 @@ Railway dashboard verification on 2026-11-06 showed config-as-code is unavailabl
 ## 2026-11-06 — Guided creation inputs
 
 The user requested less repetitive setup and guidance beside relevant fields. Put type/language before source and cover details; use profile-specific hints and disable hidden academic metadata so it cannot be submitted accidentally. Preserve those values when switching back. Neutral profiles retain optional source requirements because these can improve generation. Keep browser text persistence explicit and local: Restore recovers the snapshot, Start over clears current fields while pausing autosave, and Forget deletes saved text. Keys/files never enter the snapshot. This changes form presentation only, not generation semantics or milestone timing. See guided-form-plan.md for the four requirement/action/check entries and verification limits.
+
+
+## 2026-11-06 — Production student walkthrough
+
+The user authorized a new production PZ with an existing Gemini connection, explicitly including transfer to Railway. A fictional demonstration assignment is not an approved university specification. The bounded four-change plan is production-pz/plan.md. Initial production calls exposed invalid source-ID prefixes and more tables than the validator accepts; the schema now carries the existing table dimension limits and the prompt explicitly preserves IDs. Chapter prompt version 9 invalidates older generated caches. Profile guidance narrows overlapping introductory leaves and distinguishes entry-based bundling from fallback directory collection. Genuine missing approvals and measurements are never invented; an explicitly absent demonstration approval can be reported as a limitation rather than a completion instruction.
+
+Creation now asks for document text (default) or an outline explicitly. Prose requires a connected provider in frontend and backend validation; legacy API submissions without the intent field remain compatible. Gemini 3.5 Flash-Lite is selectable by default, with other supported IDs and custom entry retained; availability remains account-dependent and is checked by the worker. Local-model controls require an explicitly configured LOCAL_LLM_ENDPOINT on the web process; Compose passes its existing worker endpoint to web, Railway has none. Existing retained jobs are unchanged.
+
+Progress counts saved non-baseline sections, including edits, instead of initialized outlines. It measures drafting coverage, not factual quality or PDF readiness. Usage shows a real snapshot time rather than a permanently stale “now”.
+
+Schema reference checked: https://ai.google.dev/gemini-api/docs/generate-content/structured-output lists minItems/maxItems; runtime validation remains authoritative. Automated suites remain deferred to milestone 8.

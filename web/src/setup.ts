@@ -1,7 +1,7 @@
 // Explicit opt-in only: credentials, confirmations and uploaded files never enter storage.
 const DRAFT_KEY = "doc-gen.creation-draft.v1";
 const allowed = new Set([
-  "github_url", "description", "specification", "profile_id", "language",
+  "generation_intent", "github_url", "description", "specification", "profile_id", "language",
   "metadata.project", "metadata.organization", "metadata.faculty", "metadata.program",
   "metadata.group", "metadata.author", "metadata.supervisor", "metadata.supervisor_position",
   "metadata.approver", "metadata.approver_position", "metadata.year", "metadata.code",
@@ -107,8 +107,13 @@ export function initSetup(): void {
     const picker = document.createElement("select");
     picker.id = `${input.id}_picker`;
     picker.add(new Option(input.dataset.modelLabel!, preset));
+    for (const entry of (input.dataset.modelOptions ?? "").split(";")) {
+      const [id, title] = entry.split("|");
+      if (id && title) picker.add(new Option(title, id));
+    }
+    const isPreset = (value: string) => Array.from(picker.options).some(option => option.value === value && value !== "custom");
     picker.add(new Option("Other model — enter ID / Другая модель", "custom"));
-    picker.value = input.value === preset ? preset : "custom";
+    picker.value = isPreset(input.value) ? input.value : "custom";
     label.htmlFor = picker.id;
     label.textContent = "Model / Модель";
     container.insertBefore(picker, input);
@@ -120,7 +125,7 @@ export function initSetup(): void {
       if (custom) input.focus();
     };
     picker.addEventListener("change", () => { update(); save(); });
-    input.addEventListener("change", () => { picker.value = input.value === preset ? preset : "custom"; input.hidden = picker.value !== "custom"; });
+    input.addEventListener("change", () => { picker.value = isPreset(input.value) ? input.value : "custom"; input.hidden = picker.value !== "custom"; });
     input.hidden = picker.value !== "custom";
   });
 }

@@ -68,6 +68,15 @@
             <p class="form-note">Document output: English and Russian for every profile; Catalan for technical overview, client handover, SRS and arc42. The interface remains English/Russian.</p>
             <p class="callout" data-profile-guide aria-live="polite">Technical overview: a compact explanation of the implementation for a project handover.</p>
 
+            <div class="field">
+              <label for="generation_intent">Result / Результат</label>
+              <select id="generation_intent" name="generation_intent">
+                <option value="prose">Generate document text / Сгенерировать текст документа</option>
+                <option value="outline">Outline only, without AI / Только структура, без ИИ</option>
+              </select>
+              <p class="form-note">For document text, connect a model below. An outline contains placeholders and is not a finished document. / Для текста подключите модель ниже. Структура содержит заготовки, а не готовый документ.</p>
+            </div>
+
             <div class="callout" data-draft-settings hidden>
               <label class="checkbox"><input type="checkbox" data-remember-draft> Remember this form on this device / Запомнить форму</label>
               <p class="form-note">Saves text, repository address and model IDs in this browser. Never saves API keys or attached files. Use only on your own device; reselect files after returning. New documents still need a key; existing documents retain their server-side connection until expiry.</p>
@@ -149,17 +158,17 @@
               </div>
             </details>
 
-            <details class="group">
-              <summary>Model keys <span class="optional">Optional</span></summary>
+            <details class="group" data-generation-model open>
+              <summary>Generation model / Модель генерации <span data-model-required>Required for text / Нужна для текста</span></summary>
               <div class="details-body">
                 <p class="form-note">Without a connected model you get an outline, source facts and TODOs, not finished prose. / Без модели — структура, факты из кода и TODO, а не готовый текст. Connect one provider to generate prose. Separate several keys with commas or new lines: each key gets its own free-tier window. Keys are encrypted on this server.</p>
                 <input type="hidden" name="generation_mode" value="free">
 
-                <div class="providers">
+                <div class="providers" data-provider-fields>
                   <fieldset class="provider">
                     <legend>Gemini</legend>
                     <div class="field"><label for="gemini_key">API key or keys</label><input id="gemini_key" name="gemini_key" type="password" autocomplete="off" maxlength="1000"></div>
-                    <div class="field" data-model-picker><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" value="gemini-2.5-flash" maxlength="150" data-model-label="Gemini 2.5 Flash"></div>
+                    <div class="field" data-model-picker><label for="gemini_model">Model ID</label><input id="gemini_model" name="gemini_model" value="gemini-3.5-flash-lite" maxlength="150" data-model-label="Gemini 3.5 Flash-Lite" data-model-options="gemini-2.5-flash|Gemini 2.5 Flash;gemini-3.8-flash|Gemini 3.8 Flash"></div>
                     <p class="form-note"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Get an API key</a> · <a href="https://ai.google.dev/gemini-api/docs/api-key" target="_blank" rel="noopener noreferrer">Provider instructions</a>. Sign in, create a key, paste it above, then confirm your free account below. Availability and limits depend on your account; the worker checks the model before generation.</p>
                     <label class="checkbox"><input type="checkbox" name="gemini_free" value="yes"> This project has no billing enabled.</label>
                     <details>
@@ -201,6 +210,7 @@
                     </details>
                   </fieldset>
 
+                  {{if .LocalModelEnabled}}
                   <fieldset class="provider">
                     <legend>Local model</legend>
                     <label class="checkbox"><input type="checkbox" name="local_enabled" value="yes"> Run a model in this Docker setup without an API key.</label>
@@ -214,6 +224,7 @@
                       <p class="form-note">Run <code>make models</code> once and keep the Ollama service running. CPU-only generation is slow and produces weaker prose than hosted models.</p>
                     </details>
                   </fieldset>
+                  {{end}}
                 </div>
               </div>
             </details>

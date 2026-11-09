@@ -16,6 +16,7 @@ type Config struct {
 	HTTPAddr, DatabaseURL, DataDir, UploadDir, SourceDir, StateDir, GitHubToken, LLMEncryptionKey string
 	Retention                                                                                     time.Duration
 	CookieSecure                                                                                  bool
+	LocalModelEnabled                                                                             bool
 }
 
 func Load() (Config, error) {
@@ -81,7 +82,7 @@ func Load() (Config, error) {
 		}
 	}
 
-	return Config{CookieSecure: cookieSecure, HTTPAddr: addr, DatabaseURL: databaseURL, DataDir: root, UploadDir: uploadDir, SourceDir: sourceDir, StateDir: stateDir, GitHubToken: os.Getenv("GITHUB_TOKEN"), LLMEncryptionKey: os.Getenv("LLM_ENCRYPTION_KEY"), Retention: time.Duration(days) * 24 * time.Hour}, nil
+	return Config{LocalModelEnabled: strings.TrimSpace(os.Getenv("LOCAL_LLM_ENDPOINT")) != "", CookieSecure: cookieSecure, HTTPAddr: addr, DatabaseURL: databaseURL, DataDir: root, UploadDir: uploadDir, SourceDir: sourceDir, StateDir: stateDir, GitHubToken: os.Getenv("GITHUB_TOKEN"), LLMEncryptionKey: os.Getenv("LLM_ENCRYPTION_KEY"), Retention: time.Duration(days) * 24 * time.Hour}, nil
 }
 
 // EncryptionKey returns the AES master key for saved provider credentials.

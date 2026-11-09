@@ -18,7 +18,8 @@
       "level": 2,
       "ru": "Наименование программы",
       "en": "Program name",
-      "draft": true
+      "draft": true,
+      "guidance": "State the supplied program name and one sentence identifying its purpose. Leave detailed features and workflow to their own sections."
     },
     {
       "id": "pz-03",
@@ -40,21 +41,24 @@
       "level": 2,
       "ru": "Функциональное назначение",
       "en": "Functional purpose",
-      "draft": true
+      "draft": true,
+      "guidance": "Describe implemented user capabilities only, checking the actual CLI dispatcher or API contract. Output template existence does not mean the generator accepts that document type. Do not repeat operational purpose or the application-area section."
     },
     {
       "id": "pz-06",
       "level": 2,
       "ru": "Эксплуатационное назначение",
       "en": "Operational purpose",
-      "draft": true
+      "draft": true,
+      "guidance": "Describe who operates the software, the local or hosted environment, required connectivity and the operator responsibilities. Do not demand measured hardware minima or repeat the full command list here."
     },
     {
       "id": "pz-07",
       "level": 2,
       "ru": "Краткая характеристика области применения программы",
       "en": "Brief description of the application area",
-      "draft": true
+      "draft": true,
+      "guidance": "Explain the application domain and a concrete use case. Do not claim verified compliance with university or national standards, or infer features from bundled output templates. Do not request market measurements to describe the application domain."
     },
     {
       "id": "pz-08",
@@ -73,7 +77,7 @@
     {
       "id": "pz-10",
       "level": 2,
-      "ru": "Описание и обоснование выбора состава технических и программных средст",
+      "ru": "Описание и обоснование выбора состава технических и программных средств",
       "en": "Description and rationale of hardware and software selection",
       "draft": false
     },
@@ -122,7 +126,7 @@
       "ru": "Обоснование выбора метода организации входных и выходных данных",
       "en": "Rationale for input and output organization",
       "draft": true,
-      "guidance": "Explain actual input/configuration loading and output writing/compilation paths. Distinguish generated section files, optional bundled files and final artifacts. Do not infer filename suffixes or assume the application never invokes its external compiler."
+      "guidance": "Trace actual configuration loading and generated output paths. For source bundling, distinguish entry-file include expansion from a fallback directory walk; never present one branch as the whole algorithm. Identify concrete filenames and directories only when supplied. Describe rationale separately from observed behavior."
     },
     {
       "id": "pz-17",
@@ -167,7 +171,8 @@
       "level": 1,
       "ru": "ПРИЛОЖЕНИЕ 2. ССЫЛКИ НА АНАЛОГИ",
       "en": "Appendix 2. Links to comparable products",
-      "draft": true
+      "draft": true,
+      "guidance": "If no evaluated named alternatives are supplied, say so and give a useful comparison methodology. Do not invent competitor names, capabilities or URLs, and do not assume analogues require formal approval. A proposed comparison is a valid section when explicitly labelled; do not add a generic TODO."
     },
     {
       "id": "pz-23",

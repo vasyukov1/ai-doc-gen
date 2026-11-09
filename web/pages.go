@@ -5,6 +5,8 @@ import (
 	"embed"
 	"fmt"
 	"html/template"
+
+	"github.com/vasyukov1/ai-doc-gen/internal/domain"
 )
 
 //go:embed templates/*.html
@@ -28,12 +30,21 @@ func Page(name string) (*template.Template, error) {
 
 func funcs() template.FuncMap {
 	return template.FuncMap{
-		"pct":         percent,
-		"profileName": profileName,
-		"statusClass": statusClass,
-		"statusLabel": statusLabel,
-		"stageIndex":  stageIndex,
+		"pct":             percent,
+		"writtenSections": writtenSections,
+		"profileName":     profileName,
+		"statusClass":     statusClass,
+		"statusLabel":     statusLabel,
+		"stageIndex":      stageIndex,
 	}
+}
+
+// Written sections exclude initial outlines but include the owner's edits.
+func writtenSections(job domain.Job) int {
+	if job.FreeDraft {
+		return max(0, job.Content.Available-job.Content.Baseline)
+	}
+	return job.CompletedSections
 }
 
 func percent(done, total int) int {
