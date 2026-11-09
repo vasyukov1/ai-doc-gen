@@ -26,7 +26,7 @@
     <section class="card">
       <div class="card__body stack">
         <p class="callout callout--warn">
-          {{if eq .Job.Content.Outcome "outline"}}Generation did not produce section text. This document contains outline placeholders only.{{else}}Some sections were not generated; unresolved gaps remain.{{end}}
+          {{if eq .Job.Content.Outcome "outline"}}Generation did not produce section text. This document contains outline placeholders only.{{else}}The draft contains unresolved gaps and needs review.{{end}}
         </p>
         {{if .Job.GenerationReason}}<p class="form-note">Reason: {{.Job.GenerationReason}}</p>{{end}}
         <p class="form-note">Review and fill in the saved sections. {{if gt .Job.Content.Baseline 0}}With a working connected provider, you can explicitly continue unfinished sections on the input page.{{end}}</p>

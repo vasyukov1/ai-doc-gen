@@ -23,10 +23,10 @@ Approach: correct the existing form/status/prompt contracts rather than build a 
 
 - [x] Read requirements, existing deployment and quality records; start isolated branch.
 - [x] Submit a new production PZ from the browser with fictional input and the authorized real connection.
-- [ ] Capture terminal report, source-pinned generated text and PDF; audit raw output before corrections.
-- [ ] Implement accepted fixes and build Go/frontend; perform manual pre/post checks.
-- [ ] Repeat real generation and audit raw output; inspect the PDF and downloadable Typst.
-- [ ] Independent review, documentation, explicit-path commit/push, integrate deployed branch and verify production.
+- [x] Capture terminal report, source-pinned generated text and PDF; audit raw output before corrections.
+- [x] Implement accepted fixes and build Go/frontend; perform manual pre/post checks.
+- [x] Repeat real generation and audit raw output; inspect the PDF and downloadable Typst.
+- [x] Independent review, documentation, explicit-path commit/push, integrate deployed branch and verify production.
 
 ## Guardrails and limits
 
@@ -49,3 +49,7 @@ Production attempt 241b7239-2733-4a7c-87b8-e3f0cc7e56ae was rejected before draf
 ### Single table representation
 
 The corrected-schema raw run still duplicated pz-22 tables and rejected pz-15 for row width mismatch. SP3 now requests Markdown-only tables in body and omits the structured tables property from new model response schemas; legacy stored tables remain supported. Validate with real section regeneration and inspect the resulting PDF. This supersedes the earlier schema table-bound approach.
+
+## Completion — 2026-11-09
+
+SP1–SP4 are implemented and reviewed. Production generation reached 17/17 model leaves; raw semantic quality remains insufficient for unattended submission. A separate source-reviewed editorial PDF and Typst bundle were produced locally, with limitations preserved. Full evidence and remaining hypotheses are in README.md. No next milestone started. Next exact command for a future task: `git status --short`; then read `docs/development/production-pz/README.md` and select a bounded next wave with the user.

@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-09",
+  "fixture_commit": "99b05b1ca25310546207361bbdca2c53f98a8063",
+  "raw": {
+    "job_id": "241b7239-2733-4a7c-87b8-e3f0cc7e56ae",
+    "content": {
+      "baseline": 0,
+      "outcome": "partial",
+      "available": 17,
+      "model": 17,
+      "unresolved": 16
+    },
+    "calls": 9,
+    "reported_input_tokens": 39637,
+    "reported_output_tokens": 8026,
+    "body_words": 2646,
+    "pdf_pages": 19,
+    "semantic_gate": "failed"
+  },
+  "reviewed": {
+    "editorial": true,
+    "production_draft_overwritten": false,
+    "sections": 17,
+    "body_words": 2596,
+    "pdf_pages": 17,
+    "todo_markers": 0
+  },
+  "limitations": [
+    "Single fictional student walkthrough, not user research",
+    "Provider tokens are not billing totals",
+    "Reviewed document is a static source audit, not executed tests"
+  ]
+}
