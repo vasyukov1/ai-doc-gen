@@ -75,3 +75,5 @@ Raw and reviewed PDF pages were rendered to PNGs for inspection. The raw PDF exp
 - Do not claim automatic submission readiness. The next quality work should add bounded related-definition retrieval, evidence-backed claim checking and cross-chapter contradiction checks, as described in [architecture handoff](../architecture-handoff.md). This wave does not implement that roadmap automatically.
 
 Confidence is high for the observed structural/compatibility failures and fixes on this fixture, medium for the proposed UX benefit, and low for generalization to other projects. A different provider/model or a new fixture can overturn general quality expectations. The alternative explanation is that some gains come from stochastic model variation; this was not a controlled benchmark (A9, A10).
+
+Final publication note: Railway aborted the subsequent report/banner-only build (`020d75b`) with exit 137 / context canceled. The already active `chapters-10` deployment remained healthy. A documentation follow-up retriggers publication; do not infer an application regression or an out-of-memory root cause solely from this exit code.
