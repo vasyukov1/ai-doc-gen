@@ -269,3 +269,7 @@ Creation now asks for document text (default) or an outline explicitly. Prose re
 Progress counts saved non-baseline sections, including edits, instead of initialized outlines. It measures drafting coverage, not factual quality or PDF readiness. Usage shows a real snapshot time rather than a permanently stale “now”.
 
 Schema reference checked: https://ai.google.dev/gemini-api/docs/generate-content/structured-output lists minItems/maxItems; runtime validation remains authoritative. Automated suites remain deferred to milestone 8.
+
+### 2026-11-09: Keep table bounds in validation, not constrained decoding
+
+A real Gemini 3.5 Flash-Lite request rejected the nested bounded table schema with HTTP 400; the same minimal schema without array bounds succeeded. Retain scoped identifier enums, enforce table dimensions in existing decoded-output validation, and describe limits in the prompt. Provider-specific schema compilation is an additional acceptance boundary beyond Go or transport smoke checks.

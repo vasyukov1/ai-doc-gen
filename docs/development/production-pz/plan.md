@@ -41,3 +41,7 @@ The interrupted baseline completed with 14 model leaves, 3 baselines and 17 reco
 The independent reviewer found an accidental diagnostics JSON-tag regression in the new schema delta. It was corrected before deployment; a disposable HTTP transport smoke confirmed `json_schema` remains a boolean, scoped enums reach the payload and table limits match the validator. Go build, TypeScript checking/build and Docker build passed. Local browser checks confirmed missing-key prose blocking, explicit outline disabling keys, no unconfigured local option, and model preset restoration after reload. No automated suites were added.
 
 The stricter schema binds citations to the actual fitted source pack and section IDs to the requested leaves. This prevents malformed identifiers, not factual hallucinations. Fresh model acceptance remains to be checked on production.
+
+### Live schema compatibility correction — 2026-11-09
+
+Production attempt 241b7239-2733-4a7c-87b8-e3f0cc7e56ae was rejected before drafting (HTTP 400). A minimal real Gemini probe reproduced the rejection with nested table array bounds and succeeded with those bounds removed, preserving section/citation enums. Remove nested array bounds from the provider schema; keep exact IDs, prompt limits and existing server-side table validation. This corrects SP3 rather than adding scope. Mock transport acceptance alone was insufficient evidence of provider compatibility. Private probe reports preserve both results.

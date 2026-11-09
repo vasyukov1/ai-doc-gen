@@ -316,13 +316,14 @@ func chapterResponseFormat(sectionIDs, citationIDs []string) map[string]any {
 		citationID["enum"] = citationIDs
 	}
 	citations := map[string]any{"type": "array", "items": citationID}
-	columns := map[string]any{"type": "array", "items": stringType, "minItems": 1, "maxItems": 6}
-	row := map[string]any{"type": "array", "items": stringType, "minItems": 1, "maxItems": 6}
+	// Nested array bounds exceed Gemini schema complexity; validate them after decoding.
+	columns := map[string]any{"type": "array", "items": stringType}
+	row := map[string]any{"type": "array", "items": stringType}
 	table := map[string]any{
 		"type": "object", "additionalProperties": false,
 		"properties": map[string]any{
 			"caption": stringType, "columns": columns,
-			"rows": map[string]any{"type": "array", "items": row, "maxItems": 40},
+			"rows": map[string]any{"type": "array", "items": row},
 		},
 		"required": []string{"caption", "columns", "rows"},
 	}
@@ -330,7 +331,7 @@ func chapterResponseFormat(sectionIDs, citationIDs []string) map[string]any {
 		"type": "object", "additionalProperties": false,
 		"properties": map[string]any{
 			"id": sectionID, "body": stringType, "citations": citations, "missing_information": stringsType,
-			"tables": map[string]any{"type": "array", "items": table, "maxItems": 5},
+			"tables": map[string]any{"type": "array", "items": table},
 		},
 		"required": []string{"id", "body", "citations", "missing_information", "tables"},
 	}
